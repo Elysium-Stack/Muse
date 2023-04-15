@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  bot:
+    build:
+      context: ../
+      dockerfile: ./.docker/Dockerfile
+      target: base
+    tty: true
+    command: yarn docker:start
+    env_file: ../.env
+    ports:
+      - '$EXPOSED_API_PORT:3000'
+    volumes:
+      - ../:/opt/app
+  postgres:
+    image: postgres:12.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nyx
+    ports:
+      - '$EXPOSED_DB_PORT:5432'
