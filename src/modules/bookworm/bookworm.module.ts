@@ -1,8 +1,11 @@
+import { SharedModule } from '@hermes';
 import { Module } from '@nestjs/common';
+import { BookwormSettingsCommands } from './commands/settings.commands';
+import { BookwormSettingsService } from './services/bookworm.service';
 
 @Module({
-	imports: [],
+	imports: [SharedModule],
 	controllers: [],
-	providers: [],
+	providers: [BookwormSettingsService, BookwormSettingsCommands],
 })
 export class BookwormModule {}

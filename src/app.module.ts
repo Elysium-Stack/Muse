@@ -2,8 +2,11 @@ import { Module } from '@nestjs/common';
 import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppEvents } from './events/app.events';
 import { AdminModule, BookwormModule } from './modules';
+import { SettingsModule } from './modules/settings';
+import { AppService } from './services';
+import { SharedModule } from './shared.module';
 
 @Module({
 	imports: [
@@ -20,11 +23,15 @@ import { AdminModule, BookwormModule } from './modules';
 			],
 		}),
 
+		// shared
+		SharedModule,
+
 		// Custom modules
 		AdminModule,
+		SettingsModule,
 		BookwormModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, AppEvents],
 })
 export class AppModule {}
