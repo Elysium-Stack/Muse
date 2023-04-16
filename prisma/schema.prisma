@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Settings {
-  id    Int     @id @default(autoincrement())
-  guildId String  @unique
+  id                      Int         @id @default(autoincrement())
+  guildId                 String      @unique
 
   // Modules
-  bookwormEnabled  Boolean? @default(true)
-  bookwormChannelId  String?
-  bookwormDailyEnabled Boolean? @default(true)
-  bookwormDailyChannelId String?
-  bookwormPingEnabled  Boolean? @default(false)
-  bookwormPingRoleId  String?
+  bookwormEnabled         Boolean?    @default(true)
+  bookwormChannelId       String?
+  bookwormDailyEnabled    Boolean     @default(true)
+  bookwormDailyHour       Int         @default(0)
+  bookwormDailyChannelId  String?
+  bookwormPingEnabled     Boolean     @default(false)
+  bookwormPingRoleId      String?
 }

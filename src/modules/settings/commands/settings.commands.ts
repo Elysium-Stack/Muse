@@ -42,9 +42,16 @@ export class SettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@ComponentParam('module') value: string,
 	) {
+		// let promptFunction: promptFunction = null;
+
+		// switch (value) {
+		// 	case 'bookworm':
+		// 		promptFunction = this._bookwormSettings.promptSettings;
+		// 		break;
+		// }
+
 		const module = MODULES.find((m) => m.name.toLowerCase() === value);
 
-		console.log(module);
 		if (!module?.settingsPrompt) {
 			return;
 		}

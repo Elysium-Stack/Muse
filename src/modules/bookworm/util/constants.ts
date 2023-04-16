@@ -16,6 +16,11 @@ export const BOOKWORM_SETTINGS_CHOICES = [
 		value: 'dailyEnabled',
 	},
 	{
+		name: 'Daily hour',
+		description: 'At which hour the daily question should be asked.',
+		value: 'dailyHour',
+	},
+	{
 		name: 'Daily Channel',
 		description: 'The channel the daily questions should be posted in.',
 		value: 'dailyChannelId',

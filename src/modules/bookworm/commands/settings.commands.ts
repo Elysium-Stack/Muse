@@ -1,4 +1,5 @@
-import { MESSAGE_PREFIX } from '@hermes/constants';
+import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@hermes/constants';
+import { createHoursSelect } from '@hermes/util/create-hour-select';
 import { camelCaseToSnakeCase } from '@hermes/util/strings';
 import { Logger } from '@nestjs/common';
 import {
@@ -10,13 +11,20 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 	RoleSelectMenuBuilder,
+	StringSelectMenuBuilder,
 } from 'discord.js';
 import {
 	Button,
 	ButtonContext,
+	ChannelSelect,
 	ComponentParam,
 	Context,
+	ISelectedChannels,
+	ISelectedRoles,
 	Options,
+	RoleSelect,
+	SelectedChannels,
+	SelectedRoles,
 	SelectedStrings,
 	SlashCommandContext,
 	StringOption,
@@ -25,9 +33,8 @@ import {
 	Subcommand,
 } from 'necord';
 import { BookwormCommandDecorator } from '../bookworm.decorator';
-import { BookwormSettingsService } from '../services/bookworm.service';
+import { BookwormSettingsService } from '../services/settings.service';
 import { BOOKWORM_SETTINGS_CHOICES } from '../util/constants';
-import { bookwormPromptSetting } from '../util/prompt-settings';
 
 class BookwormSettingsChangeOptions {
 	@StringOption({
@@ -59,7 +66,7 @@ export class BookwormSettingsCommands {
 		const settings = await this._settings.get(interaction.guildId);
 
 		console.log(settings);
-		return interaction.reply({ content: 'Settings!' });
+		return interaction.reply({ content: 'Settings for the bookworm' });
 	}
 
 	// settings change flow
@@ -74,16 +81,23 @@ export class BookwormSettingsCommands {
 		this._logger.verbose(`Change bookworm settings, option: ${option}`);
 
 		if (!option) {
-			return bookwormPromptSetting(interaction);
+			return this._settings.promptSettings(interaction);
 		}
 
 		return this._askSettingValue(interaction, option);
 	}
 
+	@Button('BOOKWORM_SETTINGS_BACK')
+	public onBackButton(
+		@Context()
+		[interaction]: ButtonContext,
+	) {
+		return this._settings.promptSettings(interaction);
+	}
+
 	@StringSelect('BOOKWORM_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
-		@Context()
-		[interaction]: StringSelectContext,
+		@Context() [interaction]: StringSelectContext,
 		@SelectedStrings() selected: string[],
 	) {
 		return this._askSettingValue(interaction, selected[0]);
@@ -98,11 +112,12 @@ export class BookwormSettingsCommands {
 
 		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
-		return bookwormPromptSetting(
-			interaction,
-			true,
-			`Bookworm has been ${parsedValue ? 'enabled' : 'disabled'}`,
-		);
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Bookworm has been ${
+				parsedValue ? 'enabled' : 'disabled'
+			}`,
+			components: [this._getBackButtonRow()],
+		});
 	}
 
 	@Button('BOOKWORM_SETTINGS_CHANGE_DAILY_ENABLED/:value')
@@ -122,7 +137,72 @@ export class BookwormSettingsCommands {
 			content: `${MESSAGE_PREFIX} Bookworm daily questions has been ${
 				parsedValue ? 'enabled' : 'disabled'
 			}`,
-			components: [],
+			components: [this._getBackButtonRow()],
+		});
+	}
+
+	@ChannelSelect('BOOKWORM_SETTINGS_CHANGE_CHANNEL_ID')
+	public async onChannelChange(
+		@Context() [interaction]: ButtonContext,
+		@SelectedChannels() [[id]]: ISelectedChannels,
+	) {
+		await this._settings.set(interaction.guildId, 'channelId', id);
+
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Bookworm channel has been changed to <#${id}>`,
+			components: [this._getBackButtonRow()],
+		});
+	}
+
+	@ChannelSelect('BOOKWORM_SETTINGS_CHANGE_DAILY_CHANNEL_ID')
+	public async onDailyChannelChange(
+		@Context() [interaction]: ButtonContext,
+		@SelectedChannels() [[id]]: ISelectedChannels,
+	) {
+		await this._settings.set(interaction.guildId, 'dailyChannelId', id);
+
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Bookworm daily channel has been changed to <#${id}>`,
+			components: [this._getBackButtonRow()],
+		});
+	}
+
+	@RoleSelect('BOOKWORM_SETTINGS_CHANGE_PING_ROLE_ID')
+	public async onPingRoldChange(
+		@Context() [interaction]: ButtonContext,
+		@SelectedRoles() [[id]]: ISelectedRoles,
+	) {
+		await this._settings.set(interaction.guildId, 'pingRoleId', id);
+
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Bookworm ping role has been changed to <@&${id}>`,
+			components: [this._getBackButtonRow()],
+		});
+	}
+
+	@StringSelect('BOOKWORM_SETTINGS_CHANGE_DAILY_HOUR')
+	public async onDailyHourChange(
+		@Context() [interaction]: StringSelectContext,
+		@SelectedStrings() [selected]: string[],
+	) {
+		const parsed = parseInt(selected, 10);
+
+		if (isNaN(parsed)) {
+			return interaction.update({
+				content: `${MESSAGE_PREFIX} Something wen't wrong, try again later.`,
+				components: [this._getBackButtonRow()],
+			});
+		}
+
+		await this._settings.set(interaction.guildId, 'dailyHour', parsed);
+
+		const time = !isNaN(parsed)
+			? HOUR_OPTIONS.find((h) => h.value === parsed).name
+			: 'none';
+
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Bookworm daily hour has been changed to \`${time}\``,
+			components: [this._getBackButtonRow()],
 		});
 	}
 
@@ -133,10 +213,15 @@ export class BookwormSettingsCommands {
 		let components = [];
 		const settings = await this._settings.get(interaction.guildId);
 
-		// TODO: Add saving for channels & role
+		let currentValue = settings[option];
+		let readableOption = option;
+
 		switch (option) {
 			case 'enabled':
 			case 'dailyEnabled':
+				readableOption =
+					option === 'enabled' ? 'Enabled' : 'Daily enabled';
+				currentValue = settings[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
@@ -160,8 +245,13 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
-			case 'bookwormChannelId':
+			case 'channelId':
 			case 'dailyChannelId':
+				readableOption =
+					option === 'channelId' ? 'Channel' : 'Daily channel';
+				currentValue = settings[option]
+					? `<#${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
@@ -174,7 +264,12 @@ export class BookwormSettingsCommands {
 							.setPlaceholder('Select a channel'),
 					),
 				];
+				break;
 			case 'pingRoleId':
+				readableOption = 'Ping role';
+				currentValue = settings[option]
+					? `<@&${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
@@ -186,19 +281,52 @@ export class BookwormSettingsCommands {
 							.setPlaceholder('Select a role'),
 					),
 				];
+				break;
+			case 'dailyHour':
+				readableOption = 'Daily hour';
+				currentValue = !isNaN(settings[option])
+					? `\`${
+							HOUR_OPTIONS.find(
+								(h) => h.value === settings[option],
+							).name
+					  }\``
+					: 'none';
+				components = [
+					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+						createHoursSelect(
+							'BOOKWORM_SETTINGS_CHANGE_DAILY_HOUR',
+						),
+					),
+				];
+				break;
 		}
+
+		components.push(this._getBackButtonRow(true));
 
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
-				content: `${MESSAGE_PREFIX} What would you like to change ${option} to?`,
+				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
+				
+Current value: ${currentValue}`,
 				components,
 			});
 		}
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} What would you like to change ${option} to?`,
+			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
+				
+Current value: ${currentValue}`,
 			components,
 			ephemeral: true,
 		});
+	}
+
+	private _getBackButtonRow(isCancel = false) {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder()
+				.setCustomId(`BOOKWORM_SETTINGS_BACK`)
+				.setLabel(isCancel ? 'Cancel' : 'Back to bookworm settings')
+				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
+		);
 	}
 }
