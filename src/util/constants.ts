@@ -1,13 +1,6 @@
-import { bookwormPromptSetting } from '@muse/modules/bookworm/util/prompt-settings';
-
 export const MESSAGE_PREFIX = '𓏢';
 
-export const MODULES = [
-	{
-		name: 'Bookworm',
-		settingsPrompt: bookwormPromptSetting,
-	},
-];
+export const MODULES = ['Bookworm', 'Music'];
 
 export const HOUR_OPTIONS = [
 	{

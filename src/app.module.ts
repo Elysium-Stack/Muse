@@ -5,6 +5,7 @@ import { NecordModule } from 'necord';
 import { AppController } from './app.controller';
 import { AppEvents } from './events/app.events';
 import { AdminModule, BookwormModule } from './modules';
+import { MusicModule } from './modules/music';
 import { SettingsModule } from './modules/settings';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
@@ -33,6 +34,7 @@ import { SharedModule } from './shared.module';
 		AdminModule,
 		SettingsModule,
 		BookwormModule,
+		MusicModule,
 	],
 	controllers: [AppController],
 	providers: [AppService, AppEvents],

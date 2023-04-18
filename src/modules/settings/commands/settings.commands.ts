@@ -7,7 +7,6 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import {
 	Button,
 	ButtonContext,
-	ComponentParam,
 	Context,
 	SlashCommand,
 	SlashCommandContext,
@@ -22,44 +21,36 @@ export class SettingsCommands {
 		description: 'List available modules to change settings of.',
 	})
 	public async onSettings(@Context() [interaction]: SlashCommandContext) {
-		const modulesSets = [...chunks(MODULES, 3)];
+		const data = this._getInteractionReply();
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} What module settings would you like to view?`,
+			...data,
 			ephemeral: true,
+		});
+	}
+
+	@Button('SETTINGS_SHOW')
+	public async onDailyEnabledButton(@Context() [interaction]: ButtonContext) {
+		const data = this._getInteractionReply();
+		return interaction.update(data);
+	}
+
+	private _getInteractionReply() {
+		const modulesSets = [...chunks(MODULES, 3)];
+		return {
+			content: `${MESSAGE_PREFIX} What module settings would you like to view?`,
+			embeds: [],
 			components: modulesSets.map((set) =>
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
 					set.map((module) =>
 						new ButtonBuilder()
 							.setCustomId(
-								`SETTINGS_VIEW/${module.name.toLowerCase()}`,
+								`${module.toUpperCase()}_SETTINGS_SHOW`,
 							)
-							.setLabel(module.name)
+							.setLabel(module)
 							.setStyle(ButtonStyle.Primary),
 					),
 				),
 			),
-		});
-	}
-
-	@Button('SETTINGS_VIEW/:module')
-	public async onDailyEnabledButton(
-		@Context() [interaction]: ButtonContext,
-		@ComponentParam('module') value: string,
-	) {
-		// let promptFunction: promptFunction = null;
-
-		// switch (value) {
-		// 	case 'bookworm':
-		// 		promptFunction = this._bookwormSettings.promptSettings;
-		// 		break;
-		// }
-
-		const module = MODULES.find((m) => m.name.toLowerCase() === value);
-
-		if (!module?.settingsPrompt) {
-			return;
-		}
-
-		return module.settingsPrompt(interaction, false);
+		};
 	}
 }

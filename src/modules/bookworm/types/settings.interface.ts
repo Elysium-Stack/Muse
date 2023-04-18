@@ -4,6 +4,5 @@ export interface BookwormSettingsInterface {
 	dailyEnabled: boolean;
 	dailyHour: number;
 	dailyChannelId?: string;
-	pingEnabled: boolean;
 	pingRoleId?: string;
 }

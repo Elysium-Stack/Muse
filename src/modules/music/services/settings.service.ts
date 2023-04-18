@@ -1,7 +1,7 @@
 import { BaseSettingsService } from '@muse/base';
 import { SettingsService } from '@muse/modules/settings';
 import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
-import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/util/constants';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Injectable } from '@nestjs/common';
 import {
 	ActionRowBuilder,
@@ -14,15 +14,12 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
-import { BookwormSettingsInterface } from '../types/settings.interface';
-import {
-	BOOKWORM_EMBED_COLOR,
-	BOOKWORM_SETTINGS_CHOICES,
-} from '../util/constants';
+import { MusicSettingsInterface } from '../types/settings.interface';
+import { MUSIC_EMBED_COLOR, MUSIC_SETTINGS_CHOICES } from '../util/constants';
 
 @Injectable()
-export class BookwormSettingsService extends BaseSettingsService<BookwormSettingsInterface> {
-	protected _base = 'bookworm';
+export class MusicSettingsService extends BaseSettingsService<MusicSettingsInterface> {
+	protected _base = 'music';
 
 	constructor(protected _settings: SettingsService) {
 		super(_settings);
@@ -31,20 +28,14 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 	) {
-		const {
-			enabled,
-			channelId,
-			dailyEnabled,
-			dailyChannelId,
-			dailyHour,
-			pingRoleId,
-		} = await this.get(interaction.guildId);
+		const { enabled, channelId, djRoleId } = await this.get(
+			interaction.guildId,
+		);
 
-		const hourOption = HOUR_OPTIONS.find((h) => h.value === dailyHour);
 		const embed = new EmbedBuilder()
-			.setColor(BOOKWORM_EMBED_COLOR)
-			.setTitle('Bookworm settings')
-			.setDescription(`These are the settings for the bookworm module`)
+			.setColor(MUSIC_EMBED_COLOR)
+			.setTitle('Music settings')
+			.setDescription(`These are the settings for the music module`)
 			.addFields(
 				{
 					name: 'Status',
@@ -57,30 +48,15 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 					inline: true,
 				},
 				{
-					name: 'Daily status',
-					value: dailyEnabled ? 'Enabled' : 'Disabled',
-					inline: true,
-				},
-				{
-					name: 'Daily channel',
-					value: channelId ? `<#${dailyChannelId}>` : '-',
-					inline: true,
-				},
-				{
-					name: 'Daily time',
-					value: hourOption.name,
-					inline: true,
-				},
-				{
-					name: 'Ping role',
-					value: pingRoleId ? `<@&${pingRoleId}>` : '-',
+					name: 'DJ Role',
+					value: djRoleId ? `<@&${djRoleId}>` : '-',
 					inline: true,
 				},
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`BOOKWORM_SETTINGS_PROMPT`)
+				.setCustomId(`MUSIC_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
 			ALL_SETTINGS_BUTTON,
@@ -108,10 +84,10 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 		message?: string,
 	) {
 		const select = new StringSelectMenuBuilder()
-			.setCustomId('BOOKWORM_SETTINGS_CHANGE_SELECT')
+			.setCustomId('MUSIC_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				BOOKWORM_SETTINGS_CHOICES.map(({ name, description, value }) =>
+				MUSIC_SETTINGS_CHOICES.map(({ name, description, value }) =>
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
@@ -124,7 +100,7 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`BOOKWORM_SETTINGS_SHOW`)
+				.setCustomId(`MUSIC_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
 			ALL_SETTINGS_BUTTON,

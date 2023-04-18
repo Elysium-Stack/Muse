@@ -15,7 +15,7 @@ export class GuildAdminGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const ctx = NecordExecutionContext.create(context);
 		const [interaction] = ctx.getContext<'interactionCreate'>();
-		if (!interaction.isChatInputCommand()) return false;
+		// if (!interaction.isChatInputCommand()) return false;
 
 		const admins = process.env.OWNER_IDS.split(',');
 		if (admins.includes(interaction.user.id)) {
@@ -28,10 +28,10 @@ export class GuildAdminGuard implements CanActivate {
 		const hasPermission = member.permissions.has(
 			PermissionsBitField.Flags.Administrator,
 		);
-		if (!hasPermission) {
-			return false;
+		if (hasPermission) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 }

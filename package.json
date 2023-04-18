@@ -32,6 +32,7 @@
 		"@prisma/client": "^4.12.0",
 		"date-fns": "^2.29.3",
 		"discord.js": "^14.9.0",
+		"kazagumo": "^2.3.2",
 		"necord": "^5.7.2",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.2.0"

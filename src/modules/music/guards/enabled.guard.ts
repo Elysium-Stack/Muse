@@ -5,13 +5,13 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { NecordExecutionContext } from 'necord';
-import { BookwormSettingsService } from '../services/settings.service';
+import { MusicSettingsService } from '../services/settings.service';
 
 @Injectable()
-export class BookwormEnabledGuard implements CanActivate {
-	private readonly _logger = new Logger(BookwormEnabledGuard.name);
+export class MusicEnabledGuard implements CanActivate {
+	private readonly _logger = new Logger(MusicEnabledGuard.name);
 
-	constructor(private readonly _bookwormSettings: BookwormSettingsService) {}
+	constructor(private readonly _musicSettings: MusicSettingsService) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const ctx = NecordExecutionContext.create(context);
@@ -23,7 +23,7 @@ export class BookwormEnabledGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId);
+		const settings = await this._musicSettings.get(interaction.guildId);
 
 		if (!settings.enabled) {
 			return false;

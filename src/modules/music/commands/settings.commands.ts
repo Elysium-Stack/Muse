@@ -1,7 +1,5 @@
-import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/constants';
-import { ForbiddenExceptionFilter } from '@muse/filters';
-import { GuildAdminGuard } from '@muse/guards/guild-admin.guard';
-import { createHoursSelect } from '@muse/util/create-hour-select';
+import { GuildAdminGuard } from '@muse/guards';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
@@ -13,7 +11,6 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 	RoleSelectMenuBuilder,
-	StringSelectMenuBuilder,
 } from 'discord.js';
 import {
 	Button,
@@ -34,44 +31,45 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
-import { BookwormCommandDecorator } from '../bookworm.decorator';
-import { BookwormSettingsService } from '../services/settings.service';
-import { BOOKWORM_SETTINGS_CHOICES } from '../util/constants';
+import { ForbiddenExceptionFilter } from 'src/filters';
+import { MusicCommandDecorator } from '..';
+import { MusicSettingsService } from '../services/settings.service';
+import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
 
-class BookwormSettingsChangeOptions {
+class MusicSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
 		description: 'The option to change',
 		required: false,
-		choices: BOOKWORM_SETTINGS_CHOICES,
+		choices: MUSIC_SETTINGS_CHOICES,
 	})
 	option: string;
 }
 
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
-@BookwormCommandDecorator({
+@MusicCommandDecorator({
 	name: 'settings',
-	description: 'Bookworm settings commands',
+	description: 'Music settings commands',
 })
-export class BookwormSettingsCommands {
-	private readonly _logger = new Logger(BookwormSettingsCommands.name);
+export class MusicSettingsCommands {
+	private readonly _logger = new Logger(MusicSettingsCommands.name);
 
-	constructor(private _settings: BookwormSettingsService) {}
+	constructor(private _settings: MusicSettingsService) {}
 
 	@Subcommand({
 		name: 'show',
-		description: 'Show bookworm settings',
+		description: 'Show music settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Loaded bookworm settings for ${interaction.guildId}`,
+			`Loaded music settings for ${interaction.guildId}`,
 		);
 
 		return this._settings.showSettings(interaction);
 	}
 
-	@Button('BOOKWORM_SETTINGS_SHOW')
+	@Button('MUSIC_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -86,7 +84,7 @@ export class BookwormSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: BookwormSettingsChangeOptions,
+		@Options() { option }: MusicSettingsChangeOptions,
 	) {
 		this._logger.verbose(`Change bookworm settings, option: ${option}`);
 
@@ -97,7 +95,7 @@ export class BookwormSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
-	@Button('BOOKWORM_SETTINGS_PROMPT')
+	@Button('MUSIC_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -105,7 +103,7 @@ export class BookwormSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
-	@Button('BOOKWORM_SETTINGS_BACK')
+	@Button('MUSIC_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -113,7 +111,7 @@ export class BookwormSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
-	@StringSelect('BOOKWORM_SETTINGS_CHANGE_SELECT')
+	@StringSelect('MUSIC_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
 		@SelectedStrings() selected: string[],
@@ -121,7 +119,7 @@ export class BookwormSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
-	@Button('BOOKWORM_SETTINGS_CHANGE_ENABLED/:value')
+	@Button('MUSIC_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
 		@ComponentParam('value') value: string,
@@ -131,35 +129,14 @@ export class BookwormSettingsCommands {
 		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm has been ${
+			content: `${MESSAGE_PREFIX} Music has been ${
 				parsedValue ? 'enabled' : 'disabled'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
 	}
 
-	@Button('BOOKWORM_SETTINGS_CHANGE_DAILY_ENABLED/:value')
-	public async onDailyEnabledButton(
-		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
-	) {
-		const parsedValue = value === 'true' ? true : false;
-
-		await this._settings.set(
-			interaction.guildId,
-			'dailyEnabled',
-			parsedValue,
-		);
-
-		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm daily questions has been ${
-				parsedValue ? 'enabled' : 'disabled'
-			}`,
-			components: [this._getBackButtonRow()],
-		});
-	}
-
-	@ChannelSelect('BOOKWORM_SETTINGS_CHANGE_CHANNEL_ID')
+	@ChannelSelect('MUSIC_SETTINGS_CHANGE_CHANNEL_ID')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels,
@@ -167,59 +144,20 @@ export class BookwormSettingsCommands {
 		await this._settings.set(interaction.guildId, 'channelId', id);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm channel has been changed to <#${id}>`,
+			content: `${MESSAGE_PREFIX} Music channel has been changed to <#${id}>`,
 			components: [this._getBackButtonRow()],
 		});
 	}
 
-	@ChannelSelect('BOOKWORM_SETTINGS_CHANGE_DAILY_CHANNEL_ID')
-	public async onDailyChannelChange(
-		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() [[id]]: ISelectedChannels,
-	) {
-		await this._settings.set(interaction.guildId, 'dailyChannelId', id);
-
-		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm daily channel has been changed to <#${id}>`,
-			components: [this._getBackButtonRow()],
-		});
-	}
-
-	@RoleSelect('BOOKWORM_SETTINGS_CHANGE_PING_ROLE_ID')
+	@RoleSelect('MUSIC_SETTINGS_CHANGE_DJ_ROLE_ID')
 	public async onPingRoldChange(
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles,
 	) {
-		await this._settings.set(interaction.guildId, 'pingRoleId', id);
+		await this._settings.set(interaction.guildId, 'djRoleId', id);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm ping role has been changed to <@&${id}>`,
-			components: [this._getBackButtonRow()],
-		});
-	}
-
-	@StringSelect('BOOKWORM_SETTINGS_CHANGE_DAILY_HOUR')
-	public async onDailyHourChange(
-		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() [selected]: string[],
-	) {
-		const parsed = parseInt(selected, 10);
-
-		if (isNaN(parsed)) {
-			return interaction.update({
-				content: `${MESSAGE_PREFIX} Something wen't wrong, try again later.`,
-				components: [this._getBackButtonRow()],
-			});
-		}
-
-		await this._settings.set(interaction.guildId, 'dailyHour', parsed);
-
-		const time = !isNaN(parsed)
-			? HOUR_OPTIONS.find((h) => h.value === parsed).name
-			: 'none';
-
-		return interaction.update({
-			content: `${MESSAGE_PREFIX} Bookworm daily hour has been changed to \`${time}\``,
+			content: `${MESSAGE_PREFIX} Music DJ role has been changed to <@&${id}>`,
 			components: [this._getBackButtonRow()],
 		});
 	}
@@ -236,15 +174,13 @@ export class BookwormSettingsCommands {
 
 		switch (option) {
 			case 'enabled':
-			case 'dailyEnabled':
-				readableOption =
-					option === 'enabled' ? 'Enabled' : 'Daily enabled';
+				readableOption = 'Enabled';
 				currentValue = settings[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
 							.setCustomId(
-								`BOOKWORM_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}/true`,
 							)
@@ -253,7 +189,7 @@ export class BookwormSettingsCommands {
 							.setDisabled(settings[option] === true),
 						new ButtonBuilder()
 							.setCustomId(
-								`BOOKWORM_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}/false`,
 							)
@@ -264,9 +200,7 @@ export class BookwormSettingsCommands {
 				];
 				break;
 			case 'channelId':
-			case 'dailyChannelId':
-				readableOption =
-					option === 'channelId' ? 'Channel' : 'Daily channel';
+				readableOption = 'Channel';
 				currentValue = settings[option]
 					? `<#${settings[option]}>`
 					: 'none';
@@ -274,7 +208,7 @@ export class BookwormSettingsCommands {
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
 							.setCustomId(
-								`BOOKWORM_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}`,
 							)
@@ -283,8 +217,8 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
-			case 'pingRoleId':
-				readableOption = 'Ping role';
+			case 'djRoleId':
+				readableOption = 'DJ role';
 				currentValue = settings[option]
 					? `<@&${settings[option]}>`
 					: 'none';
@@ -292,7 +226,7 @@ export class BookwormSettingsCommands {
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
 							.setCustomId(
-								`BOOKWORM_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}`,
 							)
@@ -300,24 +234,13 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
-			case 'dailyHour':
-				readableOption = 'Daily hour';
-				currentValue = !isNaN(settings[option])
-					? `\`${
-							HOUR_OPTIONS.find(
-								(h) => h.value === settings[option],
-							).name
-					  }\``
-					: 'none';
-				components = [
-					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-						createHoursSelect(
-							'BOOKWORM_SETTINGS_CHANGE_DAILY_HOUR',
-						),
-					),
-				];
-				break;
 		}
+
+		console.log(
+			`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+				option,
+			).toUpperCase()}`,
+		);
 
 		components.push(this._getBackButtonRow(true));
 
@@ -342,8 +265,8 @@ Current value: ${currentValue}`,
 	private _getBackButtonRow(isCancel = false) {
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`BOOKWORM_SETTINGS_BACK`)
-				.setLabel(isCancel ? 'Cancel' : 'Back to bookworm settings')
+				.setCustomId(`MUSIC_SETTINGS_BACK`)
+				.setLabel(isCancel ? 'Cancel' : 'Back to music settings')
 				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
 		);
 	}

@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { Client, PermissionsBitField } from 'discord.js';
 import { NecordExecutionContext } from 'necord';
-import { BookwormSettingsService } from '../services/settings.service';
+import { MusicSettingsService } from '../services/settings.service';
 
 @Injectable()
-export class BookwormChannelGuard implements CanActivate {
-	private readonly _logger = new Logger(BookwormChannelGuard.name);
+export class MusicChannelGuard implements CanActivate {
+	private readonly _logger = new Logger(MusicChannelGuard.name);
 
 	constructor(
-		private readonly _bookwormSettings: BookwormSettingsService,
+		private readonly _musicSettings: MusicSettingsService,
 		private _client: Client,
 	) {}
 
@@ -37,7 +37,7 @@ export class BookwormChannelGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId);
+		const settings = await this._musicSettings.get(interaction.guildId);
 
 		if (!settings.channelId) {
 			return true;
