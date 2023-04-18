@@ -3434,7 +3434,15 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-kazagumo@^2.3.2:
+kazagumo-spotify@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/kazagumo-spotify/-/kazagumo-spotify-1.2.0.tgz#9328442be13d140c81f5483df53be553ce0cd615"
+  integrity sha512-+PBqh3nIhtGpx8/nLoM/Jw944CwSIhnqKm3JlYwKXxrJKCltoj7kS+DVloO2HfBaQwo3TSjjS/o9vqMB8NaOzA==
+  dependencies:
+    kazagumo "^2.1.6"
+    undici "^5.5.1"
+
+kazagumo@^2.1.6, kazagumo@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/kazagumo/-/kazagumo-2.3.2.tgz#4553315f9618f3a45811b35411602b3b27da34bc"
   integrity sha512-yC+k+yuwj9jb9/c1Wc57wvrAKe8wvnlyLYzUWC5tYeWAt5xap4JKxjJugrG2Q/2xKCq3UoIzTQw7AdKaxWbOHw==
@@ -4768,7 +4776,7 @@ uid@2.0.2:
   dependencies:
     "@lukeed/csprng" "^1.0.0"
 
-undici@^5.21.0:
+undici@^5.21.0, undici@^5.5.1:
   version "5.21.2"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.21.2.tgz#329f628aaea3f1539a28b9325dccc72097d29acd"
   integrity sha512-f6pTQ9RF4DQtwoWSaC42P/NKlUjvezVvd9r155ohqkwFNRyBKM3f3pcty3ouusefNRyM25XhIQEbeQ46sZDJfQ==

@@ -22,6 +22,6 @@ services:
         ports:
             - '$EXPOSED_DB_PORT:5432'
     lavalink:
-        image: fredboat/lavalink:dev
+        image: fredboat/lavalink:3.5
         volumes:
             - ../.lavalink/application.yml:/opt/Lavalink/application.yml:ro

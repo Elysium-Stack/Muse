@@ -23,6 +23,7 @@ import { SharedModule } from './shared.module';
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
 				GatewayIntentBits.GuildMembers,
+				GatewayIntentBits.GuildVoiceStates,
 			],
 		}),
 		ScheduleModule.forRoot(),

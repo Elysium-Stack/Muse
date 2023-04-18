@@ -16,7 +16,17 @@ export class AdminGuard implements CanActivate {
 	canActivate(context: ExecutionContext): boolean {
 		const ctx = NecordExecutionContext.create(context);
 		const [interaction] = ctx.getContext<'interactionCreate'>();
-		// if (!interaction.isChatInputCommand()) return false;
+
+		if (!interaction) {
+			return true;
+		}
+
+		if (
+			interaction.isUserContextMenuCommand() ||
+			interaction.isContextMenuCommand()
+		) {
+			return false;
+		}
 
 		const admins = process.env.OWNER_IDS.split(',');
 		if (!admins.includes(interaction.user.id)) {
