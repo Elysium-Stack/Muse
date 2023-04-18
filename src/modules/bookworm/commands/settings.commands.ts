@@ -1,7 +1,9 @@
-import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@hermes/constants';
-import { createHoursSelect } from '@hermes/util/create-hour-select';
-import { camelCaseToSnakeCase } from '@hermes/util/strings';
-import { Logger } from '@nestjs/common';
+import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/constants';
+import { ForbiddenExceptionFilter } from '@muse/filters';
+import { GuildAdminGuard } from '@muse/guards/guild-admin.guard';
+import { createHoursSelect } from '@muse/util/create-hour-select';
+import { camelCaseToSnakeCase } from '@muse/util/strings';
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -46,6 +48,8 @@ class BookwormSettingsChangeOptions {
 	option: string;
 }
 
+@UseGuards(GuildAdminGuard)
+@UseFilters(ForbiddenExceptionFilter)
 @BookwormCommandDecorator({
 	name: 'settings',
 	description: 'Bookworm settings commands',

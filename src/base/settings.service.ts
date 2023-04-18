@@ -1,4 +1,4 @@
-import { SettingsService } from '@hermes/settings';
+import { SettingsService } from '@muse/settings';
 import { Settings } from '@prisma/client';
 
 export abstract class BaseSettingsService<T> {

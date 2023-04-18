@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
 import { AppController } from './app.controller';
@@ -15,6 +16,7 @@ import { SharedModule } from './shared.module';
 				process.env.NODE_ENV !== 'production'
 					? process.env.DEVELOPMENT_SERVER_IDS.split(',')
 					: false,
+			skipRegistration: true,
 			token: process.env.DISCORD_TOKEN,
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -22,6 +24,7 @@ import { SharedModule } from './shared.module';
 				GatewayIntentBits.GuildMembers,
 			],
 		}),
+		ScheduleModule.forRoot(),
 
 		// shared
 		SharedModule,

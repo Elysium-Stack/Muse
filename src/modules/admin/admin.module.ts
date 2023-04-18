@@ -1,4 +1,4 @@
-import { SharedModule } from '@hermes';
+import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
 import { AdminUtilsCommands } from './commands/util.commands';
 

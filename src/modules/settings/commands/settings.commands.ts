@@ -1,6 +1,8 @@
-import { MESSAGE_PREFIX, MODULES } from '@hermes/constants';
-import { chunks } from '@hermes/util/arrays';
-import { Injectable } from '@nestjs/common';
+import { MESSAGE_PREFIX, MODULES } from '@muse/constants';
+import { ForbiddenExceptionFilter } from '@muse/filters';
+import { GuildAdminGuard } from '@muse/guards';
+import { chunks } from '@muse/util/arrays';
+import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import {
 	Button,
@@ -11,6 +13,8 @@ import {
 	SlashCommandContext,
 } from 'necord';
 
+@UseGuards(GuildAdminGuard)
+@UseFilters(ForbiddenExceptionFilter)
 @Injectable()
 export class SettingsCommands {
 	@SlashCommand({

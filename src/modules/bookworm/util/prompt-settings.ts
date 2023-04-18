@@ -1,5 +1,5 @@
-import { MESSAGE_PREFIX } from '@hermes/util/constants';
-import { promptFunction } from '@hermes/util/types';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
+import { promptFunction } from '@muse/util/types';
 import {
 	ActionRowBuilder,
 	CommandInteraction,

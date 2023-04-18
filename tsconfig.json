@@ -18,11 +18,11 @@
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@hermes": ["src"],
-			"@hermes/*": ["src/*"],
-			"@hermes/constants": ["src/util/constants"],
-			"@hermes/prisma": ["src/modules/prisma"],
-			"@hermes/settings": ["src/modules/settings"]
+			"@muse": ["src"],
+			"@muse/*": ["src/*"],
+			"@muse/constants": ["src/util/constants"],
+			"@muse/prisma": ["src/modules/prisma"],
+			"@muse/settings": ["src/modules/settings"]
 		}
 	}
 }

@@ -1,8 +1,8 @@
-import { SharedModule } from '@hermes';
+import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
 import { BookwormGeneralCommands } from './commands/general.commands';
 import { BookwormSettingsCommands } from './commands/settings.commands';
-import { BookwormGeneralService } from './services/general.service';
+import { BookwormQuestionService } from './services/question.service';
 import { BookwormSettingsService } from './services/settings.service';
 
 @Module({
@@ -11,7 +11,7 @@ import { BookwormSettingsService } from './services/settings.service';
 	providers: [
 		BookwormSettingsService,
 		BookwormSettingsCommands,
-		BookwormGeneralService,
+		BookwormQuestionService,
 		BookwormGeneralCommands,
 	],
 })

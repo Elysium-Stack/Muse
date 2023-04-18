@@ -1,6 +1,6 @@
-import { BaseSettingsService } from '@hermes/base';
-import { SettingsService } from '@hermes/modules/settings';
-import { MESSAGE_PREFIX } from '@hermes/util/constants';
+import { BaseSettingsService } from '@muse/base';
+import { SettingsService } from '@muse/modules/settings';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Injectable } from '@nestjs/common';
 import {
 	ActionRowBuilder,

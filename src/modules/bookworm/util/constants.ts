@@ -1,3 +1,5 @@
+export const BOOKWORM_EMBED_COLOR = '#9400ff';
+
 export const BOOKWORM_SETTINGS_CHOICES = [
 	{
 		name: 'Enabled',

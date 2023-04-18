@@ -1,4 +1,4 @@
-import { PrismaModule } from '@hermes/prisma';
+import { PrismaModule } from '@muse/prisma';
 import { Module } from '@nestjs/common';
 import { SettingsService } from './services';
 

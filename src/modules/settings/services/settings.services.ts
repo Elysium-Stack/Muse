@@ -1,4 +1,4 @@
-import { PrismaService } from '@hermes/prisma';
+import { PrismaService } from '@muse/prisma';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()

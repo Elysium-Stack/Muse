@@ -1,7 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@muse/modules/prisma';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { getHours } from 'date-fns';
+import { ChannelType, Client } from 'discord.js';
+import { createQuestionEmbed } from '../util/create-question-embed';
 
 @Injectable()
-export class BookwormGeneralService {
+export class BookwormQuestionService {
+	private readonly _logger = new Logger(BookwormQuestionService.name);
+
 	public questions = [
 		'What are you reading?',
 		'Who is your current book boyfriend?',
@@ -106,7 +114,9 @@ export class BookwormGeneralService {
 		'What was your favorite book as a child?',
 	];
 
-	getQuestion(guildId: string, getRandom = false) {
+	constructor(private _prisma: PrismaService, private _client: Client) {}
+
+	async get(guildId: string, getRandom = false) {
 		if (getRandom) {
 			const min = 0;
 			const max = this.questions.length - 1;
@@ -116,7 +126,70 @@ export class BookwormGeneralService {
 			];
 		}
 
-		console.log(guildId);
-		return this.questions[0];
+		let index = 0;
+		const latestLog = await this._prisma.bookwormLog.findFirst({
+			where: {
+				guildId,
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+		});
+
+		if (latestLog) {
+			index = latestLog.index + 1;
+		}
+
+		if (index >= this.questions.length - 1) {
+			index = 0;
+		}
+
+		await this._prisma.bookwormLog.create({
+			data: {
+				guildId,
+				index,
+			},
+		});
+
+		return this.questions[index];
+	}
+
+	@Cron('0 0 * * * *')
+	async checkDaily() {
+		this._logger.log('Checking for bookworm daily question.');
+
+		const hour = getHours(new Date());
+		const settings = await this._prisma.settings.findMany({
+			where: {
+				bookwormDailyHour: hour,
+				bookwormChannelId: {
+					not: null,
+				},
+				bookwormEnabled: true,
+				bookwormDailyEnabled: true,
+			},
+		});
+
+		for (const {
+			guildId,
+			bookwormDailyChannelId,
+			bookwormPingRoleId,
+		} of settings) {
+			const guild = await this._client.guilds.fetch(guildId);
+			const channel = await guild.channels.fetch(bookwormDailyChannelId);
+			const question = await this.get(guildId);
+
+			if (channel.type === ChannelType.GuildText) {
+				const embed = createQuestionEmbed(
+					`${MESSAGE_PREFIX} Daily bookworm question`,
+					question,
+					this._client.user,
+				);
+				const content = bookwormPingRoleId
+					? `<@&${bookwormPingRoleId}>`
+					: '';
+				await channel.send({ embeds: [embed], content });
+			}
+		}
 	}
 }

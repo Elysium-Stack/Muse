@@ -1,4 +1,4 @@
-import { SettingsService } from '@hermes/modules/settings';
+import { SettingsService } from '@muse/modules/settings';
 import { Injectable, Logger } from '@nestjs/common';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On, Once } from 'necord';
