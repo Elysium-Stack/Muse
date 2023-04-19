@@ -9,7 +9,6 @@ import { MusicModule } from './modules/music';
 import { SettingsModule } from './modules/settings';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
-
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -17,7 +16,7 @@ import { SharedModule } from './shared.module';
 				process.env.NODE_ENV !== 'production'
 					? process.env.DEVELOPMENT_SERVER_IDS.split(',')
 					: false,
-			skipRegistration: true,
+			skipRegistration: process.env.REGISTER_COMMANDS === 'false',
 			token: process.env.DISCORD_TOKEN,
 			intents: [
 				GatewayIntentBits.Guilds,
