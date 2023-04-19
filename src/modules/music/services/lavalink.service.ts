@@ -4,6 +4,10 @@ import { Kazagumo, KazagumoPlayer, KazagumoTrack } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
 import { On } from 'necord';
 import { Connectors } from 'shoukaku';
+import {
+	createPlayingComponents,
+	createPlayingEmbed,
+} from '../util/currently-playing-embed';
 
 @Injectable()
 export class LavalinkService extends Kazagumo {
@@ -73,7 +77,7 @@ export class LavalinkService extends Kazagumo {
 			}
 
 			players.map((player) => player.connection.disconnect());
-			console.warn(`Lavalink ${name}: Disconnected`);
+			this._logger.warn(`Lavalink ${name}: Disconnected`);
 		});
 
 		// Kazagumo
@@ -82,32 +86,36 @@ export class LavalinkService extends Kazagumo {
 		);
 		this.on('playerEnd', (player) => this._onPlayerEnd(player));
 		this.on('playerEmpty', (player) => this._onPlayerEmpty(player));
+		this.on('playerDestroy', (player) => this._onPlayerDestroy(player));
 	}
 
 	private async _onPlayerStart(player: KazagumoPlayer, track: KazagumoTrack) {
-		const channel = await this._client.channels.fetch(player.textId);
-		if (channel.type !== ChannelType.GuildText) {
-			return;
-		}
-
-		const res = await channel.send({
-			content: `Now playing **${track.title}** by **${track.author}**`,
-		});
-		player.data.set('message', res);
+		this._logger.log(`Player start for ${player.guildId}`);
+		this.createPlayerMessage(player, track);
 	}
 
 	private async _onPlayerEnd(player: KazagumoPlayer) {
-		player.data.get('message')?.edit({ content: `Finished playing` });
+		this._logger.log(`Player end for ${player.guildId}`);
+		player.data.get('message')?.delete();
+	}
+
+	private async _onPlayerDestroy(player: KazagumoPlayer) {
+		this._logger.log(`Player destroyed for ${player.guildId}`);
+		player.data.get('message')?.delete();
 	}
 
 	private async _onPlayerEmpty(player: KazagumoPlayer) {
+		this._logger.log(`Player empty for ${player.guildId}`);
+
 		const channel = await this._client.channels.fetch(player.textId);
 		if (channel.type !== ChannelType.GuildText) {
 			return;
 		}
 
+		player.data.get('message')?.delete();
+
 		const res = await channel.send({
-			content: `Destroyed player due to inactivity.`,
+			content: `No more songs to play, disconnecting.`,
 		});
 		player.data.set('message', res);
 
@@ -130,6 +138,10 @@ export class LavalinkService extends Kazagumo {
 			clearTimeout(timeout);
 		}
 
+		if (!player.voiceId) {
+			return;
+		}
+
 		const channel = await this._client.channels.fetch(player.voiceId);
 		if (channel.type !== ChannelType.GuildVoice) {
 			return;
@@ -139,13 +151,36 @@ export class LavalinkService extends Kazagumo {
 			return;
 		}
 
-		// TODO: Fix this
+		const textChannel = await this._client.channels.fetch(player.textId);
 		player.data.set(
 			'disconnectTimeout',
-			setTimeout(() => {
-				player.disconnect();
+			setTimeout(async () => {
+				if (textChannel.type === ChannelType.GuildText) {
+					await textChannel.send({
+						content: `Disconnected player due to inactivity.`,
+					});
+				}
+				player.destroy();
 				player.data.delete('disconnectTimeout');
 			}, 5000),
 		);
+	}
+
+	async createPlayerMessage(player: KazagumoPlayer, track: KazagumoTrack) {
+		player.data
+			.get('message')
+			?.delete()
+			.catch(() => null);
+
+		const channel = await this._client.channels.fetch(player.textId);
+		if (channel.type !== ChannelType.GuildText) {
+			return;
+		}
+
+		const res = await channel.send({
+			embeds: [createPlayingEmbed(player, track)],
+			components: createPlayingComponents(player),
+		});
+		player.data.set('message', res);
 	}
 }

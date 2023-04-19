@@ -1,3 +1,4 @@
+import { IncorrectChannelException } from '@muse/util/errors';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -47,6 +48,6 @@ export class MusicChannelGuard implements CanActivate {
 			return true;
 		}
 
-		return false;
+		throw new IncorrectChannelException(settings.channelId);
 	}
 }

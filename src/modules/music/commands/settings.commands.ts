@@ -236,12 +236,6 @@ export class MusicSettingsCommands {
 				break;
 		}
 
-		console.log(
-			`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-				option,
-			).toUpperCase()}`,
-		);
-
 		components.push(this._getBackButtonRow(true));
 
 		if (interaction instanceof MessageComponentInteraction) {

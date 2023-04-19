@@ -1,24 +1,18 @@
-import { ModuleNotEnabledException } from '@muse/util/errors';
 import { interactionReply } from '@muse/util/interaction-replies';
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
-import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
+import { HasNoPlayerException } from '../util/errors';
 
-@Catch(ModuleNotEnabledException)
-export class EnabledExceptionFilter implements ExceptionFilter {
-	private readonly _logger = new Logger(EnabledExceptionFilter.name);
+@Catch(HasNoPlayerException)
+export class HasNoPlayerExceptionFilter implements ExceptionFilter {
+	private readonly _logger = new Logger(HasNoPlayerExceptionFilter.name);
 
 	async catch(exception: Error, host: ArgumentsHost) {
 		const [interaction] = host.getArgByIndex<SlashCommandContext>(0) ?? [
 			undefined,
 		];
 		const message = {
-			embeds: [
-				new EmbedBuilder()
-					.setColor('Red')
-					.setTitle('Module not enabled')
-					.setDescription(exception.message),
-			],
+			content: 'I am not currently playing anything here!',
 		};
 		this._logger.error(exception);
 

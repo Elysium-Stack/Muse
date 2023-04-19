@@ -1,14 +1,10 @@
-import {
-	ArgumentsHost,
-	Catch,
-	ExceptionFilter,
-	ForbiddenException,
-	Logger,
-} from '@nestjs/common';
+import { IncorrectChannelException } from '@muse/util/errors';
+import { interactionReply } from '@muse/util/interaction-replies';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
 
-@Catch(ForbiddenException)
+@Catch(IncorrectChannelException)
 export class ChannelExceptionFilter implements ExceptionFilter {
 	private readonly _logger = new Logger(ChannelExceptionFilter.name);
 
@@ -21,25 +17,11 @@ export class ChannelExceptionFilter implements ExceptionFilter {
 				new EmbedBuilder()
 					.setColor('Red')
 					.setTitle('Incorrect channel')
-					.setDescription(
-						`Sorry, this module command can only be used in a certain channel!`,
-					),
+					.setDescription(exception.message),
 			],
 		};
 		this._logger.error(exception);
 
-		if (!interaction) {
-			return;
-		}
-
-		if (interaction.deferred) {
-			return interaction.editReply(message);
-		}
-
-		if (interaction.replied) {
-			return interaction.followUp({ ...message, ephemeral: true });
-		}
-
-		return interaction.reply({ ...message, ephemeral: true });
+		return interactionReply(interaction, message);
 	}
 }

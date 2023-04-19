@@ -53,6 +53,7 @@ model MusicLog {
   userId                  String
 
   query                   String
+  result                  Json?
 
   // timestamps
   createdAt               DateTime    @default(now())

@@ -1,3 +1,4 @@
+import { ModuleNotEnabledException } from '@muse/util/errors';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -26,7 +27,7 @@ export class BookwormEnabledGuard implements CanActivate {
 		const settings = await this._bookwormSettings.get(interaction.guildId);
 
 		if (!settings.enabled) {
-			return false;
+			throw new ModuleNotEnabledException('Music');
 		}
 
 		return true;

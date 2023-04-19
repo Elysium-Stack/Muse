@@ -1,3 +1,4 @@
+import { EnabledExceptionFilter } from '@muse/filters';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,
@@ -8,32 +9,37 @@ import {
 } from 'necord';
 import { HasNoPlayerExceptionFilter } from '../filters/has-player.filter';
 import { NotInVoiceExceptionFilter } from '../filters/in-voice.filter';
+import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicHasPlayerGuard } from '../guards/has-player.guard';
 import { MusicInVoiceGuard } from '../guards/in-voice.guard';
 import { MusicCommandDecorator } from '../music.decorator';
 import { MusicPlayerService } from '../services/player.service';
 
-@UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
-@UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)
+@UseGuards(MusicEnabledGuard, MusicInVoiceGuard, MusicHasPlayerGuard)
+@UseFilters(
+	EnabledExceptionFilter,
+	NotInVoiceExceptionFilter,
+	HasNoPlayerExceptionFilter,
+)
 @MusicCommandDecorator()
-export class MusicStopCommands {
-	private readonly _logger = new Logger(MusicStopCommands.name);
+export class MusicPreviousCommands {
+	private readonly _logger = new Logger(MusicPreviousCommands.name);
 
 	constructor(private _player: MusicPlayerService) {}
 
 	@Subcommand({
-		name: 'stop',
-		description: 'Stop the current player',
+		name: 'previous',
+		description: 'Play the previous song in the queue',
 	})
-	public async stop(@Context() [interaction]: SlashCommandContext) {
-		return this._player.stop(interaction);
+	public async previous(@Context() [interaction]: SlashCommandContext) {
+		return this._player.previous(interaction);
 	}
 
-	@Button('MUSIC_STOP')
+	@Button('MUSIC_PREVIOUS')
 	public onButton(
 		@Context()
 		[interaction]: ButtonContext,
 	) {
-		return this._player.stop(interaction);
+		return this._player.previous(interaction, false);
 	}
 }
