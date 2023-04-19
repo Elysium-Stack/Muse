@@ -5,12 +5,12 @@ services:
         build:
             context: ./
             target: production
-        restart: always
+        restart: unless-stopped
         tty: true
         env_file: ./.env
     db:
         image: postgres:12.2
-        restart: always
+        restart: unless-stopped
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
@@ -19,6 +19,6 @@ services:
             - '$EXPOSED_DB_PORT:5432'
     lavalink:
         image: fredboat/lavalink:latest
-        restart: always
+        restart: unless-stopped
         volumes:
             - ./.lavalink/application.yml:/opt/Lavalink/application.yml:ro
