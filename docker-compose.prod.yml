@@ -3,24 +3,20 @@ version: '3'
 services:
     bot:
         build:
-            context: .
-            target: base
+            context: ./
+            target: production
+        restart: always
         tty: true
-        command: yarn docker:start
         env_file: ./.env
-        ports:
-            - '$EXPOSED_API_PORT:3000'
-        volumes:
-            - ./:/opt/app
     db:
         image: postgres:12.2
+        restart: always
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: muse
-        ports:
-            - '$EXPOSED_DB_PORT:5432'
     lavalink:
         image: fredboat/lavalink:latest
+        restart: always
         volumes:
             - ./.lavalink/application.yml:/opt/Lavalink/application.yml:ro
