@@ -14,6 +14,7 @@
 		"start": "node dist/main",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
+		"start:prod": "yarn start",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"test": "jest",
 		"test:watch": "jest --watch",
