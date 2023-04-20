@@ -95,22 +95,22 @@ export class MetricsEvents {
 
 	@On(Events.ChannelCreate)
 	public onChannelCreate() {
-		this.totalChannels.inc();
+		this._reloadGauges();
 	}
 
 	@On(Events.ChannelDelete)
 	public onChannelDelete() {
-		this.totalChannels.dec();
+		this._reloadGauges();
 	}
 
 	@On(Events.GuildMemberAdd)
 	public onGuildMemberAdd() {
-		this.totalUsers.inc();
+		this._reloadGauges();
 	}
 
 	@On(Events.GuildMemberRemove)
 	public onGuildMemberRemove() {
-		this.totalUsers.dec();
+		this._reloadGauges();
 	}
 
 	private _getCommandsCount() {
@@ -125,10 +125,18 @@ export class MetricsEvents {
 		return totalCommands;
 	}
 
-	private _reloadGauges(client = this._client) {
+	private async _reloadGauges(client = this._client) {
 		this.totalGuilds.set(client.guilds.cache.size);
 		this.totalChannels.set(client.channels.cache.size);
-		this.totalUsers.set(client.users.cache.size);
+
+		const totalUsers = await client.guilds.cache.reduce(
+			async (total, guild) => {
+				const members = await guild.members.fetch();
+				return (await total) + members.filter((m) => !m.user.bot).size;
+			},
+			Promise.resolve(0),
+		);
+		this.totalUsers.set(totalUsers);
 
 		this.totalInteractions.set(this._getCommandsCount());
 	}
