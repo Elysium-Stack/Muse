@@ -23,4 +23,10 @@ services:
     lavalink:
         image: fredboat/lavalink:latest
         volumes:
-            - ./.lavalink/application.yml:/opt/Lavalink/application.yml:ro
+            - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
+    prometheus:
+        image: prom/prometheus
+        volumes:
+            - ./.docker/prometheus.dev.yml:/etc/prometheus/prometheus.yml
+        ports:
+            - '$EXPOSED_PROM_PORT:9090'

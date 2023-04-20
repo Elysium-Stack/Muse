@@ -1,0 +1,29 @@
+global:
+    scrape_interval: 15s
+
+    # Attach these labels to any time series or alerts when communicating with
+    # external systems (federation, remote storage, Alertmanager).
+    external_labels:
+        monitor: 'muse-prod'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+    - job_name: 'muse'
+
+      scrape_interval: 5s
+
+      static_configs:
+          - targets: ['bot:3000']
+    - job_name: 'lavalink'
+
+      scrape_interval: 5s
+
+      static_configs:
+          - targets: ['lavalink:2333']
+
+remote_write:
+    - url: '<remote write url>'
+      basic_auth:
+          username: '<remote write user>'
+          password: '<remove write api key>'

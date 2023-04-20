@@ -1,14 +1,26 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
 import { AppController } from './app.controller';
 import { AppEvents } from './events/app.events';
+import { GuildEvents } from './events/guild.events';
+import { InteractionEvents } from './events/interaction.events';
+import { MetricsEvents } from './events/metrics.events';
+import { MuseLoggerModule } from './logger/logger.module';
+import { botMetrics } from './metrics/bot.metrics';
+import { channelMetrics } from './metrics/channel.metrics';
+import { guildMetrics } from './metrics/guild.metrics';
+import { interactionMetrics } from './metrics/interaction.metrics';
+import { userMetrics } from './metrics/user.metrics';
+import { LoggerMiddleware } from './middleware/log.middleware';
 import { AdminModule, BookwormModule } from './modules';
 import { MusicModule } from './modules/music';
 import { SettingsModule } from './modules/settings';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
+
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -25,7 +37,11 @@ import { SharedModule } from './shared.module';
 				GatewayIntentBits.GuildVoiceStates,
 			],
 		}),
+		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
+
+		// logger
+		MuseLoggerModule,
 
 		// shared
 		SharedModule,
@@ -37,6 +53,28 @@ import { SharedModule } from './shared.module';
 		MusicModule,
 	],
 	controllers: [AppController],
-	providers: [AppService, AppEvents],
+	providers: [
+		AppService,
+
+		// prometheus
+		...botMetrics,
+		...guildMetrics,
+		...channelMetrics,
+		...userMetrics,
+		...interactionMetrics,
+
+		// events
+		AppEvents,
+		InteractionEvents,
+		GuildEvents,
+		MetricsEvents,
+	],
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(LoggerMiddleware).forRoutes({
+			path: '*',
+			method: RequestMethod.ALL,
+		});
+	}
+}

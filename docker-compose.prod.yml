@@ -21,4 +21,8 @@ services:
         image: fredboat/lavalink:latest
         restart: unless-stopped
         volumes:
-            - ./.lavalink/application.yml:/opt/Lavalink/application.yml:ro
+            - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
+    prometheus:
+        image: prom/prometheus
+        volumes:
+            - ./.docker/prometheus.prod.yml:/etc/prometheus/prometheus.yml
