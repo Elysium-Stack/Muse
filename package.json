@@ -6,6 +6,7 @@
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
+		"postinstall": "patch-package",
 		"prebuild": "yarn prisma:generate",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -34,14 +35,18 @@
 		"@nestjs/schedule": "^2.2.1",
 		"@prisma/client": "^4.12.0",
 		"@willsoto/nestjs-prometheus": "^5.1.1",
+		"colors": "^1.4.0",
 		"date-fns": "^2.29.3",
 		"discord.js": "^14.9.0",
 		"kazagumo": "^2.3.2",
 		"kazagumo-spotify": "^1.2.0",
 		"necord": "^5.7.2",
+		"nest-winston": "^1.9.1",
 		"prom-client": "^14.2.0",
 		"reflect-metadata": "^0.1.13",
-		"rxjs": "^7.2.0"
+		"rxjs": "^7.2.0",
+		"winston": "^3.8.2",
+		"winston-loki": "^6.0.6"
 	},
 	"devDependencies": {
 		"@nestjs/cli": "^9.0.0",
@@ -58,6 +63,7 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.0.0",
 		"jest": "29.5.0",
+		"patch-package": "^7.0.0",
 		"prettier": "^2.3.2",
 		"prisma": "^4.12.0",
 		"source-map-support": "^0.5.20",

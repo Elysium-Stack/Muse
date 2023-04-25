@@ -1,12 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MuseLogger } from './logger/logger.service';
+import { createLogger } from './util/create-logger';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
-		bufferLogs: true,
+		logger: createLogger(),
 	});
-	app.useLogger(app.get(MuseLogger));
 	await app.listen(3000);
 }
 bootstrap();
