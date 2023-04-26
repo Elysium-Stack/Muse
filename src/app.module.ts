@@ -1,5 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
@@ -7,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppEvents } from './events/app.events';
 import { GuildEvents } from './events/guild.events';
 import { InteractionEvents } from './events/interaction.events';
+import { MessageEvents } from './events/message.events';
 import { MetricsEvents } from './events/metrics.events';
 import { MuseLoggerModule } from './logger/logger.module';
 import { botMetrics } from './metrics/bot.metrics';
@@ -35,7 +38,24 @@ import { SharedModule } from './shared.module';
 				GatewayIntentBits.GuildMessages,
 				GatewayIntentBits.GuildMembers,
 				GatewayIntentBits.GuildVoiceStates,
+				GatewayIntentBits.MessageContent,
+				GatewayIntentBits.GuildEmojisAndStickers,
+				GatewayIntentBits.GuildMessageReactions,
 			],
+		}),
+		SentryModule.forRoot({
+			dsn: process.env.SENTRY_DNS,
+			debug: process.env.NODE_ENV !== 'production',
+			environment:
+				process.env.NODE_ENV === 'production'
+					? 'production'
+					: 'development',
+			logLevels: ['error'], //based on sentry.io loglevel //
+			sampleRate: 1,
+			close: {
+				enabled: process.env.NODE_ENV === 'production',
+				timeout: 5000,
+			},
 		}),
 		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
@@ -56,6 +76,11 @@ import { SharedModule } from './shared.module';
 	providers: [
 		AppService,
 
+		{
+			provide: APP_INTERCEPTOR,
+			useFactory: () => new SentryInterceptor(),
+		},
+
 		// prometheus
 		...botMetrics,
 		...guildMetrics,
@@ -65,6 +90,7 @@ import { SharedModule } from './shared.module';
 
 		// events
 		AppEvents,
+		MessageEvents,
 		InteractionEvents,
 		GuildEvents,
 		MetricsEvents,

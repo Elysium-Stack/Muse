@@ -68,6 +68,9 @@ export class LavalinkService extends Kazagumo {
 		this.shoukaku.on('debug', (name, info) =>
 			this._logger.debug(`Lavalink ${name}: Debug,`, info),
 		);
+		this.shoukaku.on('error', (name, ...args) =>
+			this._logger.error(`Lavalink ${name}: Error,`, ...args),
+		);
 		this.shoukaku.on('disconnect', (name, players, moved) => {
 			this.shoukaku.on('error', (name, error) =>
 				this._logger.error(`Lavalink ${name}: Error Caught,`, error),
