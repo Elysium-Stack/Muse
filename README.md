@@ -48,6 +48,7 @@ $ docker-compose exec -it bot yarn prisma migrate dev
 
 #### Prerequisite
 
+-   [NodeJS 18.x](https://nodejs.org/en/download)
 -   [PostgresDB](https://www.postgresql.org/)
 -   [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
 
