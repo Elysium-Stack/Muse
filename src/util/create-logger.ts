@@ -48,7 +48,7 @@ export const createLogger = () => {
 				  ]
 				: []),
 			new transports.Console({
-				level: 'debug',
+				level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
 				format: format.printf(({ context, level, message }) => {
 					return getColor(level)(
 						`[Muse] ${process.pid} - ${colors.white(

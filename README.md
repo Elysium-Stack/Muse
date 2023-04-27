@@ -1,75 +1,84 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="http://the-river-styx.com/" target="blank"><img src="https://raw.githubusercontent.com/Elysium-Stack/Muse/master/.github/logo.png" width="200" alt="Muse logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+  <p align="center">A multi-purpose <a href="http://discord.com" target="_blank">Discord</a> bot for the <a href="http://the-river-styx.com" target="_blank">Elysium</a> server.</p>
     <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
+      <img src="https://img.shields.io/github/license/elysium-stack/muse" alt="Package License" />
+      <img src="https://img.shields.io/github/actions/workflow/status/elysium-stack/muse/deploy.yml" alt="CircleCI" />
+      <a href="https://discord.the-river-styx.com" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+    </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Running Muse
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-https://discord.com/oauth2/authorize?client_id=1096884341763752017&scope=bot&permissions=527710547199
-
-## Installation
+### Getting started
 
 ```bash
-$ yarn install
+$ git clone git@github.com:Elysium-Stack/Muse.git
 ```
 
-## Running the app
+**Copy the `.env.example` to `.env` and change the values in the `.env file`**
+
+---
+
+### Docker (Recommended)
+
+#### Prerequisite
+
+-   [Docker](https://www.docker.com/)
+
+### Running the app
 
 ```bash
-# development
-$ yarn run start
+$ docker-compose up -d db lavalink
+$ docker-compose up bot
+```
 
+### Running migrations
+
+```bash
+$ docker-compose exec -it bot yarn prisma migrate dev
+```
+
+---
+
+### NodeJS
+
+#### Prerequisite
+
+-   [PostgresDB](https://www.postgresql.org/)
+-   [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
+
+#### Installing
+
+```bash
+$ yarn
+$ yarn prisma generate
+$ yarn prisma migrate dev
+```
+
+### Running the app
+
+```bash
 # watch mode
-$ yarn run start:dev
+$ yarn start:dev
+
+# debug & watch mode
+$ yarn start:debug
 
 # production mode
-$ yarn run start:prod
+$ yarn start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
 ## Stay in touch
 
--   Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
--   Website - [https://nestjs.com](https://nestjs.com/)
--   Twitter - [@nestframework](https://twitter.com/nestframework)
+-   Author - [Jurien Hamaker](https://jurien.dev)
+-   Website - [https://the-river-styx.com](https://the-river-styx.com/)
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+MUSE is [GPL licensed](LICENSE).

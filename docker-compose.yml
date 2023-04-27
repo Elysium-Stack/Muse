@@ -12,6 +12,9 @@ services:
             - '$EXPOSED_API_PORT:3000'
         volumes:
             - ./:/opt/app
+        depends_on:
+            - db
+            - lavalink
     db:
         image: postgres:12.2
         environment:

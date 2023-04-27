@@ -11,7 +11,6 @@ import { GuildEvents } from './events/guild.events';
 import { InteractionEvents } from './events/interaction.events';
 import { MessageEvents } from './events/message.events';
 import { MetricsEvents } from './events/metrics.events';
-import { MuseLoggerModule } from './logger/logger.module';
 import { botMetrics } from './metrics/bot.metrics';
 import { channelMetrics } from './metrics/channel.metrics';
 import { guildMetrics } from './metrics/guild.metrics';
@@ -59,9 +58,6 @@ import { SharedModule } from './shared.module';
 		}),
 		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
-
-		// logger
-		MuseLoggerModule,
 
 		// shared
 		SharedModule,
