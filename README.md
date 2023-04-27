@@ -63,7 +63,7 @@ $ yarn prisma migrate dev
 ### Running the app
 
 ```bash
-# watch mode
+# watch mode (recommended)
 $ yarn start:dev
 
 # debug & watch mode
