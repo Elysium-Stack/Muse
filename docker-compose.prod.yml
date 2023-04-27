@@ -2,9 +2,7 @@ version: '3'
 
 services:
     bot:
-        build:
-            context: ./
-            target: production
+        image: ghcr.io/elysium-stack/muse:main
         restart: unless-stopped
         tty: true
         env_file: ./.env
