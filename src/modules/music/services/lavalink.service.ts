@@ -117,10 +117,9 @@ export class LavalinkService extends Kazagumo {
 
 		player.data.get('message')?.delete();
 
-		const res = await channel.send({
+		await channel.send({
 			content: `No more songs to play, disconnecting.`,
 		});
-		player.data.set('message', res);
 
 		player.destroy();
 	}
