@@ -44,7 +44,9 @@ export class SettingsCommands {
 					set.map((module) =>
 						new ButtonBuilder()
 							.setCustomId(
-								`${module.toUpperCase()}_SETTINGS_SHOW`,
+								`${module
+									.toUpperCase()
+									.replace(/ /g, '_')}_SETTINGS_SHOW`,
 							)
 							.setLabel(module)
 							.setStyle(ButtonStyle.Primary),

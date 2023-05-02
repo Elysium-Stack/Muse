@@ -11,59 +11,63 @@ datasource db {
 }
 
 model Settings {
-  id                      Int         @id @default(autoincrement())
-  guildId                 String      @unique
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String      @unique
 
   // Modules
   
   // Bookworm
-  bookwormEnabled         Boolean?    @default(true)
-  bookwormChannelId       String?
-  bookwormDailyEnabled    Boolean     @default(true)
-  bookwormDailyHour       Int         @default(0)
-  bookwormDailyChannelId  String?
-  bookwormPingRoleId      String?
+  bookwormEnabled                           Boolean?    @default(true)
+  bookwormChannelId                         String?
+  bookwormDailyEnabled                      Boolean     @default(true)
+  bookwormDailyHour                         Int         @default(0)
+  bookwormDailyChannelId                    String?
+  bookwormPingRoleId                        String?
 
   // Music
-  musicEnabled            Boolean?    @default(true)
-  musicChannelId          String?
-  musicDjRoleId           String?
+  musicEnabled                              Boolean?    @default(true)
+  musicChannelId                            String?
+  musicDjRoleId                             String?
+
+  // Reaction trigger
+  reactionTriggerEnabled                    Boolean?    @default(true)
+  reactionTriggerIgnoredChannelIds          String[]    @default([])
 
 
 
   // timestamps
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
 }
 
 model BookwormLog {
-  id                      Int         @id @default(autoincrement())
-  guildId                 String
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
 
-  index                   Int?
+  index                                     Int?
 
   // timestamps
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
 }
 
 model MusicLog {
-  id                      Int         @id @default(autoincrement())
-  guildId                 String
-  userId                  String
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+  userId                                    String
 
-  query                   String
-  result                  Json?
+  query                                     String
+  result                                    Json?
 
   // timestamps
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
 }
 
 model MessageReactionTriggers {
-  id                      Int         @id @default(autoincrement())
-  guildId                 String
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
 
-  regex                   String
-  emojiId                 String
+  phrase                                    String
+  emojiId                                   String
 }

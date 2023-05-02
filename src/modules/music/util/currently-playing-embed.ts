@@ -25,7 +25,8 @@ export const createPlayingEmbed = (
 				value: `\`${readableTime(track.length)}\``,
 				inline: true,
 			},
-		);
+		)
+		.setImage(track.thumbnail);
 
 export const createPlayingComponents = (player: KazagumoPlayer) => [
 	new ActionRowBuilder<ButtonBuilder>().addComponents(

@@ -9,7 +9,6 @@ import { AppController } from './app.controller';
 import { AppEvents } from './events/app.events';
 import { GuildEvents } from './events/guild.events';
 import { InteractionEvents } from './events/interaction.events';
-import { MessageEvents } from './events/message.events';
 import { MetricsEvents } from './events/metrics.events';
 import { botMetrics } from './metrics/bot.metrics';
 import { channelMetrics } from './metrics/channel.metrics';
@@ -19,6 +18,7 @@ import { userMetrics } from './metrics/user.metrics';
 import { LoggerMiddleware } from './middleware/log.middleware';
 import { AdminModule, BookwormModule } from './modules';
 import { MusicModule } from './modules/music';
+import { ReactionTriggerModule } from './modules/reaction-trigger/reaction-trigger.module';
 import { SettingsModule } from './modules/settings';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
@@ -67,6 +67,7 @@ import { SharedModule } from './shared.module';
 		SettingsModule,
 		BookwormModule,
 		MusicModule,
+		ReactionTriggerModule,
 	],
 	controllers: [AppController],
 	providers: [
@@ -86,7 +87,6 @@ import { SharedModule } from './shared.module';
 
 		// events
 		AppEvents,
-		MessageEvents,
 		InteractionEvents,
 		GuildEvents,
 		MetricsEvents,

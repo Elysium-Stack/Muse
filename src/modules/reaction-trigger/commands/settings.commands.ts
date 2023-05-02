@@ -10,7 +10,6 @@ import {
 	ChannelType,
 	CommandInteraction,
 	MessageComponentInteraction,
-	RoleSelectMenuBuilder,
 } from 'discord.js';
 import {
 	Button,
@@ -19,11 +18,8 @@ import {
 	ComponentParam,
 	Context,
 	ISelectedChannels,
-	ISelectedRoles,
 	Options,
-	RoleSelect,
 	SelectedChannels,
-	SelectedRoles,
 	SelectedStrings,
 	SlashCommandContext,
 	StringOption,
@@ -32,44 +28,44 @@ import {
 	Subcommand,
 } from 'necord';
 import { ForbiddenExceptionFilter } from 'src/filters';
-import { MusicCommandDecorator } from '..';
-import { MusicSettingsService } from '../services/settings.service';
-import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
+import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
+import { ReactionTriggerSettingsService } from '../services/settings.service';
+import { REACTION_TRIGGER_SETTINGS_CHOICES } from '../util/constants';
 
-class MusicSettingsChangeOptions {
+class ReactionTriggerSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
 		description: 'The option to change',
 		required: false,
-		choices: MUSIC_SETTINGS_CHOICES,
+		choices: REACTION_TRIGGER_SETTINGS_CHOICES,
 	})
 	option: string;
 }
 
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
-@MusicCommandDecorator({
+@ReactionTriggerCommandDecorator({
 	name: 'settings',
-	description: 'Music settings commands',
+	description: 'Reaction trigger settings commands',
 })
-export class MusicSettingsCommands {
-	private readonly _logger = new Logger(MusicSettingsCommands.name);
+export class ReactionTriggerSettingsCommands {
+	private readonly _logger = new Logger(ReactionTriggerSettingsCommands.name);
 
-	constructor(private _settings: MusicSettingsService) {}
+	constructor(private _settings: ReactionTriggerSettingsService) {}
 
 	@Subcommand({
 		name: 'show',
-		description: 'Show music settings',
+		description: 'Show reaction trigger settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Loaded music settings for ${interaction.guildId}`,
+			`Loaded reaction trigger settings for ${interaction.guildId}`,
 		);
 
 		return this._settings.showSettings(interaction);
 	}
 
-	@Button('MUSIC_SETTINGS_SHOW')
+	@Button('REACTION_TRIGGER_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -84,9 +80,11 @@ export class MusicSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: MusicSettingsChangeOptions,
+		@Options() { option }: ReactionTriggerSettingsChangeOptions,
 	) {
-		this._logger.verbose(`Change music settings, option: ${option}`);
+		this._logger.verbose(
+			`Change reaction trigger settings, option: ${option}`,
+		);
 
 		if (!option) {
 			return this._settings.promptSettings(interaction);
@@ -95,7 +93,7 @@ export class MusicSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
-	@Button('MUSIC_SETTINGS_PROMPT')
+	@Button('REACTION_TRIGGER_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -103,7 +101,7 @@ export class MusicSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
-	@Button('MUSIC_SETTINGS_BACK')
+	@Button('REACTION_TRIGGER_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
 		[interaction]: ButtonContext,
@@ -111,7 +109,7 @@ export class MusicSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
-	@StringSelect('MUSIC_SETTINGS_CHANGE_SELECT')
+	@StringSelect('REACTION_TRIGGER_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
 		@SelectedStrings() selected: string[],
@@ -119,7 +117,7 @@ export class MusicSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
-	@Button('MUSIC_SETTINGS_CHANGE_ENABLED/:value')
+	@Button('REACTION_TRIGGER_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
 		@ComponentParam('value') value: string,
@@ -129,35 +127,27 @@ export class MusicSettingsCommands {
 		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Music has been ${
+			content: `${MESSAGE_PREFIX} Reaction trigger has been ${
 				parsedValue ? 'enabled' : 'disabled'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
 	}
 
-	@ChannelSelect('MUSIC_SETTINGS_CHANGE_CHANNEL_ID')
+	@ChannelSelect('REACTION_TRIGGER_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() [[id]]: ISelectedChannels,
+		@SelectedChannels() data: ISelectedChannels,
 	) {
-		await this._settings.set(interaction.guildId, 'channelId', id);
+		const ids = [...data.keys()];
+		await this._settings.set(interaction.guildId, 'ignoredChannelIds', ids);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Music channel has been changed to <#${id}>`,
-			components: [this._getBackButtonRow()],
-		});
-	}
-
-	@RoleSelect('MUSIC_SETTINGS_CHANGE_DJ_ROLE_ID')
-	public async onPingRoldChange(
-		@Context() [interaction]: ButtonContext,
-		@SelectedRoles() [[id]]: ISelectedRoles,
-	) {
-		await this._settings.set(interaction.guildId, 'djRoleId', id);
-
-		return interaction.update({
-			content: `${MESSAGE_PREFIX} Music DJ role has been changed to <@&${id}>`,
+			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
+				ids.length
+					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
+					: ' None'
+			}`,
 			components: [this._getBackButtonRow()],
 		});
 	}
@@ -180,7 +170,7 @@ export class MusicSettingsCommands {
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
 							.setCustomId(
-								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}/true`,
 							)
@@ -189,7 +179,7 @@ export class MusicSettingsCommands {
 							.setDisabled(settings[option] === true),
 						new ButtonBuilder()
 							.setCustomId(
-								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}/false`,
 							)
@@ -199,38 +189,25 @@ export class MusicSettingsCommands {
 					),
 				];
 				break;
-			case 'channelId':
-				readableOption = 'Channel';
-				currentValue = settings[option]
-					? `<#${settings[option]}>`
+			case 'ignoredChannelIds':
+				readableOption = 'Ignored channels';
+				currentValue = settings[option]?.length
+					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
 					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
+							.setMinValues(1)
+							.setMaxValues(25) // 25 is the max currently..
 							.setCustomId(
-								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
 									option,
 								).toUpperCase()}`,
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select a channel'),
-					),
-				];
-				break;
-			case 'djRoleId':
-				readableOption = 'DJ role';
-				currentValue = settings[option]
-					? `<@&${settings[option]}>`
-					: 'none';
-				components = [
-					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
-						new RoleSelectMenuBuilder()
-							.setCustomId(
-								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
-							)
-							.setPlaceholder('Select a role'),
+							.setPlaceholder(
+								'Select the channels to ignore (max 25)',
+							),
 					),
 				];
 				break;
@@ -259,8 +236,10 @@ Current value: ${currentValue}`,
 	private _getBackButtonRow(isCancel = false) {
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`MUSIC_SETTINGS_BACK`)
-				.setLabel(isCancel ? 'Cancel' : 'Back to music settings')
+				.setCustomId(`REACTION_TRIGGER_SETTINGS_BACK`)
+				.setLabel(
+					isCancel ? 'Cancel' : 'Back to reaction trigger settings',
+				)
 				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
 		);
 	}
