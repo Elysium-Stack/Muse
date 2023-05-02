@@ -1,4 +1,5 @@
 import { PrismaService } from '@muse/modules/prisma';
+import { escapeRegExp } from '@muse/util/regex';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client, Message } from 'discord.js';
 import { ReactionTriggerSettingsService } from './settings.service';
@@ -103,8 +104,8 @@ export class ReactionTriggerGeneralService {
 		});
 
 		for (const { id, phrase, emojiId } of triggers) {
-			const regexInstance = new RegExp(phrase, 'ig');
-			const test = regexInstance.test(message.cleanContent);
+			const regexInstance = new RegExp(escapeRegExp(phrase), 'ig');
+			const test = regexInstance.test(message.content);
 			if (!test) {
 				continue;
 			}
