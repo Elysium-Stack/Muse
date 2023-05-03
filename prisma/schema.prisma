@@ -70,4 +70,6 @@ model MessageReactionTriggers {
 
   phrase                                    String
   emojiId                                   String
+
+  exact                                     Boolean     @default(false)
 }

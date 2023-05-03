@@ -14,6 +14,7 @@ import {
 	EmbedBuilder,
 } from 'discord.js';
 import {
+	BooleanOption,
 	Button,
 	ButtonContext,
 	ComponentParam,
@@ -55,6 +56,13 @@ class ReactionTriggerAddOptions {
 		required: true,
 	})
 	emoji: string;
+
+	@BooleanOption({
+		name: 'exact',
+		description: 'Wether the message should be an exact match',
+		required: false,
+	})
+	exact: boolean;
 }
 
 class ReactionTriggerRemoveOptions {
@@ -105,7 +113,7 @@ export class ReactionTriggerGeneralCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { phrase, emoji }: ReactionTriggerAddOptions,
+		@Options() { phrase, emoji, exact }: ReactionTriggerAddOptions,
 	) {
 		const splittedEmoji = emoji.split(':');
 		const emojiId = splittedEmoji[splittedEmoji.length - 1].replace(
@@ -128,6 +136,7 @@ export class ReactionTriggerGeneralCommands {
 		await this._general.addReactionTriggerByWord(
 			interaction.guildId,
 			phrase,
+			exact ?? false,
 			resolvedEmoji.id,
 		);
 
@@ -225,7 +234,11 @@ export class ReactionTriggerGeneralCommands {
 				},
 				{
 					name: 'Phrase',
-					value: triggers.map((t) => t.phrase).join('\n'),
+					value: triggers
+						.map(
+							(t) => `${t.exact ? '**Exact:** ' : ''}${t.phrase}`,
+						)
+						.join('\n'),
 					inline: true,
 				},
 			]);

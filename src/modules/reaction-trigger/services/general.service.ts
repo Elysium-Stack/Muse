@@ -45,12 +45,14 @@ export class ReactionTriggerGeneralService {
 	public addReactionTriggerByWord(
 		guildId: string,
 		phrase: string,
+		exact: boolean,
 		emojiId: string,
 	) {
 		return this._prisma.messageReactionTriggers.create({
 			data: {
 				guildId,
 				phrase,
+				exact,
 				emojiId,
 			},
 		});
@@ -103,9 +105,12 @@ export class ReactionTriggerGeneralService {
 			where,
 		});
 
-		for (const { id, phrase, emojiId } of triggers) {
+		for (const { id, phrase, exact, emojiId } of triggers) {
 			const regexInstance = new RegExp(escapeRegExp(phrase), 'ig');
-			const test = regexInstance.test(message.content);
+			const test = exact
+				? phrase === message.content
+				: regexInstance.test(message.content);
+
 			if (!test) {
 				continue;
 			}
