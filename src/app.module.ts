@@ -16,10 +16,14 @@ import { guildMetrics } from './metrics/guild.metrics';
 import { interactionMetrics } from './metrics/interaction.metrics';
 import { userMetrics } from './metrics/user.metrics';
 import { LoggerMiddleware } from './middleware/log.middleware';
-import { AdminModule, BookwormModule } from './modules';
-import { MusicModule } from './modules/music';
-import { ReactionTriggerModule } from './modules/reaction-trigger/reaction-trigger.module';
-import { SettingsModule } from './modules/settings';
+import {
+	AdminModule,
+	BookwormModule,
+	FunModule,
+	MusicModule,
+	ReactionTriggerModule,
+	SettingsModule,
+} from './modules';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
 
@@ -64,6 +68,7 @@ import { SharedModule } from './shared.module';
 
 		// Custom modules
 		AdminModule,
+		FunModule,
 		SettingsModule,
 		BookwormModule,
 		MusicModule,
