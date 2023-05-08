@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FunDoggoCommands } from './commands/doggo.commands';
 import { FunKittyCommands } from './commands/kitty.commands';
+import { FunMessageEvents } from './events/message.events';
 import { FunDoggoService } from './services/doggo.service';
 import { FunKittyService } from './services/kitty.service';
 
@@ -8,6 +9,8 @@ import { FunKittyService } from './services/kitty.service';
 	imports: [],
 	controllers: [],
 	providers: [
+		FunMessageEvents,
+
 		FunKittyService,
 		FunKittyCommands,
 		FunDoggoService,

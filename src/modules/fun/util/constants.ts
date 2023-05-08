@@ -24,3 +24,13 @@ export const KITTY_TYPE_OPTIONS = [
 		value: 'cute',
 	},
 ];
+
+export const TABLE_FLIP_RESPONSES = [
+	`┬─┬ノ( ◕◡◕ ノ)`,
+	`┬─┬ノ(ಠ_ಠノ)`,
+	` ┬─┬ノ( º _ ºノ)`,
+	`┬─┬ノ( º _ ºノ) `,
+	`┳━┳ ヽ(ಠل͜ಠ)ﾉ`,
+];
+
+export const TABLE_FLIP_RECOGNIZERS = [`彡`, `┻━┻`, `╯`, `☞`, `┛`];
