@@ -3,7 +3,7 @@ import { ChannelType, Client, Events, VoiceState } from 'discord.js';
 import { Kazagumo, KazagumoPlayer, KazagumoTrack } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
 import { On } from 'necord';
-import { Connectors } from 'shoukaku';
+import { Connectors, TrackExceptionEvent, TrackStuckEvent } from 'shoukaku';
 import {
 	createPlayingComponents,
 	createPlayingEmbed,
@@ -57,7 +57,7 @@ export class LavalinkService extends Kazagumo {
 	}
 
 	private _initializeListeners() {
-		// shoukaku
+		// Shoukaku
 		this.shoukaku.on('close', (name, code, reason) =>
 			this._logger.warn(
 				`Lavalink ${name}: Closed, Code ${code}, Reason ${
@@ -83,6 +83,8 @@ export class LavalinkService extends Kazagumo {
 			this._logger.warn(`Lavalink ${name}: Disconnected`);
 		});
 
+		// basic errors
+
 		// Kazagumo
 		this.on('playerStart', (player, track) =>
 			this._onPlayerStart(player, track),
@@ -90,6 +92,26 @@ export class LavalinkService extends Kazagumo {
 		this.on('playerEnd', (player) => this._onPlayerEnd(player));
 		this.on('playerEmpty', (player) => this._onPlayerEmpty(player));
 		this.on('playerDestroy', (player) => this._onPlayerDestroy(player));
+
+		// basic errors
+		this.on('playerClosed', (player, data) =>
+			this._logger.warn(
+				`Player closed for ${player.guildId} ${
+					player.textId
+				} ${JSON.stringify(data)}`,
+			),
+		);
+		this.on('playerResolveError', (player, track, message) =>
+			this._logger.error(
+				`Player start\n ${JSON.stringify({ player, track, message })}`,
+			),
+		);
+		this.on('playerStuck', (player, data) =>
+			this._onPlayerStuck(player, data),
+		);
+		this.on('playerException', (player, data) =>
+			this._onPlayerException(player, data),
+		);
 	}
 
 	private async _onPlayerStart(player: KazagumoPlayer, track: KazagumoTrack) {
@@ -122,6 +144,42 @@ export class LavalinkService extends Kazagumo {
 		});
 
 		player.destroy();
+	}
+
+	private async _onPlayerStuck(
+		player: KazagumoPlayer,
+		data: TrackStuckEvent,
+	) {
+		this._logger.error(`Player stuck\n ${JSON.stringify({ data })}`);
+
+		const channel = await this._client.channels.fetch(player.textId);
+		player.destroy();
+
+		if (channel.type !== ChannelType.GuildText) {
+			return;
+		}
+
+		await channel.send({
+			content: `Player got stuck, please try again.`,
+		});
+	}
+
+	private async _onPlayerException(
+		player: KazagumoPlayer,
+		data: TrackExceptionEvent,
+	) {
+		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
+
+		const channel = await this._client.channels.fetch(player.textId);
+		player.destroy();
+
+		if (channel.type !== ChannelType.GuildText) {
+			return;
+		}
+
+		await channel.send({
+			content: `Something wen't wrong, please try again.`,
+		});
 	}
 
 	@On(Events.VoiceStateUpdate)
