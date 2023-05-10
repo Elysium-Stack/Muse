@@ -19,10 +19,10 @@ export class FunKittyService {
 			.then((d) => {
 				if (d.status !== 200) {
 					return new Promise((resolve) =>
-						setTimeout(
-							() => resolve(this.getRandomKitty(type)),
-							300,
-						),
+						setTimeout(async () => {
+							const { data } = await this.getRandomKitty(type);
+							resolve(data);
+						}, 300),
 					);
 				}
 
@@ -33,6 +33,9 @@ export class FunKittyService {
 				return null;
 			});
 
-		return data;
+		return {
+			data,
+			type: data.mimetype === 'image/gif' ? 'gif' : 'normal',
+		};
 	}
 }

@@ -26,17 +26,25 @@ export class FunKittyCommands {
 	})
 	public async kitty(@Context() [interaction]: SlashCommandContext) {
 		this._logger.debug('Sending a random kitty image');
-		const data = await this._kitty.getRandomKitty();
+
+		await interaction.deferReply();
+
+		const { data, type } = await this._kitty.getRandomKitty();
 
 		if (!data) {
-			return interaction.reply({
+			return interaction.editReply({
 				content: `${MESSAGE_PREFIX} Something went wrong while fetching the kitty image. Try again later.`,
-				ephemeral: true,
 			});
 		}
 
-		return interaction.reply({
-			content: `${KITTY_BASE_URL}${data.url}`,
+		return interaction.editReply({
+			content: '',
+			files: [
+				{
+					attachment: `${KITTY_BASE_URL}${data.url}`,
+					name: `kitty.${type === 'gif' ? 'gif' : 'png'}`,
+				},
+			],
 		});
 	}
 }
