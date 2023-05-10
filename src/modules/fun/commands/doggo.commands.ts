@@ -26,17 +26,28 @@ export class FunDoggoCommands {
 	})
 	public async kitty(@Context() [interaction]: SlashCommandContext) {
 		this._logger.debug('Sending a random doggo image');
+
+		await interaction.deferReply();
+
 		const data = await this._doggo.getRandomDoggo();
 
 		if (!data) {
-			return interaction.reply({
+			return interaction.editReply({
 				content: `${MESSAGE_PREFIX} Something went wrong while fetching the doggo image. Try again later.`,
-				ephemeral: true,
 			});
 		}
 
-		return interaction.reply({
-			content: `${DOGGO_BASE_URL}/${data.url}`,
+		const splittedUrl = data.url.split('.');
+		const fileType = splittedUrl[splittedUrl.length - 1];
+
+		return interaction.editReply({
+			content: '',
+			files: [
+				{
+					attachment: `${DOGGO_BASE_URL}/${data.url}`,
+					name: `doggo.${fileType}`,
+				},
+			],
 		});
 	}
 }
