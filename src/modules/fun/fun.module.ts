@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { FunDoggoCommands } from './commands/doggo.commands';
+import { FunFoxyCommands } from './commands/foxy.commands';
 import { FunKittyCommands } from './commands/kitty.commands';
 import { FunMessageEvents } from './events/message.events';
 import { FunDoggoService } from './services/doggo.service';
+import { FunFoxyService } from './services/foxy.service';
 import { FunKittyService } from './services/kitty.service';
 
 @Module({
@@ -15,6 +17,8 @@ import { FunKittyService } from './services/kitty.service';
 		FunKittyCommands,
 		FunDoggoService,
 		FunDoggoCommands,
+		FunFoxyService,
+		FunFoxyCommands,
 	],
 	exports: [],
 })

@@ -1,5 +1,6 @@
 export const KITTY_BASE_URL = `https://cataas.com`;
 export const DOGGO_BASE_URL = `https://random.dog`;
+export const FOXY_BASE_URL = `https://randomfox.ca`;
 
 export const KITTY_TYPE_OPTIONS = [
 	{
