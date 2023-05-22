@@ -1,7 +1,9 @@
 import { PrismaService } from '@muse/modules/prisma';
+import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Injectable, Logger } from '@nestjs/common';
 import { FeedbackTopics, FeedbackTopicsType } from '@prisma/client';
 import { Client, EmbedBuilder, User } from 'discord.js';
+import { FEEDBACK_EMBED_COLOR } from '../util/constants';
 
 @Injectable()
 export class FeedbackService {
@@ -106,7 +108,7 @@ export class FeedbackService {
 		content: string,
 	) {
 		const embed = new EmbedBuilder()
-			.setTitle('Feedback response')
+			.setTitle(`${MESSAGE_PREFIX} Feedback response`)
 			.addFields(
 				{
 					name: 'Topic',
@@ -122,7 +124,8 @@ export class FeedbackService {
 					name: 'Feedback',
 					value: content,
 				},
-			);
+			)
+			.setColor(FEEDBACK_EMBED_COLOR);
 
 		const guild = await this._client.guilds.fetch(guildId);
 		const channel = await guild.channels.fetch(topic.referenceId);
