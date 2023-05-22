@@ -19,6 +19,7 @@ import { LoggerMiddleware } from './middleware/log.middleware';
 import {
 	AdminModule,
 	BookwormModule,
+	FeedbackModule,
 	FunModule,
 	MusicModule,
 	ReactionTriggerModule,
@@ -73,6 +74,7 @@ import { SharedModule } from './shared.module';
 		BookwormModule,
 		MusicModule,
 		ReactionTriggerModule,
+		FeedbackModule,
 	],
 	controllers: [AppController],
 	providers: [

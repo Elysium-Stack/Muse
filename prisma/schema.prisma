@@ -73,3 +73,28 @@ model MessageReactionTriggers {
 
   exact                                     Boolean     @default(false)
 }
+
+enum FeedbackTopicsType {
+  CHANNEL
+  GOOGLE_SHEET
+}
+
+model FeedbackTopics {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+
+  type                                      FeedbackTopicsType
+  referenceId                               String
+
+  name                                      String
+}
+
+// model GoogleAuthTokens {
+//   id                                        Int         @id @default(autoincrement())
+//   guildId                                   String
+//   userId                                    String
+
+//   client_id                                 String
+//   client_secret                             String
+//   refresh_token                             String
+// }
