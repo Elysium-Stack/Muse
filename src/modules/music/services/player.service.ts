@@ -27,19 +27,12 @@ export class MusicPlayerService {
 			`Playing song for ${interaction.user.tag}: ${song}`,
 		);
 
+		await interaction.deferReply();
+
 		const member = await interaction.guild.members.fetch(
 			interaction.user.id,
 		);
 		const { channel } = member.voice;
-
-		const player = await this._lavalink.createPlayer({
-			guildId: interaction.guild.id,
-			textId: interaction.channel.id,
-			voiceId: channel.id,
-			volume: 50,
-			deaf: true,
-		});
-		player.data.set('previousVolume', 50);
 
 		const result = await this._lavalink.search(song, {
 			requester: interaction.user,
@@ -67,6 +60,15 @@ export class MusicPlayerService {
 				content: `No results found for query \`${song}\`!`,
 			});
 		}
+
+		const player = await this._lavalink.createPlayer({
+			guildId: interaction.guild.id,
+			textId: interaction.channel.id,
+			voiceId: channel.id,
+			volume: 50,
+			deaf: true,
+		});
+		player.data.set('previousVolume', 50);
 
 		if (result.type === 'PLAYLIST') {
 			for (const track of result.tracks) {

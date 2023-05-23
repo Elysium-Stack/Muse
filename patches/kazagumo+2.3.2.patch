@@ -1,0 +1,70 @@
+diff --git a/node_modules/kazagumo/dist/Kazagumo.js b/node_modules/kazagumo/dist/Kazagumo.js
+index 0adfc20..d5bd616 100644
+--- a/node_modules/kazagumo/dist/Kazagumo.js
++++ b/node_modules/kazagumo/dist/Kazagumo.js
+@@ -124,16 +124,21 @@ class Kazagumo extends events_1.EventEmitter {
+             const node = (options === null || options === void 0 ? void 0 : options.nodeName) ? this.shoukaku.getNode(options.nodeName) : this.getLeastUsedNode();
+             if (!node)
+                 throw new Interfaces_1.KazagumoError(3, 'No node is available');
+-            const source = Interfaces_1.SourceIDs[((options === null || options === void 0 ? void 0 : options.engine) && ['youtube', 'youtube_music', 'soundcloud'].includes(options.engine)
++            const source = Interfaces_1.SourceIDs[((options === null || options === void 0 ? void 0 : options.engine) && Object.keys(Interfaces_1.SourceIDs).includes(options.engine)
+                 ? options.engine
+                 : null) ||
+                 (!!this.KazagumoOptions.defaultSearchEngine &&
+-                    ['youtube', 'youtube_music', 'soundcloud'].includes(this.KazagumoOptions.defaultSearchEngine)
++                    Object.keys(Interfaces_1.SourceIDs).includes(this.KazagumoOptions.defaultSearchEngine)
+                     ? this.KazagumoOptions.defaultSearchEngine
+                     : null) ||
+                 'youtube'];
+             const isUrl = /^https?:\/\/.*/.test(query);
+-            const result = yield node.rest.resolve(!isUrl ? `${source}search:${query}` : query).catch((_) => null);
++            let result = yield node.rest.resolve(!isUrl ? `${source}search:${query}` : query).catch((_) => null);
++
++            if(!result?.tracks?.length && source === 'sp') {
++                result = yield node.rest.resolve(!isUrl ? `ytsearch:${query}` : query).catch((_) => null);
++            }
++
+             if (!result)
+                 return this.buildSearch(undefined, [], 'SEARCH');
+             this.emit(Interfaces_1.Events.Debug, `Searched ${query}; Track results: ${result.tracks.length}`);
+diff --git a/node_modules/kazagumo/dist/Managers/Supports/KazagumoTrack.js b/node_modules/kazagumo/dist/Managers/Supports/KazagumoTrack.js
+index f8e2c6d..3e78129 100644
+--- a/node_modules/kazagumo/dist/Managers/Supports/KazagumoTrack.js
++++ b/node_modules/kazagumo/dist/Managers/Supports/KazagumoTrack.js
+@@ -121,11 +121,10 @@ class KazagumoTrack {
+             return this;
+         });
+     }
+-    getTrack(player) {
++    getTrack(player, defaultSearchEngine = this.kazagumo.KazagumoOptions.defaultSearchEngine) {
+         return __awaiter(this, void 0, void 0, function* () {
+             if (!this.kazagumo)
+                 throw new Error('Kazagumo is not set');
+-            const defaultSearchEngine = this.kazagumo.KazagumoOptions.defaultSearchEngine;
+             const source = Interfaces_1.SourceIDs[defaultSearchEngine || 'youtube'] || 'yt';
+             const query = [this.author, this.title].filter((x) => !!x).join(' - ');
+             const node = this.kazagumo.getLeastUsedNode();
+@@ -134,6 +133,11 @@ class KazagumoTrack {
+             const result = player
+                 ? yield (player === null || player === void 0 ? void 0 : player.search(`${source}:${query}`))
+                 : yield node.rest.resolve(`${source}search:${query}`);
++            
++            if((!result || !result.tracks.length) && source !== 'yt') {
++                return yield this.getTrack(player, 'youtube');
++            } 
++
+             if (!result || !result.tracks.length)
+                 throw new Interfaces_1.KazagumoError(2, 'No results found');
+             result.tracks = result.tracks.map((x) => Utils_1.KazagumoUtils.convertKazagumoTrackToTrack(x));
+diff --git a/node_modules/kazagumo/dist/Modules/Interfaces.js b/node_modules/kazagumo/dist/Modules/Interfaces.js
+index d22a933..4b430ca 100644
+--- a/node_modules/kazagumo/dist/Modules/Interfaces.js
++++ b/node_modules/kazagumo/dist/Modules/Interfaces.js
+@@ -7,6 +7,7 @@ exports.SourceIDs = {
+     youtube: 'yt',
+     youtube_music: 'ytm',
+     soundcloud: 'sc',
++    spotify: 'sp'
+ };
+ exports.Events = {
+     // Player events
