@@ -30,9 +30,9 @@ export class LavalinkService extends Kazagumo {
 									clientId: process.env.SPOTIFY_CLIENT_ID,
 									clientSecret:
 										process.env.SPOTIFY_CLIENT_SECRET,
-									playlistPageLimit: 1,
-									albumPageLimit: 1,
-									searchLimit: 10,
+									playlistPageLimit: 10,
+									albumPageLimit: 5,
+									searchLimit: 20,
 									searchMarket: 'US',
 								}),
 						  ]
