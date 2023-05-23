@@ -37,3 +37,4 @@ lerna-debug.log*
 .env
 
 .docker/prometheus.*.yml
+.docker/lavalink.yml
