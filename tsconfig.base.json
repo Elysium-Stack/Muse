@@ -1,0 +1,26 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "es2015",
+		"module": "esnext",
+		"lib": ["es2020", "dom"],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@muse": ["apps/muse/src"],
+			"@muse/*": ["apps/muse/src/*"],
+			"@muse/constants": ["apps/muse/src/util/constants"],
+			"@muse/prisma": ["apps/muse/src/modules/prisma"],
+			"@muse/settings": ["apps/muse/src/modules/settings"]
+		}
+	},
+	"exclude": ["node_modules", "tmp"]
+}

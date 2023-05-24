@@ -14,16 +14,16 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 RUN yarn prisma generate
-RUN yarn build
+RUN yarn muse:build
 
 
 FROM base as production
 
 ENV NODE_ENV=production
 
-COPY --from=BUILD /opt/app/dist /opt/app/dist
+COPY --from=BUILD /opt/app/dist/apps/muse /opt/app/dist/apps/muse
 COPY --from=BUILD /opt/app/prisma /opt/app/prisma
 COPY --from=BUILD /opt/app/node_modules /opt/app/node_modules
 COPY --from=BUILD /opt/app/package.json /opt/app/package.json
 
-CMD ["yarn", "start:prod"]
+CMD ["yarn", "muse:start:prod"]

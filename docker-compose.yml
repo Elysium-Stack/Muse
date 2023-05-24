@@ -1,12 +1,13 @@
 version: '3'
 
 services:
-    bot:
+    muse:
         build:
             context: .
+            dockerfile: Dockerfile.muse
             target: base
         tty: true
-        command: yarn docker:start
+        command: yarn muse:docker:start
         env_file: ./.env
         ports:
             - '$EXPOSED_API_PORT:3000'

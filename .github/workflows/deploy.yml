@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Create and publish a Docker image
+name: Deploy docker images
 
 on:
     push:
@@ -18,7 +18,7 @@ env:
     IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-    build-and-push-image:
+    muse:
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -45,6 +45,7 @@ jobs:
               uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
               with:
                   context: .
+                  file: {context}/Dockerfile.muse
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
