@@ -15,10 +15,11 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
 
 jobs:
     muse:
+        env:
+            IMAGE_NAME: muse
         runs-on: ubuntu-latest
         permissions:
             contents: read
