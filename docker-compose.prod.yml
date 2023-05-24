@@ -6,6 +6,8 @@ services:
         restart: unless-stopped
         tty: true
         env_file: ./.env
+        ports:
+            - '$EXPOSED_API_PORT:3000'
         depends_on:
             - db
             - lavalink
@@ -25,5 +27,6 @@ services:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
     prometheus:
         image: prom/prometheus
+        restart: unless-stopped
         volumes:
             - ./.docker/prometheus.prod.yml:/etc/prometheus/prometheus.yml
