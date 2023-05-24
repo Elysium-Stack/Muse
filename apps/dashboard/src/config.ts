@@ -1,1 +1,1 @@
-export const INVITE_LINK = import.meta.env.INVITE_LINK;
+export const INVITE_LINK = import.meta.env.PUBLIC_INVITE_LINK;
