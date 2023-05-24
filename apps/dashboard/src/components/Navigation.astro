@@ -1,6 +1,7 @@
 ---
 import { Image } from '@astrojs/image/components';
 import logoImage from '../assets/images/logo.png';
+import { INVITE_LINK } from '../config';
 ---
 
 <div class="navbar sticky top-0">
@@ -8,11 +9,7 @@ import logoImage from '../assets/images/logo.png';
 		<a href="/" class="mr-6">
 			<Image src={logoImage} width={64} height={64} alt="Muse logo" />
 		</a>
-		<a
-			href="https://discord.com/oauth2/authorize?client_id=1096889146775195780&scope=bot&permissions=527710547199"
-			class="link text-white"
-			target="_INVITE"
-		>
+		<a href={INVITE_LINK} class="link text-white" target="_INVITE">
 			Add to server
 		</a>
 	</div>
