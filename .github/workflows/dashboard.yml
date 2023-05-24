@@ -40,20 +40,7 @@ jobs:
             - name: create env file
               run: |
                   touch .env
-                  echo "Putting it in:"
                   echo PUBLIC_INVITE_LINK="${{ vars.INVITE_LINK }}" >> .env
-                  echo " "
-                  echo "Vars way"
-                  echo ${{ vars.INVITE_LINK }}
-                  echo " "
-                  echo "Environment variable way"
-                  echo $PUBLIC_INVITE_LINK
-                  echo " "
-                  echo "Cat .env"
-                  cat .env
-                  echo " "
-                  echo "LS -la"
-                  ls -la
             - run: yarn
             - run: yarn dashboard:build
 
