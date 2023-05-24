@@ -24,6 +24,9 @@ concurrency:
 jobs:
     build:
         runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - uses: actions/checkout@v3
 
@@ -36,28 +39,8 @@ jobs:
                   cache: 'yarn'
 
             - run: yarn
-            - run: yarn build
+            - run: yarn dashboard:build
 
-            - name: Upload artifact
-              uses: actions/upload-artifact@v3
-              with:
-                  name: dist
-                  path: dist
-    deploy:
-        # Add a dependency to the build job
-        needs: build
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-            - name: Download build artifact
-              uses: actions/download-artifact@v3
-              with:
-                  name: dist
-                  path: dist
             - name: Setup Pages
               uses: actions/configure-pages@v3
             - name: Upload artifact

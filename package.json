@@ -18,7 +18,6 @@
 		"muse:build": "yarn build muse",
 		"dashboard:docker:start": "yarn docker:start dashboard",
 		"dashboard:start": "yarn serve dashboard",
-		"dashboard:start:prod": "yarn start:prod ./dist/apps/muse/main",
 		"dashboard:build": "yarn build dashboard",
 		"test": "yarn nx test",
 		"prisma:pull": "yarn prisma db pull",
