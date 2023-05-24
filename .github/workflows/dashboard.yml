@@ -38,6 +38,7 @@ jobs:
                   node-version: 18
                   cache: 'yarn'
 
+            - run: export INVITE_LINK=${{ vars.INVITE_LINK }}
             - run: yarn
             - run: yarn dashboard:build
 
