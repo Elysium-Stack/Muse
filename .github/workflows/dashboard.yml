@@ -40,7 +40,9 @@ jobs:
             - name: create env file
               run: |
                   touch .env
-                  echo PUBLIC_INVITE_LINK=${{ vars.INVITE_LINK }} >> .env
+                  echo PUBLIC_INVITE_LINK="${{ vars.INVITE_LINK }}" >> .env
+                  echo ${{ vars.INVITE_LINK }}
+                  echo $PUBLIC_INVITE_LINK
                   cat .env
                   ls -la
             - run: yarn
