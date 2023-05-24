@@ -4,9 +4,16 @@ import logoImage from '../assets/images/logo.png';
 ---
 
 <div class="navbar sticky top-0">
-	<div class="flex-1 px-2 lg:flex-none">
-		<a href="/">
+	<div class="flex-1 px-2 lg:flex-none gap-4">
+		<a href="/" class="mr-6">
 			<Image src={logoImage} width={64} height={64} alt="Muse logo" />
+		</a>
+		<a
+			href="https://discord.com/oauth2/authorize?client_id=1096889146775195780&scope=bot&permissions=527710547199"
+			class="link text-white"
+			target="_INVITE"
+		>
+			Add to server
 		</a>
 	</div>
 	<div class="flex justify-end items-center flex-1 px-2">

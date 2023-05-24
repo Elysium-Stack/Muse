@@ -9,3 +9,7 @@ body {
 	@apply w-full h-full;
 	font-family: 'Inter', serif;
 }
+
+.link {
+	@apply opacity-75 hover:opacity-100 transition-opacity no-underline hover:underline;
+}
