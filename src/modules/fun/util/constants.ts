@@ -34,4 +34,11 @@ export const TABLE_FLIP_RESPONSES = [
 	`┳━┳ ヽ(ಠل͜ಠ)ﾉ`,
 ];
 
-export const TABLE_FLIP_RECOGNIZERS = [`彡`, `┻━┻`, `╯`, `☞`, `┛`];
+export const TABLE_FLIP_RECOGNIZERS = [
+	`彡`,
+	`┻━┻`,
+	`╯`,
+	`☞`,
+	`┛`,
+	`( \\o°o)\\`,
+];
