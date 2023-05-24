@@ -8,6 +8,7 @@ FROM base as build
 
 COPY package.json yarn.lock ./
 COPY patches ./patches
+COPY tools ./tools
 
 RUN yarn install --frozen-lockfile
 

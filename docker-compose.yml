@@ -4,7 +4,6 @@ services:
     muse:
         build:
             context: .
-            dockerfile: Dockerfile.muse
             target: base
         tty: true
         command: yarn muse:docker:start
@@ -16,6 +15,17 @@ services:
         depends_on:
             - db
             - lavalink
+    dashboard:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn dashboard:docker:start
+        env_file: ./.env
+        ports:
+            - '$EXPOSED_DASHBOARD_PORT:3000'
+        volumes:
+            - ./:/opt/app
     db:
         image: postgres:12.2
         environment:

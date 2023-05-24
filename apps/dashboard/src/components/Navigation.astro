@@ -1,0 +1,36 @@
+---
+import { Image } from '@astrojs/image/components';
+import logoImage from '../assets/images/logo.png';
+---
+
+<div class="navbar sticky top-0">
+	<div class="flex-1 px-2 lg:flex-none">
+		<a href="/">
+			<Image src={logoImage} width={64} height={64} alt="Muse logo" />
+		</a>
+	</div>
+	<div class="flex justify-end items-center flex-1 px-2">
+		<div class="flex gap-4 items-center">
+			<a class="btn btn-primary rounded-full">Sign in</a>
+			<!-- <div class="dropdown dropdown-end">
+				<label tabindex="0" class="btn p-0 mask mask-squircle">
+					<Image
+						src="https://placehold.co/48x48"
+						class="mask mask-squircle"
+						width={48}
+						height={48}
+						format="svg"
+						alt="You!"
+					/>
+				</label>
+				<ul
+					tabindex="0"
+					class="menu dropdown-content p-2 shadow bg-neutral rounded-box w-52 mt-4"
+				>
+					<li><a>Item 1</a></li>
+					<li><a>Item 2</a></li>
+				</ul>
+			</div> -->
+		</div>
+	</div>
+</div>

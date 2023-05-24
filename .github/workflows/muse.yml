@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Deploy docker images
+name: Build & Deploy Muse docker image
 
 on:
     push:
@@ -17,7 +17,7 @@ env:
     REGISTRY: ghcr.io
 
 jobs:
-    muse:
+    build:
         env:
             IMAGE_NAME: muse
         runs-on: ubuntu-latest
@@ -46,7 +46,6 @@ jobs:
               uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
               with:
                   context: .
-                  file: Dockerfile.muse
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
