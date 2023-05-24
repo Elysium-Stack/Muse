@@ -25,6 +25,7 @@ import {
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
+import { HealthModule } from './modules/health/health.module';
 import { AppService } from './services';
 import { SharedModule } from './shared.module';
 
@@ -66,6 +67,9 @@ import { SharedModule } from './shared.module';
 
 		// shared
 		SharedModule,
+
+		// System
+		HealthModule,
 
 		// Custom modules
 		AdminModule,

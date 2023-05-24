@@ -28,10 +28,12 @@
 	"private": true,
 	"dependencies": {
 		"@astrojs/image": "^0.16.9",
+		"@nestjs/axios": "^2.0.0",
 		"@nestjs/common": "^9.1.1",
 		"@nestjs/core": "^9.1.1",
 		"@nestjs/platform-express": "^9.1.1",
 		"@nestjs/schedule": "^2.2.1",
+		"@nestjs/terminus": "^9.1.1",
 		"@ntegral/nestjs-sentry": "^4.0.0",
 		"@prisma/client": "^4.12.0",
 		"@sentry/node": "^7.49.0",

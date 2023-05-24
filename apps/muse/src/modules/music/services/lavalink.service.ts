@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChannelType, Client, Events, VoiceState } from 'discord.js';
-import { Kazagumo, KazagumoPlayer, KazagumoTrack } from 'kazagumo';
+import { Kazagumo, KazagumoPlayer, KazagumoTrack, State } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
 import { On } from 'necord';
 import { Connectors, TrackExceptionEvent, TrackStuckEvent } from 'shoukaku';
@@ -54,6 +54,11 @@ export class LavalinkService extends Kazagumo {
 			this._logger.log(`Lavalink ${name} is ready!`);
 			this._initializeListeners();
 		});
+	}
+
+	async getStatus() {
+		const node = this.shoukaku.getNode();
+		return node?.state === State.CONNECTED;
 	}
 
 	private _initializeListeners() {

@@ -10,15 +10,14 @@ import { MusicSettingsCommands } from './commands/settings.commands';
 import { MusicShuffleCommands } from './commands/shuffle.command';
 import { MusicStopCommands } from './commands/stop.command';
 import { MusicVolumeCommands } from './commands/volume.command';
-import { LavalinkService } from './services/lavalink.service';
+import { MusicSharedModule } from './music.shared.module';
 import { MusicPlayerService } from './services/player.service';
 import { MusicSettingsService } from './services/settings.service';
 
 @Module({
-	imports: [SharedModule],
+	imports: [SharedModule, MusicSharedModule],
 	controllers: [],
 	providers: [
-		LavalinkService,
 		MusicSettingsService,
 		MusicSettingsCommands,
 		MusicPlayerService,
