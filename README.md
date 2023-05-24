@@ -33,13 +33,13 @@ $ git clone git@github.com:Elysium-Stack/Muse.git
 
 ```bash
 $ docker-compose up -d db lavalink
-$ docker-compose up bot
+$ docker-compose up muse
 ```
 
 ### Running migrations
 
 ```bash
-$ docker-compose exec -it bot yarn prisma migrate dev
+$ docker-compose exec -it muse yarn prisma migrate dev
 ```
 
 ---
@@ -60,17 +60,14 @@ $ yarn prisma generate
 $ yarn prisma migrate dev
 ```
 
-### Running the app
+### Running the bot/api
 
 ```bash
 # watch mode (recommended)
-$ yarn start:dev
-
-# debug & watch mode
-$ yarn start:debug
+$ yarn muse:start
 
 # production mode
-$ yarn start:prod
+$ yarn muse:start:prod
 ```
 
 ---
