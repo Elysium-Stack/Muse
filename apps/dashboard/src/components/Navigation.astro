@@ -1,7 +1,8 @@
 ---
 import { Image } from '@astrojs/image/components';
 import logoImage from '../assets/images/logo.png';
-import { INVITE_LINK } from '../config';
+
+const INVITE_LINK = import.meta.env.PUBLIC_INVITE_LINK;
 ---
 
 <div class="navbar sticky top-0">

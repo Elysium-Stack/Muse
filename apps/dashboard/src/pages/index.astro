@@ -3,8 +3,9 @@ import { Image } from '@astrojs/image/components';
 import logoImage from '../assets/images/logo.png';
 import Navigation from '../components/Navigation.astro';
 import Particles from '../components/Particles.astro';
-import { INVITE_LINK } from '../config';
 import Layout from '../layouts/Layout.astro';
+
+const INVITE_LINK = import.meta.env.PUBLIC_INVITE_LINK;
 ---
 
 <Layout title="Welcome to Muse.">

@@ -41,6 +41,8 @@ jobs:
               run: |
                   touch .env
                   echo PUBLIC_INVITE_LINK=${{ vars.INVITE_LINK }} >> .env
+                  cat .env
+                  ls -la
             - run: yarn
             - run: yarn dashboard:build
 
