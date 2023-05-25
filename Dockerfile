@@ -28,6 +28,6 @@ COPY --from=BUILD /opt/app/package.json /opt/app/package.json
 
 COPY .docker/healthcheck.sh /healthcheck.sh
 RUN chmod +x /healthcheck.sh
-HEALTHCHECK --interval=30s --timeout=3s --start-period=1s CMD /healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=3s --start-period=30s CMD /healthcheck.sh
 
 CMD ["yarn", "muse:start:prod"]
