@@ -26,15 +26,25 @@ export class HealthController {
 		private memory: MemoryHealthIndicator,
 	) {}
 
+	@Get('ping')
+	@ApiExcludeEndpoint(true)
+	ping() {
+		return 'pong!';
+	}
+
 	@Get()
 	@ApiExcludeEndpoint(true)
 	@HealthCheck()
 	check() {
 		return this.health.check([
 			() =>
-				this.http.pingCheck('basic check', 'http://localhost:3000', {
-					timeout: 100,
-				}),
+				this.http.pingCheck(
+					'basic check',
+					'http://localhost:3000/api/health/ping',
+					{
+						timeout: 100,
+					},
+				),
 			() =>
 				this.disk.checkStorage('diskStorage', {
 					thresholdPercent: 0.5,
