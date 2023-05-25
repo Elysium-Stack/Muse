@@ -5,7 +5,6 @@ import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
-import { AppController } from './app.controller';
 import { AppEvents } from './events/app.events';
 import { GuildEvents } from './events/guild.events';
 import { InteractionEvents } from './events/interaction.events';
@@ -18,15 +17,16 @@ import { userMetrics } from './metrics/user.metrics';
 import { LoggerMiddleware } from './middleware/log.middleware';
 import {
 	AdminModule,
+	AuthModule,
 	BookwormModule,
+	DiscordModule,
 	FeedbackModule,
 	FunModule,
+	HealthModule,
 	MusicModule,
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
-import { HealthModule } from './modules/health/health.module';
-import { AppService } from './services';
 import { SharedModule } from './shared.module';
 
 @Module({
@@ -68,10 +68,12 @@ import { SharedModule } from './shared.module';
 		// shared
 		SharedModule,
 
-		// System
+		// Api
 		HealthModule,
+		AuthModule,
+		DiscordModule,
 
-		// Custom modules
+		// Discord modules
 		AdminModule,
 		FunModule,
 		SettingsModule,
@@ -80,10 +82,7 @@ import { SharedModule } from './shared.module';
 		ReactionTriggerModule,
 		FeedbackModule,
 	],
-	controllers: [AppController],
 	providers: [
-		AppService,
-
 		{
 			provide: APP_INTERCEPTOR,
 			useFactory: () => new SentryInterceptor(),

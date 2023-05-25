@@ -1,4 +1,4 @@
-import { LavalinkService } from '@muse/modules/music/services/lavalink.service';
+import { LavalinkService } from '@muse/modules/discord/music/services/lavalink.service';
 import { Injectable } from '@nestjs/common';
 import {
 	HealthCheckError,

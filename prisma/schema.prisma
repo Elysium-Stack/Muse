@@ -10,6 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Users {
+  id                                        Int         @id @default(autoincrement())
+
+  discordId                                 String      @unique
+  username                                  String
+  discriminator                             String
+
+  discordToken                              String
+  discordRefreshToken                       String
+
+  refreshToken                              String?
+}
+
 model Settings {
   id                                        Int         @id @default(autoincrement())
   guildId                                   String      @unique
