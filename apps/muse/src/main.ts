@@ -5,6 +5,7 @@ import { createLogger } from './util/create-logger';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
+		cors: true,
 		logger: createLogger(),
 	});
 	app.setGlobalPrefix('api');
