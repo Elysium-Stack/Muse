@@ -43,4 +43,7 @@ Thumbs.db
 .docker/prometheus.*.yml
 .docker/lavalink.yml
 
-.astro
+# Next.js
+.next
+
+.angular

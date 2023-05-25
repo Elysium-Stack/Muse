@@ -16,7 +16,16 @@
 				"tsConfig": "apps/muse/tsconfig.app.json",
 				"assets": [],
 				"isolatedConfig": true,
-				"webpackConfig": "apps/muse/webpack.config.js"
+				"webpackConfig": "apps/muse/webpack.config.js",
+				"transformers": [
+					{
+						"name": "@nestjs/swagger",
+						"options": {
+							"classValidatorShim": true,
+							"introspectComments": true
+						}
+					}
+				]
 			},
 			"configurations": {
 				"development": {},

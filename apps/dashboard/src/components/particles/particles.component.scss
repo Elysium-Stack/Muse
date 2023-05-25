@@ -1,0 +1,95 @@
+$color-particle-1: #a5f3fc;
+$color-particle-2: #c084fc;
+$color-particle-3: #fef08a;
+$color-particle-4: #fef08a;
+$spacing: 2560px;
+$time-1: 60s;
+$time-2: 120s;
+$time-3: 180s;
+$time-4: 200s;
+
+/* mixins */
+@function particles($max, $color-particle) {
+	$val: 0px 0px $color-particle;
+	@for $i from 1 through $max {
+		$val: #{$val},
+			random($spacing) + px random($spacing) + px $color-particle;
+	}
+	@return $val;
+}
+
+@mixin particles($max, $color-particle) {
+	box-shadow: particles($max, $color-particle);
+	border-radius: 50%;
+	opacity: 0.7;
+}
+
+.animation-wrapper {
+	@apply absolute top-0 left-0 w-full h-full overflow-hidden -z-10;
+}
+
+.particle,
+.particle:after {
+	@apply bg-transparent;
+}
+
+.particle:after {
+	@apply absolute;
+	content: '';
+	top: $spacing;
+}
+
+.particle-1 {
+	animation: animParticle $time-1 linear infinite;
+	@include particles(1000, $color-particle-1);
+	height: 2px;
+	width: 2px;
+}
+
+.particle-1:after {
+	@include particles(900, $color-particle-1);
+	height: 2px;
+	width: 2px;
+}
+
+.particle-2 {
+	animation: animParticle $time-2 linear infinite;
+	@include particles(800, $color-particle-2);
+	height: 2px;
+	width: 2px;
+}
+
+.particle-2:after {
+	@include particles(500, $color-particle-2);
+	height: 3px;
+	width: 3px;
+}
+
+.particle-3:after {
+	@include particles(1100, $color-particle-3);
+	height: 3px;
+	width: 3px;
+	border-radius: 50%;
+}
+
+.particle-4 {
+	animation: animParticle $time-4 linear infinite;
+	@include particles(1200, $color-particle-4);
+	height: 1px;
+	width: 1px;
+}
+
+.particle-4:after {
+	@include particles(700, $color-particle-4);
+	height: 1px;
+	width: 1px;
+}
+
+@keyframes animParticle {
+	from {
+		transform: translateY(0px);
+	}
+	to {
+		transform: translateY($spacing * -1);
+	}
+}

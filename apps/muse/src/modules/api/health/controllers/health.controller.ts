@@ -1,4 +1,5 @@
 import { Controller, Get, Inject } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import {
 	DiskHealthIndicator,
 	HealthCheck,
@@ -26,6 +27,7 @@ export class HealthController {
 	) {}
 
 	@Get()
+	@ApiExcludeEndpoint(true)
 	@HealthCheck()
 	check() {
 		return this.health.check([

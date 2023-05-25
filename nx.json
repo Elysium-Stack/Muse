@@ -1,5 +1,4 @@
 {
-	"plugins": ["@nxtensions/astro"],
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
 		"production": [
@@ -45,5 +44,30 @@
 			}
 		}
 	},
-	"defaultProject": "dashboard"
+	"generators": {
+		"@nx/react": {
+			"application": {
+				"babel": true
+			}
+		},
+		"@nx/next": {
+			"application": {
+				"style": "scss",
+				"linter": "eslint"
+			}
+		},
+		"@nx/angular:application": {
+			"style": "scss",
+			"linter": "eslint",
+			"unitTestRunner": "jest",
+			"e2eTestRunner": "cypress"
+		},
+		"@nx/angular:library": {
+			"linter": "eslint",
+			"unitTestRunner": "jest"
+		},
+		"@nx/angular:component": {
+			"style": "scss"
+		}
+	}
 }

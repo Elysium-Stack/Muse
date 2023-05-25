@@ -1,0 +1,122 @@
+<div class="navbar sticky top-0 px-0">
+	<div class="flex-1 lg:flex-none gap-4">
+		<a href="/" class="mr-6">
+			<img
+				src="/assets/images/logo.png"
+				width="64"
+				height="64"
+				alt="Muse logo"
+			/>
+		</a>
+		<a
+			[href]="inviteUrl"
+			class="hidden md:block link text-white"
+			target="_INVITE"
+		>
+			Add to server
+		</a>
+	</div>
+	<div class="flex flex-1 justify-end items-center">
+		<div class="flex md:hidden gap-4 items-center">
+			<div class="dropdown dropdown-end">
+				<label
+					tabindex="0"
+					class="btn btn-ghost p-1 text-2xl aspect-square"
+				>
+					<span class="gg-menu-right"></span>
+				</label>
+				<ul
+					tabindex="0"
+					class="menu dropdown-content p-2 shadow bg-neutral rounded-box w-64 mt-2"
+				>
+					<li class="rounded-none" *ngIf="user$() as user">
+						<div
+							class="flex gap-4 px-0 mx-4 hover:bg-transparent border-b border-gray-700 !rounded-none mb-2"
+						>
+							<img
+								[src]="user.avatar"
+								class="mask mask-squircle"
+								width="32"
+								height="32"
+								[alt]="user.username + '#' + user.discriminator"
+							/>
+							<p
+								class="flex-1 text-white whitespace-nowrap overflow-hidden text-ellipsis"
+							>
+								{{ user.username }}#{{ user.discriminator }}
+								{{ user.username }}#{{ user.discriminator }}
+							</p>
+						</div>
+					</li>
+					<li>
+						<a [href]="inviteUrl" target="_INVITE">
+							Add to server
+						</a>
+					</li>
+					<li *ngIf="user$(); else signinMobileButtonTemplate">
+						<a class="text-error" (click)="signout()"> Sign out </a>
+					</li>
+					<ng-template #signinMobileButtonTemplate>
+						<li>
+							<a class="text-primary" [href]="signinUrl">
+								Sign in
+							</a>
+						</li>
+					</ng-template>
+				</ul>
+			</div>
+		</div>
+		<div class="hidden md:flex gap-4 items-center">
+			<ng-container *ngIf="loadingUser$(); else userTemplate">
+				<div
+					class="w-10 h-10 bg-info flex items-center justify-center rounded-full"
+				>
+					<ng-icon
+						class="text-2xl animate-spin text-info-content"
+						name="cssRedo"
+					></ng-icon>
+				</div>
+			</ng-container>
+
+			<ng-template #userTemplate>
+				<ng-container
+					*ngIf="user$() as user; else signinButtonTemplate"
+				>
+					<div class="dropdown dropdown-end">
+						<label tabindex="0" class="btn btn-ghost flex gap-4">
+							<img
+								[src]="user.avatar"
+								class="mask mask-squircle"
+								width="32"
+								height="32"
+								[alt]="user.username + '#' + user.discriminator"
+							/>
+							<span class="text-white">
+								{{ user.username }}#{{ user.discriminator }}
+							</span>
+							<ng-icon name="cssChevronDown"></ng-icon>
+						</label>
+						<ul
+							tabindex="0"
+							class="menu dropdown-content p-2 shadow bg-neutral rounded-box w-52 mt-2"
+						>
+							<!-- <li><a>Item 1</a></li>
+							<li><a>Item 2</a></li> -->
+							<li>
+								<a class="text-error" (click)="signout()">
+									Sign out
+								</a>
+							</li>
+						</ul>
+					</div>
+				</ng-container>
+			</ng-template>
+
+			<ng-template #signinButtonTemplate>
+				<a class="btn btn-primary rounded-full" [href]="signinUrl">
+					Sign in
+				</a>
+			</ng-template>
+		</div>
+	</div>
+</div>
