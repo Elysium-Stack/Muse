@@ -1,4 +1,4 @@
-import { Injectable, effect, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { AuthService } from '@muse/sdk';
 import { take } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
@@ -25,15 +25,9 @@ export class UserService {
 			this.refreshToken$.set(storageRefreshToken);
 		}
 
-		console.log(storageAccessToken, storageRefreshToken);
 		if (storageAccessToken || storageRefreshToken) {
 			setTimeout(() => this._loadUser(), 100);
 		}
-
-		effect(() => {
-			// this._tokenStorage.saveAccessToken(this.accessToken$());
-			// this._tokenStorage.saveRefreshToken(this.refreshToken$());
-		});
 	}
 
 	signin(code: string) {
