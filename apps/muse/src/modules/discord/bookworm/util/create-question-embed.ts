@@ -13,5 +13,5 @@ export const createQuestionEmbed = (
 		.setTimestamp()
 		.setFooter({
 			text: 'Muse bookworm question',
-			iconURL: author?.avatarURL(),
+			iconURL: author?.avatarURL() || undefined,
 		});

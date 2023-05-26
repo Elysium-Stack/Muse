@@ -3,12 +3,12 @@
 export interface TokensResponse {
 
   /**
-   * This is a required property
+   * The users's access token.
    */
   accessToken: string;
 
   /**
-   * This is a required property
+   * The users's refresh token.
    */
   refreshToken: string;
 }

@@ -29,12 +29,19 @@ export class BookwormGeneralCommands {
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(`Get a random bookworm question`);
 
-		const question = await this._question.get(null, true);
+		const question = await this._question.get(true);
+
+		if (!question) {
+			return interaction.reply({
+				content: "Sorry, I couldn't find any questions",
+				ephemeral: true,
+			});
+		}
 
 		const embed = createQuestionEmbed(
 			`${MESSAGE_PREFIX} Random question`,
 			question,
-			this._client.user,
+			this._client.user!,
 		);
 		return interaction.reply({ content: '', embeds: [embed] });
 	}

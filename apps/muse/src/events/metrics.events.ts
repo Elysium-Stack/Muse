@@ -50,7 +50,7 @@ export class MetricsEvents {
 	public onInteractionCreate(
 		@Context() [interaction]: ContextOf<Events.InteractionCreate>,
 	) {
-		const shardId = interaction.guild.shardId
+		const shardId = interaction.guild?.shardId
 			? interaction.guild.shardId.toString()
 			: 'NONE';
 		const commandName = getInteractionCommandName(interaction, '/');

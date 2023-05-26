@@ -47,3 +47,5 @@ Thumbs.db
 .next
 
 .angular
+
+apps/muse/src/modules/prisma/dto

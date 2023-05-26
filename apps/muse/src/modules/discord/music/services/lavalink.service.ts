@@ -42,9 +42,9 @@ export class LavalinkService extends Kazagumo {
 			new Connectors.DiscordJS(_client),
 			[
 				{
-					name: process.env.LAVALINK_ID,
+					name: process.env.LAVALINK_ID!,
 					url: `${process.env.LAVALINK_HOST}:${process.env.LAVALINK_PORT}`,
-					auth: process.env.LAVALINK_PASSWORD,
+					auth: process.env.LAVALINK_PASSWORD!,
 					secure: false,
 				},
 			],
@@ -138,7 +138,7 @@ export class LavalinkService extends Kazagumo {
 		this._logger.log(`Player empty for ${player.guildId}`);
 
 		const channel = await this._client.channels.fetch(player.textId);
-		if (channel.type !== ChannelType.GuildText) {
+		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}
 
@@ -160,7 +160,7 @@ export class LavalinkService extends Kazagumo {
 		const channel = await this._client.channels.fetch(player.textId);
 		player.destroy();
 
-		if (channel.type !== ChannelType.GuildText) {
+		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}
 
@@ -178,7 +178,7 @@ export class LavalinkService extends Kazagumo {
 		const channel = await this._client.channels.fetch(player.textId);
 		player.destroy();
 
-		if (channel.type !== ChannelType.GuildText) {
+		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}
 
@@ -208,7 +208,7 @@ export class LavalinkService extends Kazagumo {
 		}
 
 		const channel = await this._client.channels.fetch(player.voiceId);
-		if (channel.type !== ChannelType.GuildVoice) {
+		if (channel?.type !== ChannelType.GuildVoice) {
 			return;
 		}
 
@@ -220,7 +220,7 @@ export class LavalinkService extends Kazagumo {
 		player.data.set(
 			'disconnectTimeout',
 			setTimeout(async () => {
-				if (textChannel.type === ChannelType.GuildText) {
+				if (textChannel?.type === ChannelType.GuildText) {
 					await textChannel.send({
 						content: `Disconnected player due to inactivity.`,
 					});
@@ -231,14 +231,21 @@ export class LavalinkService extends Kazagumo {
 		);
 	}
 
-	async createPlayerMessage(player: KazagumoPlayer, track: KazagumoTrack) {
+	async createPlayerMessage(
+		player: KazagumoPlayer,
+		track: KazagumoTrack | null | undefined,
+	) {
 		player.data
 			.get('message')
 			?.delete()
 			.catch(() => null);
 
 		const channel = await this._client.channels.fetch(player.textId);
-		if (channel.type !== ChannelType.GuildText) {
+		if (channel?.type !== ChannelType.GuildText) {
+			return;
+		}
+
+		if (!track) {
 			return;
 		}
 

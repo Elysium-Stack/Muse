@@ -9,8 +9,9 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+/* This is a test comment */
+import { ParsedTokenResponse } from '../models/parsed-token-response';
 import { TokensResponse } from '../models/tokens-response';
-import { WhoamiResponse } from '../models/whoami-response';
 
 @Injectable({
   providedIn: 'root',
@@ -29,9 +30,7 @@ export class AuthService extends BaseService {
   static readonly AuthControllerAuthPath = '/api/auth';
 
   /**
-   * Authenticate user against discord oauth2 api.
-   *
-   *
+   * Authenticate the user with discord.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authControllerAuth()` instead.
@@ -61,9 +60,7 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Authenticate user against discord oauth2 api.
-   *
-   *
+   * Authenticate the user with discord.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authControllerAuth$Response()` instead.
@@ -87,9 +84,7 @@ export class AuthService extends BaseService {
   static readonly AuthControllerCallbackPath = '/api/auth/callback';
 
   /**
-   * Discord oauth2 code callback.
-   *
-   *
+   * Trade in discord code for a jwt token
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authControllerCallback()` instead.
@@ -121,9 +116,7 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Discord oauth2 code callback.
-   *
-   *
+   * Trade in discord code for a jwt token
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authControllerCallback$Response()` instead.
@@ -148,9 +141,7 @@ export class AuthService extends BaseService {
   static readonly AuthControllerWhoamiPath = '/api/auth/me';
 
   /**
-   * Retrieve the current user from it's access token.
-   *
-   *
+   * Get the current users information.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authControllerWhoami()` instead.
@@ -161,7 +152,7 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<WhoamiResponse>> {
+): Observable<StrictHttpResponse<ParsedTokenResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthService.AuthControllerWhoamiPath, 'get');
     if (params) {
@@ -174,15 +165,13 @@ export class AuthService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<WhoamiResponse>;
+        return r as StrictHttpResponse<ParsedTokenResponse>;
       })
     );
   }
 
   /**
-   * Retrieve the current user from it's access token.
-   *
-   *
+   * Get the current users information.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authControllerWhoami$Response()` instead.
@@ -193,10 +182,10 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<WhoamiResponse> {
+): Observable<ParsedTokenResponse> {
 
     return this.authControllerWhoami$Response(params,context).pipe(
-      map((r: StrictHttpResponse<WhoamiResponse>) => r.body as WhoamiResponse)
+      map((r: StrictHttpResponse<ParsedTokenResponse>) => r.body as ParsedTokenResponse)
     );
   }
 
@@ -206,9 +195,7 @@ export class AuthService extends BaseService {
   static readonly AuthControllerLogoutPath = '/api/auth/logout';
 
   /**
-   * Invalidate the current user's tokens.
-   *
-   *
+   * Invalidate tokens for current user
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authControllerLogout()` instead.
@@ -238,9 +225,7 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Invalidate the current user's tokens.
-   *
-   *
+   * Invalidate tokens for current user
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authControllerLogout$Response()` instead.
@@ -264,9 +249,7 @@ export class AuthService extends BaseService {
   static readonly AuthControllerRefreshPath = '/api/auth/refresh';
 
   /**
-   * Refresh the current user's token with it's refresh token.
-   *
-   *
+   * Refresh the access token using the refresh token
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authControllerRefresh()` instead.
@@ -296,9 +279,7 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Refresh the current user's token with it's refresh token.
-   *
-   *
+   * Refresh the access token using the refresh token
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authControllerRefresh$Response()` instead.

@@ -1,5 +1,6 @@
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
+import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
@@ -34,6 +35,7 @@ import {
 } from 'necord';
 import { MusicCommandDecorator } from '..';
 import { MusicSettingsService } from '../services/settings.service';
+import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
 
 class MusicSettingsChangeOptions {
@@ -43,7 +45,7 @@ class MusicSettingsChangeOptions {
 		required: false,
 		choices: MUSIC_SETTINGS_CHOICES,
 	})
-	option: string;
+	option: keyof MusicSettingsInterface | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -114,7 +116,7 @@ export class MusicSettingsCommands {
 	@StringSelect('MUSIC_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: string[],
+		@SelectedStrings() selected: (keyof MusicSettingsInterface)[],
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -126,7 +128,7 @@ export class MusicSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music has been ${
@@ -141,7 +143,7 @@ export class MusicSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels,
 	) {
-		await this._settings.set(interaction.guildId, 'channelId', id);
+		await this._settings.set(interaction.guildId!, 'channelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music channel has been changed to <#${id}>`,
@@ -154,7 +156,7 @@ export class MusicSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles,
 	) {
-		await this._settings.set(interaction.guildId, 'djRoleId', id);
+		await this._settings.set(interaction.guildId!, 'djRoleId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music DJ role has been changed to <@&${id}>`,
@@ -164,18 +166,18 @@ export class MusicSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: string,
+		option: keyof MusicSettingsInterface,
 	) {
-		let components = [];
-		const settings = await this._settings.get(interaction.guildId);
+		let components: DiscordComponentsArray = [];
+		const settings = await this._settings.get(interaction.guildId!);
 
-		let currentValue = settings[option];
-		let readableOption = option;
+		let currentValue = settings?.[option];
+		let readableOption: string = option;
 
 		switch (option) {
 			case 'enabled':
 				readableOption = 'Enabled';
-				currentValue = settings[option] ? 'Enabled' : 'Disabled';
+				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
@@ -186,7 +188,7 @@ export class MusicSettingsCommands {
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
-							.setDisabled(settings[option] === true),
+							.setDisabled(settings?.[option] === true),
 						new ButtonBuilder()
 							.setCustomId(
 								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
@@ -195,13 +197,13 @@ export class MusicSettingsCommands {
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings[option] === false),
+							.setDisabled(settings?.[option] === false),
 					),
 				];
 				break;
 			case 'channelId':
 				readableOption = 'Channel';
-				currentValue = settings[option]
+				currentValue = settings?.[option]
 					? `<#${settings[option]}>`
 					: 'none';
 				components = [
@@ -219,7 +221,7 @@ export class MusicSettingsCommands {
 				break;
 			case 'djRoleId':
 				readableOption = 'DJ role';
-				currentValue = settings[option]
+				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
 					: 'none';
 				components = [

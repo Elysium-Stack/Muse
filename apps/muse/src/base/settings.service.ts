@@ -2,7 +2,7 @@ import { SettingsService } from '@muse/settings';
 import { Settings } from '@prisma/client';
 
 export abstract class BaseSettingsService<T> {
-	protected _base: string;
+	protected _base: string = '';
 
 	constructor(protected _settings: SettingsService) {}
 
@@ -10,7 +10,7 @@ export abstract class BaseSettingsService<T> {
 		const settings = await this._settings.getSettings(guildId, doCheck);
 
 		if (!settings) {
-			return;
+			return null;
 		}
 
 		return this._formatSettings(settings);
@@ -24,7 +24,7 @@ export abstract class BaseSettingsService<T> {
 	}
 
 	private _formatSettings(settings: Settings): T {
-		const newSettings = {};
+		const newSettings: any = {};
 
 		for (const [key, value] of Object.entries(settings)) {
 			if (key.startsWith(this._base)) {

@@ -21,16 +21,16 @@ export class ReactionTriggerEnabledGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS.split(',');
+		const admins = process.env.OWNER_IDS!.split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
 		const settings = await this._reactionTriggerSettings.get(
-			interaction.guildId,
+			interaction.guildId!,
 		);
 
-		if (!settings.enabled) {
+		if (!settings?.enabled) {
 			throw new ModuleNotEnabledException('Music');
 		}
 

@@ -7,8 +7,8 @@ export type RANDOM_KITTY_TYPES = 'normal' | 'gif' | 'cute' | 'random';
 export class FunDoggoService {
 	private readonly _logger = new Logger(FunDoggoService.name);
 
-	async getRandomDoggo() {
-		const html = await fetch(DOGGO_BASE_URL)
+	async getRandomDoggo(): Promise<null | { url: string; file: string }> {
+		const html: string | null = (await fetch(DOGGO_BASE_URL)
 			.then((d) => {
 				if (d.status !== 200) {
 					return new Promise((resolve) =>
@@ -21,7 +21,7 @@ export class FunDoggoService {
 			.catch((err) => {
 				this._logger.error(err);
 				return null;
-			});
+			})) as string | null;
 
 		if (!html?.length) {
 			return null;
@@ -38,13 +38,15 @@ export class FunDoggoService {
 			/<img id=\"dog-img\" [^>]*src="[^"]*"[^>]*>/,
 			'ig',
 		);
-		let matches = html.match(regex);
+		let matches: any = html.match(regex);
 
 		if (!matches) {
 			return null;
 		}
 
-		matches = matches.map((x) => x.replace(/.*src="([^"]*)".*/, '$1'));
+		matches = matches.map((x: string) =>
+			x.replace(/.*src="([^"]*)".*/, '$1'),
+		);
 
 		return {
 			url: matches[0],

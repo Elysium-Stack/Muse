@@ -1,0 +1,17 @@
+diff --git a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js b/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
+index f20e479..3d1c548 100644
+--- a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
++++ b/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
+@@ -114,9 +114,9 @@ class ControllerClassVisitor extends abstract_visitor_1.AbstractFileVisitor {
+         if (!typeReference) {
+             return undefined;
+         }
+-        if (typeReference.includes('node_modules')) {
+-            return undefined;
+-        }
++        // if (typeReference.includes('node_modules')) {
++        //     return undefined;
++        // }
+         typeReference = (0, plugin_utils_1.replaceImportPath)(typeReference, hostFilename);
+         return factory.createPropertyAssignment('type', factory.createIdentifier(typeReference));
+     }

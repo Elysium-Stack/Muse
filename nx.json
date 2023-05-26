@@ -45,17 +45,6 @@
 		}
 	},
 	"generators": {
-		"@nx/react": {
-			"application": {
-				"babel": true
-			}
-		},
-		"@nx/next": {
-			"application": {
-				"style": "scss",
-				"linter": "eslint"
-			}
-		},
 		"@nx/angular:application": {
 			"style": "scss",
 			"linter": "eslint",

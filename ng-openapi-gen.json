@@ -2,5 +2,6 @@
 	"$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
 	"input": "http://localhost:3000/swagger-json",
 	"output": "libs/sdk/src/lib",
-	"ignoreUnusedModels": false
+	"ignoreUnusedModels": false,
+	"templates": "templates"
 }

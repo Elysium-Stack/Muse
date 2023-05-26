@@ -1,6 +1,7 @@
 import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/constants';
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards/guild-admin.guard';
+import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
 import { createHoursSelect } from '@muse/util/create-hour-select';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
@@ -36,6 +37,7 @@ import {
 } from 'necord';
 import { BookwormCommandDecorator } from '../bookworm.decorator';
 import { BookwormSettingsService } from '../services/settings.service';
+import { BookwormSettingsInterface } from '../types/settings.interface';
 import { BOOKWORM_SETTINGS_CHOICES } from '../util/constants';
 
 class BookwormSettingsChangeOptions {
@@ -45,7 +47,7 @@ class BookwormSettingsChangeOptions {
 		required: false,
 		choices: BOOKWORM_SETTINGS_CHOICES,
 	})
-	option: string;
+	option: keyof BookwormSettingsInterface | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -116,7 +118,7 @@ export class BookwormSettingsCommands {
 	@StringSelect('BOOKWORM_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: string[],
+		@SelectedStrings() selected: (keyof BookwormSettingsInterface)[],
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -128,7 +130,7 @@ export class BookwormSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm has been ${
@@ -146,7 +148,7 @@ export class BookwormSettingsCommands {
 		const parsedValue = value === 'true' ? true : false;
 
 		await this._settings.set(
-			interaction.guildId,
+			interaction.guildId!,
 			'dailyEnabled',
 			parsedValue,
 		);
@@ -164,7 +166,7 @@ export class BookwormSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels,
 	) {
-		await this._settings.set(interaction.guildId, 'channelId', id);
+		await this._settings.set(interaction.guildId!, 'channelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm channel has been changed to <#${id}>`,
@@ -177,7 +179,7 @@ export class BookwormSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels,
 	) {
-		await this._settings.set(interaction.guildId, 'dailyChannelId', id);
+		await this._settings.set(interaction.guildId!, 'dailyChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm daily channel has been changed to <#${id}>`,
@@ -190,7 +192,7 @@ export class BookwormSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles,
 	) {
-		await this._settings.set(interaction.guildId, 'pingRoleId', id);
+		await this._settings.set(interaction.guildId!, 'pingRoleId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm ping role has been changed to <@&${id}>`,
@@ -212,10 +214,10 @@ export class BookwormSettingsCommands {
 			});
 		}
 
-		await this._settings.set(interaction.guildId, 'dailyHour', parsed);
+		await this._settings.set(interaction.guildId!, 'dailyHour', parsed);
 
 		const time = !isNaN(parsed)
-			? HOUR_OPTIONS.find((h) => h.value === parsed).name
+			? HOUR_OPTIONS.find((h) => h.value === parsed)?.name ?? 'none'
 			: 'none';
 
 		return interaction.update({
@@ -226,20 +228,20 @@ export class BookwormSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: string,
+		option: keyof BookwormSettingsInterface,
 	) {
-		let components = [];
-		const settings = await this._settings.get(interaction.guildId);
+		let components: DiscordComponentsArray = [];
+		const settings = await this._settings.get(interaction.guildId!);
 
-		let currentValue = settings[option];
-		let readableOption = option;
+		let currentValue = settings?.[option];
+		let readableOption: string = option;
 
 		switch (option) {
 			case 'enabled':
 			case 'dailyEnabled':
 				readableOption =
 					option === 'enabled' ? 'Enabled' : 'Daily enabled';
-				currentValue = settings[option] ? 'Enabled' : 'Disabled';
+				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
@@ -250,7 +252,7 @@ export class BookwormSettingsCommands {
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
-							.setDisabled(settings[option] === true),
+							.setDisabled(settings?.[option] === true),
 						new ButtonBuilder()
 							.setCustomId(
 								`BOOKWORM_SETTINGS_CHANGE_${camelCaseToSnakeCase(
@@ -259,7 +261,7 @@ export class BookwormSettingsCommands {
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings[option] === false),
+							.setDisabled(settings?.[option] === false),
 					),
 				];
 				break;
@@ -267,7 +269,7 @@ export class BookwormSettingsCommands {
 			case 'dailyChannelId':
 				readableOption =
 					option === 'channelId' ? 'Channel' : 'Daily channel';
-				currentValue = settings[option]
+				currentValue = settings?.[option]
 					? `<#${settings[option]}>`
 					: 'none';
 				components = [
@@ -285,7 +287,7 @@ export class BookwormSettingsCommands {
 				break;
 			case 'pingRoleId':
 				readableOption = 'Ping role';
-				currentValue = settings[option]
+				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
 					: 'none';
 				components = [
@@ -302,11 +304,11 @@ export class BookwormSettingsCommands {
 				break;
 			case 'dailyHour':
 				readableOption = 'Daily hour';
-				currentValue = !isNaN(settings[option])
+				currentValue = !isNaN(settings![option])
 					? `\`${
 							HOUR_OPTIONS.find(
-								(h) => h.value === settings[option],
-							).name
+								(h) => h.value === settings?.[option],
+							)?.name ?? '-'
 					  }\``
 					: 'none';
 				components = [

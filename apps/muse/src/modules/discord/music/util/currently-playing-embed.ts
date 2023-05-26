@@ -6,8 +6,8 @@ import { readableTime } from './readable-time';
 export const createPlayingEmbed = (
 	player: KazagumoPlayer,
 	track: KazagumoTrack,
-) =>
-	new EmbedBuilder()
+) => {
+	const embed = new EmbedBuilder()
 		.setTitle(player.paused ? '🛑 Paused playing' : '🎶 Now Playing')
 		.addFields(
 			{
@@ -22,11 +22,16 @@ export const createPlayingEmbed = (
 			},
 			{
 				name: 'Duration',
-				value: `\`${readableTime(track.length)}\``,
+				value: `\`${readableTime(track.length!)}\``,
 				inline: true,
 			},
-		)
-		.setImage(track.thumbnail);
+		);
+	if (track.thumbnail) {
+		embed.setImage(track.thumbnail);
+	}
+
+	return embed;
+};
 
 export const createPlayingComponents = (player: KazagumoPlayer) => [
 	new ActionRowBuilder<ButtonBuilder>().addComponents(

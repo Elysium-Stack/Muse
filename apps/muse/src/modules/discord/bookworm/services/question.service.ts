@@ -116,7 +116,7 @@ export class BookwormQuestionService {
 
 	constructor(private _prisma: PrismaService, private _client: Client) {}
 
-	async get(guildId: string, getRandom = false) {
+	async get(getRandom = false, guildId?: string) {
 		if (getRandom) {
 			const min = 0;
 			const max = this.questions.length - 1;
@@ -124,6 +124,10 @@ export class BookwormQuestionService {
 			return this.questions[
 				Math.floor(Math.random() * (max - min + 1)) + min
 			];
+		}
+
+		if (!guildId) {
+			return;
 		}
 
 		let index = 0;
@@ -137,7 +141,7 @@ export class BookwormQuestionService {
 		});
 
 		if (latestLog) {
-			index = latestLog.index + 1;
+			index = latestLog.index! + 1;
 		}
 
 		if (index >= this.questions.length - 1) {
@@ -175,15 +179,23 @@ export class BookwormQuestionService {
 			bookwormDailyChannelId,
 			bookwormPingRoleId,
 		} of settings) {
+			if (!bookwormDailyChannelId) {
+				continue;
+			}
+
 			const guild = await this._client.guilds.fetch(guildId);
 			const channel = await guild.channels.fetch(bookwormDailyChannelId);
-			const question = await this.get(guildId);
+			const question = await this.get(false, guildId);
 
-			if (channel.type === ChannelType.GuildText) {
+			if (!question) {
+				continue;
+			}
+
+			if (channel?.type === ChannelType.GuildText) {
 				const embed = createQuestionEmbed(
 					`${MESSAGE_PREFIX} Daily bookworm question`,
 					question,
-					this._client.user,
+					this._client.user!,
 				);
 				const content = bookwormPingRoleId
 					? `<@&${bookwormPingRoleId}>`

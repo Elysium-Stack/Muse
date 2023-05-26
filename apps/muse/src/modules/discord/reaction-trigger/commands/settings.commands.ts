@@ -1,5 +1,6 @@
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
+import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
@@ -30,6 +31,7 @@ import {
 } from 'necord';
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerSettingsService } from '../services/settings.service';
+import { ReactionTriggerSettingsInterface } from '../types/settings.interface';
 import { REACTION_TRIGGER_SETTINGS_CHOICES } from '../util/constants';
 
 class ReactionTriggerSettingsChangeOptions {
@@ -39,7 +41,7 @@ class ReactionTriggerSettingsChangeOptions {
 		required: false,
 		choices: REACTION_TRIGGER_SETTINGS_CHOICES,
 	})
-	option: string;
+	option: keyof ReactionTriggerSettingsInterface | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -112,7 +114,7 @@ export class ReactionTriggerSettingsCommands {
 	@StringSelect('REACTION_TRIGGER_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: string[],
+		@SelectedStrings() selected: (keyof ReactionTriggerSettingsInterface)[],
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -124,7 +126,7 @@ export class ReactionTriggerSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Reaction trigger has been ${
@@ -140,7 +142,11 @@ export class ReactionTriggerSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels,
 	) {
 		const ids = [...data.keys()];
-		await this._settings.set(interaction.guildId, 'ignoredChannelIds', ids);
+		await this._settings.set(
+			interaction.guildId!,
+			'ignoredChannelIds',
+			ids,
+		);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
@@ -154,18 +160,19 @@ export class ReactionTriggerSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: string,
+		option: keyof ReactionTriggerSettingsInterface,
 	) {
-		let components = [];
-		const settings = await this._settings.get(interaction.guildId);
+		let components: DiscordComponentsArray = [];
+		const settings = await this._settings.get(interaction.guildId!);
 
-		let currentValue = settings[option];
-		let readableOption = option;
+		let currentValue: string | string[] | boolean | undefined =
+			settings?.[option];
+		let readableOption: string = option;
 
 		switch (option) {
 			case 'enabled':
 				readableOption = 'Enabled';
-				currentValue = settings[option] ? 'Enabled' : 'Disabled';
+				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
@@ -176,7 +183,7 @@ export class ReactionTriggerSettingsCommands {
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
-							.setDisabled(settings[option] === true),
+							.setDisabled(settings?.[option] === true),
 						new ButtonBuilder()
 							.setCustomId(
 								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
@@ -185,13 +192,13 @@ export class ReactionTriggerSettingsCommands {
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings[option] === false),
+							.setDisabled(settings?.[option] === false),
 					),
 				];
 				break;
 			case 'ignoredChannelIds':
 				readableOption = 'Ignored channels';
-				currentValue = settings[option]?.length
+				currentValue = settings?.[option]?.length
 					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
 					: 'none';
 				components = [

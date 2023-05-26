@@ -21,7 +21,7 @@ export class SettingsService {
 		});
 	}
 
-	async checkSettings(guildId) {
+	async checkSettings(guildId: string) {
 		const settings = await this._prisma.settings.findUnique({
 			where: {
 				guildId,

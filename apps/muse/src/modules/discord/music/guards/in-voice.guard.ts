@@ -24,7 +24,7 @@ export class MusicInVoiceGuard implements CanActivate {
 			return false;
 		}
 
-		const member = await interaction.guild.members.fetch(
+		const member = await interaction.guild!.members.fetch(
 			interaction.user.id,
 		);
 		const { channel } = member.voice;
@@ -32,7 +32,7 @@ export class MusicInVoiceGuard implements CanActivate {
 			throw new NotInVoiceException();
 		}
 
-		const player = this._player.get(interaction.guild.id);
+		const player = this._player.get(interaction.guild!.id);
 		if (player && player.voiceId !== channel.id) {
 			throw new NotInVoiceException();
 		}

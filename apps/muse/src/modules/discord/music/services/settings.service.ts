@@ -28,9 +28,13 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 	) {
-		const { enabled, channelId, djRoleId } = await this.get(
-			interaction.guildId,
-		);
+		const settings = await this.get(interaction.guildId!);
+
+		if (!settings) {
+			return;
+		}
+
+		const { enabled, channelId, djRoleId } = settings;
 
 		const embed = new EmbedBuilder()
 			.setColor(MUSIC_EMBED_COLOR)

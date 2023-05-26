@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+/* This is a test comment */
 
 @Injectable({
   providedIn: 'root',

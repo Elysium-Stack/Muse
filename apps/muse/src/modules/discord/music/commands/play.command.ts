@@ -23,7 +23,7 @@ class MusicPlayOptions {
 		description: 'A query to search or an url',
 		required: true,
 	})
-	song: string;
+	song: string | undefined;
 }
 
 @UseGuards(MusicEnabledGuard, MusicInVoiceGuard)
@@ -42,7 +42,7 @@ export class MusicPlayCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { song }: MusicPlayOptions,
 	) {
-		return this._player.play(interaction, song);
+		return this._player.play(interaction, song!);
 	}
 
 	@Button('MUSIC_PLAY/:song')

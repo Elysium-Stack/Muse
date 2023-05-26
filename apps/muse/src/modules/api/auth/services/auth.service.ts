@@ -3,6 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { HealthIndicator } from '@nestjs/terminus';
 import * as argon2 from 'argon2';
+import { User } from 'discord.js';
 import { DiscordApiService } from '../../discord/services';
 import { avatarIdToString } from '../../discord/utils/avatar-id-to-string';
 import { DiscordPayload } from '../types/discord-payload.type';
@@ -93,7 +94,10 @@ export class AuthService extends HealthIndicator {
 		userId: number,
 		{ id, username, discriminator }: TokenPayload,
 	) {
-		const discordUser = await this._discord.request(userId, '/users/@me');
+		const discordUser = await this._discord.request<User>(
+			userId,
+			'/users/@me',
+		);
 
 		const [accessToken, refreshToken] = await Promise.all([
 			this._jwt.signAsync(
@@ -103,7 +107,7 @@ export class AuthService extends HealthIndicator {
 						...discordUser,
 						avatar: avatarIdToString(
 							discordUser.id,
-							discordUser.avatar,
+							discordUser.avatar!,
 						),
 					},
 				},
