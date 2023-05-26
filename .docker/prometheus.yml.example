@@ -14,7 +14,7 @@ scrape_configs:
       scrape_interval: 5s
 
       static_configs:
-          - targets: ['bot:3000/api']
+          - targets: ['muse:3000/api']
     - job_name: 'lavalink'
 
       scrape_interval: 5s
