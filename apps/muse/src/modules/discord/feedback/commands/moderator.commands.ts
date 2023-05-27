@@ -1,5 +1,6 @@
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { FeedbackTopicsType } from '@prisma/client';
@@ -36,7 +37,7 @@ class FeedbackTopicsListOptions {
 		min_value: 1,
 		max_value: 999,
 	})
-	page: number;
+	page: number | undefined;
 }
 
 class FeedbackTopicsCreateOptions {
@@ -45,7 +46,7 @@ class FeedbackTopicsCreateOptions {
 		description: 'The name of the topic',
 		required: true,
 	})
-	name: string;
+	name: string | undefined;
 
 	@StringOption({
 		name: 'type',
@@ -62,14 +63,14 @@ class FeedbackTopicsCreateOptions {
 			},
 		],
 	})
-	type: string;
+	type: string | undefined;
 
 	@ChannelOption({
 		name: 'channel',
 		description: 'The channel to report to',
 		required: false,
 	})
-	channel: TextChannel;
+	channel: TextChannel | undefined;
 }
 
 class FeedbackTopicRemoveOptions {
@@ -78,7 +79,7 @@ class FeedbackTopicRemoveOptions {
 		description: 'The id of a topic to remove',
 		required: true,
 	})
-	id: number;
+	id: number | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -146,9 +147,16 @@ export class FeedbackModeratorCommands {
 			});
 		}
 
+		if (!referenceId) {
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} A reference is required`,
+				ephemeral: true,
+			});
+		}
+
 		await this._feedback.addFeedbackTopicByName(
-			interaction.guildId,
-			name,
+			interaction.guildId!,
+			name!,
 			type as FeedbackTopicsType,
 			referenceId,
 		);
@@ -172,9 +180,16 @@ export class FeedbackModeratorCommands {
 		);
 
 		const topic = await this._feedback.removeFeedbackTopicById(
-			interaction.guildId,
-			id,
+			interaction.guildId!,
+			id!,
 		);
+
+		if (!topic) {
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} That topic doesn't exist`,
+				ephemeral: true,
+			});
+		}
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Removed feedback topic with ID "${topic.id}"`,
@@ -189,7 +204,7 @@ export class FeedbackModeratorCommands {
 		page = page ?? 1;
 
 		const { topics, total } = await this._feedback.getTopicsPerPage(
-			interaction.guildId,
+			interaction.guildId!,
 			page,
 		);
 
@@ -230,7 +245,7 @@ export class FeedbackModeratorCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Topics for ${interaction.guild.name}`)
+			.setTitle(`${MESSAGE_PREFIX} Topics for ${interaction.guild!.name}`)
 			.setColor(FEEDBACK_EMBED_COLOR)
 			.addFields([
 				{
@@ -263,7 +278,7 @@ export class FeedbackModeratorCommands {
 		}
 
 		const buttons = [];
-		const components = [];
+		const components: DiscordComponentsArrayDTO = [];
 
 		if (page > 1) {
 			buttons.push(
@@ -284,7 +299,9 @@ export class FeedbackModeratorCommands {
 		}
 
 		if (buttons.length) {
-			components.push(new ActionRowBuilder().addComponents(buttons));
+			components.push(
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+			);
 		}
 
 		if (interaction instanceof ButtonInteraction) {

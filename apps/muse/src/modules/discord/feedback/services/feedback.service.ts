@@ -94,6 +94,10 @@ export class FeedbackService {
 	) {
 		const topic = await this.getTopicById(guildId, parseInt(topicId, 10));
 
+		if (!topic) {
+			return;
+		}
+
 		if (topic.type === 'CHANNEL') {
 			return this._processChannelFeedback(topic, guildId, user, content);
 		}

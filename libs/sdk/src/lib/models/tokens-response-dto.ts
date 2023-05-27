@@ -1,14 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface TokensResponse {
+
+export interface TokensResponseDto {
 
   /**
-   * This is a required property
+   * The users's access token.
    */
   accessToken: string;
 
   /**
-   * This is a required property
+   * The users's refresh token.
    */
   refreshToken: string;
 }

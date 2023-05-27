@@ -29,10 +29,14 @@ export class MusicPlayerService {
 
 		await interaction.deferReply();
 
-		const member = await interaction.guild.members.fetch(
+		const member = await interaction.guild!.members.fetch(
 			interaction.user.id,
 		);
 		const { channel } = member.voice;
+
+		if (!channel) {
+			return;
+		}
 
 		const result = await this._lavalink.search(song, {
 			requester: interaction.user,
@@ -41,11 +45,11 @@ export class MusicPlayerService {
 		await this._prisma.musicLog
 			.create({
 				data: {
-					guildId: interaction.guildId,
+					guildId: interaction.guildId!,
 					userId: interaction.user.id,
 					query: song,
 					result: !result.tracks.length
-						? null
+						? undefined
 						: JSON.stringify(
 								result.type === 'PLAYLIST'
 									? result?.tracks
@@ -62,8 +66,8 @@ export class MusicPlayerService {
 		}
 
 		const player = await this._lavalink.createPlayer({
-			guildId: interaction.guild.id,
-			textId: interaction.channel.id,
+			guildId: interaction.guild!.id,
+			textId: interaction.channel!.id,
 			voiceId: channel.id,
 			volume: 50,
 			deaf: true,
@@ -93,7 +97,11 @@ export class MusicPlayerService {
 	async stop(interaction: MessageComponentInteraction | CommandInteraction) {
 		this._logger.verbose(`Stopping song for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
 
 		player.destroy();
 		return interactionReply(
@@ -111,7 +119,11 @@ export class MusicPlayerService {
 	) {
 		this._logger.verbose(`Starting next song for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
 
 		if (!player.queue.size && player.loop === 'none') {
 			return interactionReply(interaction, {
@@ -136,7 +148,11 @@ export class MusicPlayerService {
 			`Starting previous song for ${interaction.user.tag}`,
 		);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
 
 		if (!player.queue.previous) {
 			return interactionReply(interaction, {
@@ -161,7 +177,11 @@ export class MusicPlayerService {
 	) {
 		this._logger.verbose(`Shuffling queue for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
 
 		player.queue.shuffle();
 		player.data.set('shuffled', true);
@@ -181,7 +201,12 @@ export class MusicPlayerService {
 	) {
 		this._logger.verbose(`Looping queue for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
+
 		if (player.loop === 'queue') {
 			return interactionReply(interaction, {
 				content: 'Queue is already looped.',
@@ -205,7 +230,12 @@ export class MusicPlayerService {
 	) {
 		this._logger.verbose(`Pauzing the player for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
+
 		if (player.paused) {
 			return interactionReply(interaction, {
 				content: 'The player is already paused.',
@@ -229,9 +259,9 @@ export class MusicPlayerService {
 	) {
 		this._logger.verbose(`Resuming the player for ${interaction.user.tag}`);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
 
-		if (!player.paused) {
+		if (!player?.paused) {
 			return interactionReply(interaction, {
 				content: 'The player is not paused currently.',
 			});
@@ -258,7 +288,11 @@ export class MusicPlayerService {
 			`Setting player volume ${interaction.user.tag} to ${volume}`,
 		);
 
-		const player = await this.get(interaction.guildId);
+		const player = await this.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
 
 		player.data.set('previousVolume', player.volume * 100);
 		player.setVolume(volume);

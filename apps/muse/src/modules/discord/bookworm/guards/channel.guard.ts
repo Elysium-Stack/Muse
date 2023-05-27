@@ -23,12 +23,12 @@ export class BookwormChannelGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS.split(',');
+		const admins = process.env.OWNER_IDS!.split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
-		const guild = await this._client.guilds.fetch(interaction.guildId);
+		const guild = await this._client.guilds.fetch(interaction.guildId!);
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
@@ -38,9 +38,9 @@ export class BookwormChannelGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId);
+		const settings = await this._bookwormSettings.get(interaction.guildId!);
 
-		if (!settings.channelId) {
+		if (!settings?.channelId) {
 			return true;
 		}
 

@@ -12,11 +12,14 @@ export class DiscordApiService {
 		private readonly _prisma: PrismaService,
 	) {}
 
-	async request(userId: number, request: AxiosRequestConfig | string) {
+	async request<T>(
+		userId: number,
+		request: AxiosRequestConfig | string,
+	): Promise<T> {
 		const { accessToken, refreshToken } = await this._getTokens(userId);
 
-		let url: string;
-		let config: AxiosRequestConfig;
+		let url: string = '';
+		let config: AxiosRequestConfig = {};
 
 		if (typeof request === 'string') {
 			url = request as string;
@@ -24,7 +27,7 @@ export class DiscordApiService {
 		}
 
 		if (request instanceof Object) {
-			url = request.url;
+			url = request.url ?? '';
 			config = request;
 		}
 
@@ -68,10 +71,10 @@ export class DiscordApiService {
 
 	private async _refreshTokens(userId: number, refreshToken: string) {
 		const formData = new FormData();
-		formData.append('client_id', process.env.DISCORD_OAUTH_CLIENT_ID);
+		formData.append('client_id', process.env.DISCORD_OAUTH_CLIENT_ID!);
 		formData.append(
 			'client_secret',
-			process.env.DISCORD_OAUTH_CLIENT_SECRET,
+			process.env.DISCORD_OAUTH_CLIENT_SECRET!,
 		);
 		formData.append('refresh_token', refreshToken);
 		formData.append('grant_type', 'refresh_token');

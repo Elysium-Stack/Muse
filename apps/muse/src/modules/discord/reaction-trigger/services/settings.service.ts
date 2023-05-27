@@ -31,9 +31,13 @@ export class ReactionTriggerSettingsService extends BaseSettingsService<Reaction
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 	) {
-		const { enabled, ignoredChannelIds } = await this.get(
-			interaction.guildId,
-		);
+		const settings = await this.get(interaction.guildId!);
+
+		if (!settings) {
+			return;
+		}
+
+		const { enabled, ignoredChannelIds } = settings;
 
 		const embed = new EmbedBuilder()
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)

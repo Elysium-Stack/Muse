@@ -1,76 +1,67 @@
+import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
-	ApiForbiddenResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiResponse,
-	ApiTags,
-	ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+	ParsedTokenResponseDTO,
+	TokensResponseDTO,
+} from '../../../../types/responses.type';
 import { AccessTokenGuard } from '../guards/access-token.guard';
 import { DiscordOAuthGuard } from '../guards/discord-oauth.guard';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { AuthService } from '../services';
-import { TokensResponse, WhoamiResponse } from '../types/responses.type';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
 	constructor(private _authService: AuthService) {}
 
+	/**
+	 * Authenticate the user with discord.
+	 */
 	@Get()
 	@UseGuards(DiscordOAuthGuard)
-	@ApiOperation({ summary: 'Authenticate user against discord oauth2 api' })
-	@ApiResponse({
-		status: 301,
-		description: 'Redirect to discord oauth2 screen.',
-	})
-	@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
 	async auth() {}
 
+	/**
+	 * Trade in discord code for a jwt token
+	 */
 	@Get('callback')
 	@UseGuards(DiscordOAuthGuard)
-	@ApiOperation({ summary: 'Discord oauth2 code callback' })
-	@ApiOkResponse({ type: TokensResponse })
-	@ApiForbiddenResponse({ description: 'Forbidden.' })
-	@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
 	callback(
-		@Request() req,
+		@Request() req: AuthenticatedRequestDTO,
 		@Query('code') code: string,
-	): Promise<TokensResponse> {
-		return req.user;
+	): TokensResponseDTO {
+		return req.user as TokensResponseDTO;
 	}
 
+	/**
+	 * Get the current users information.
+	 */
 	@Get('me')
 	@UseGuards(AccessTokenGuard)
-	@ApiOperation({
-		summary: "Retrieve the current user from it's access token",
-	})
-	@ApiOkResponse({ type: WhoamiResponse })
-	@ApiForbiddenResponse({ description: 'Forbidden.' })
-	@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
-	whoami(@Request() req): Promise<WhoamiResponse> {
-		return req.user;
+	whoami(@Request() req: AuthenticatedRequestDTO): ParsedTokenResponseDTO {
+		return req.user as ParsedTokenResponseDTO;
 	}
 
+	/**
+	 * Invalidate tokens for current user
+	 */
 	@Get('logout')
 	@UseGuards(AccessTokenGuard)
-	@ApiOperation({ summary: "Invalidate the current user's tokens" })
-	logout(@Request() req) {
+	logout(@Request() req: AuthenticatedRequestDTO) {
 		this._authService.signout(req.user.sub);
 	}
 
+	/**
+	 * Refresh the access token using the refresh token
+	 */
 	@Get('refresh')
 	@UseGuards(RefreshTokenGuard)
-	@ApiOperation({
-		summary: "Refresh the current user's token with it's refresh token",
-	})
-	@ApiOkResponse({ type: TokensResponse })
-	@ApiForbiddenResponse({ description: 'Forbidden.' })
-	@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
-	refresh(@Request() req): Promise<TokensResponse> {
+	refresh(
+		@Request() req: AuthenticatedRequestDTO,
+	): Promise<TokensResponseDTO> {
 		const userId = req.user.sub;
-		const refreshToken = req.user.refreshToken;
+		const refreshToken = req.user.refreshToken!;
 		return this._authService.refreshTokens(userId, refreshToken);
 	}
 }

@@ -84,7 +84,12 @@ export class ReactionTriggerGeneralService {
 			return;
 		}
 
-		const { ignoredChannelIds } = await this._settings.get(message.guildId);
+		const settings = await this._settings.get(message.guildId);
+		if (!settings) {
+			return;
+		}
+
+		const { ignoredChannelIds } = settings;
 		if (ignoredChannelIds.indexOf(message.channelId) >= 0) {
 			return;
 		}

@@ -26,7 +26,7 @@ class MusicVolumeOptions {
 		min_value: 0,
 		max_value: 100,
 	})
-	volume: number;
+	volume: number | undefined;
 }
 
 @UseGuards(MusicEnabledGuard, MusicInVoiceGuard, MusicHasPlayerGuard)
@@ -49,7 +49,7 @@ export class MusicVolumeCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { volume }: MusicVolumeOptions,
 	) {
-		return this._player.setVolume(interaction, volume);
+		return this._player.setVolume(interaction, volume!);
 	}
 
 	@Button('MUSIC_VOLUME_SET/:volume/:isMute')
@@ -79,7 +79,12 @@ export class MusicVolumeCommands {
 		if (typeof amount === 'string') {
 			amount = parseInt(amount, 10);
 		}
-		const player = await this._player.get(interaction.guildId);
+		const player = await this._player.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
+
 		const current = player.volume * 100;
 
 		let newVolume = current + amount;
@@ -100,7 +105,12 @@ export class MusicVolumeCommands {
 			amount = parseInt(amount, 10);
 		}
 
-		const player = await this._player.get(interaction.guildId);
+		const player = await this._player.get(interaction.guildId!);
+
+		if (!player) {
+			return;
+		}
+
 		const current = player.volume * 100;
 
 		let newVolume = current - amount;

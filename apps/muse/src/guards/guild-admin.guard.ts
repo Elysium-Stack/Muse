@@ -27,12 +27,12 @@ export class GuildAdminGuard implements CanActivate {
 			return false;
 		}
 
-		const admins = process.env.OWNER_IDS.split(',');
+		const admins = process.env.OWNER_IDS!.split(',');
 		if (admins.includes(interaction?.user?.id)) {
 			return true;
 		}
 
-		const guild = await this._client.guilds.fetch(interaction.guildId);
+		const guild = await this._client.guilds.fetch(interaction.guildId!);
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(

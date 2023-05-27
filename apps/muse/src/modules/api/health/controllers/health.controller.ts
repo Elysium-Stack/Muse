@@ -26,12 +26,6 @@ export class HealthController {
 		private memory: MemoryHealthIndicator,
 	) {}
 
-	@Get('ping')
-	@ApiExcludeEndpoint(true)
-	ping() {
-		return 'pong!';
-	}
-
 	@Get()
 	@ApiExcludeEndpoint(true)
 	@HealthCheck()
@@ -59,5 +53,11 @@ export class HealthController {
 			// Mongoose for MongoDB check
 			// Redis check
 		]);
+	}
+
+	@Get('ping')
+	@ApiExcludeEndpoint(true)
+	ping() {
+		return 'pong!';
 	}
 }

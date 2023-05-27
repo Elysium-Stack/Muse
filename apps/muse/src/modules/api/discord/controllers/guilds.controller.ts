@@ -1,5 +1,7 @@
+import { PrismaService, UsersEntity } from '@muse/modules/prisma';
+import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Guild } from 'discord.js';
 import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { DiscordApiService } from '../services/api.service';
@@ -7,19 +9,27 @@ import { DiscordApiService } from '../services/api.service';
 @Controller('discord/guilds')
 @ApiTags('Guilds')
 export class GuildsController {
-	constructor(private _discord: DiscordApiService) {}
+	constructor(
+		private _discord: DiscordApiService,
+		private _prisma: PrismaService,
+	) {}
 
+	/**
+	 * Get the current users discord guilds
+	 */
 	@Get()
-	@ApiOperation({
-		summary: "Retrieve the current user's guilds",
-	})
-	@ApiResponse({
-		status: 200,
-		description: 'The guilds',
-		type: Array<Guild>,
-	})
 	@UseGuards(AccessTokenGuard)
-	guilds(@Request() { user: { sub } }): Promise<Guild[]> {
-		return this._discord.request(sub, '/users/@me/guilds');
+	guilds(
+		@Request() { user: { sub } }: AuthenticatedRequestDTO,
+	): Promise<Guild[]> {
+		return this._discord.request<Guild[]>(sub, '/users/@me/guilds');
+	}
+	/**
+	 * This is a test
+	 */
+	@Get('test')
+	@UseGuards(AccessTokenGuard)
+	test(): Promise<UsersEntity[]> {
+		return this._prisma.users.findMany();
 	}
 }

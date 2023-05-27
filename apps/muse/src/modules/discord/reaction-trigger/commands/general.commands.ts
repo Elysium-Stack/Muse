@@ -3,6 +3,7 @@ import {
 	ForbiddenExceptionFilter,
 } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
@@ -38,7 +39,7 @@ class ReactionTriggerListOptions {
 		min_value: 1,
 		max_value: 999,
 	})
-	page: number;
+	page: number | undefined;
 }
 
 class ReactionTriggerAddOptions {
@@ -48,21 +49,21 @@ class ReactionTriggerAddOptions {
 		required: true,
 		max_length: 100,
 	})
-	phrase: string;
+	phrase: string | undefined;
 
 	@StringOption({
 		name: 'emoji',
 		description: 'The emoji to react with',
 		required: true,
 	})
-	emoji: string;
+	emoji: string | undefined;
 
 	@BooleanOption({
 		name: 'exact',
 		description: 'Wether the message should be an exact match',
 		required: false,
 	})
-	exact: boolean;
+	exact: boolean | undefined;
 }
 
 class ReactionTriggerRemoveOptions {
@@ -71,7 +72,7 @@ class ReactionTriggerRemoveOptions {
 		description: 'The id of a reaction trigger to remove',
 		required: true,
 	})
-	id: number;
+	id: number | undefined;
 }
 
 @UseGuards(ReactionTriggerEnabledGuard, GuildAdminGuard)
@@ -115,7 +116,7 @@ export class ReactionTriggerGeneralCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { phrase, emoji, exact }: ReactionTriggerAddOptions,
 	) {
-		const splittedEmoji = emoji.split(':');
+		const splittedEmoji = emoji!.split(':');
 		const emojiId = splittedEmoji[splittedEmoji.length - 1].replace(
 			/\>/g,
 			'',
@@ -134,8 +135,8 @@ export class ReactionTriggerGeneralCommands {
 		);
 
 		await this._general.addReactionTriggerByWord(
-			interaction.guildId,
-			phrase,
+			interaction.guildId!,
+			phrase!,
 			exact ?? false,
 			resolvedEmoji.id,
 		);
@@ -159,12 +160,12 @@ export class ReactionTriggerGeneralCommands {
 		);
 
 		const reactionTrigger = await this._general.removeReactionTriggerByID(
-			interaction.guildId,
-			id,
+			interaction.guildId!,
+			id!,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Removed reaction trigger with ID "${reactionTrigger.id}"`,
+			content: `${MESSAGE_PREFIX} Removed reaction trigger with ID "${reactionTrigger?.id}"`,
 			ephemeral: true,
 		});
 	}
@@ -176,7 +177,7 @@ export class ReactionTriggerGeneralCommands {
 		page = page ?? 1;
 
 		const { triggers, total } = await this._general.getReactionTriggers(
-			interaction.guildId,
+			interaction.guildId!,
 			page,
 		);
 
@@ -218,7 +219,7 @@ export class ReactionTriggerGeneralCommands {
 
 		let embed = new EmbedBuilder()
 			.setTitle(
-				`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`,
+				`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`,
 			)
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)
 			.addFields([
@@ -250,7 +251,7 @@ export class ReactionTriggerGeneralCommands {
 		}
 
 		const buttons = [];
-		const components = [];
+		const components: DiscordComponentsArrayDTO = [];
 
 		if (page > 1) {
 			buttons.push(
@@ -271,7 +272,9 @@ export class ReactionTriggerGeneralCommands {
 		}
 
 		if (buttons.length) {
-			components.push(new ActionRowBuilder().addComponents(buttons));
+			components.push(
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+			);
 		}
 
 		if (interaction instanceof ButtonInteraction) {

@@ -37,7 +37,7 @@ export class FeedbackGeneralCommands {
 		description: 'Give feedback to a topic',
 	})
 	public async give(@Context() [interaction]: SlashCommandContext) {
-		const topics = await this._feedback.getAllTopics(interaction.guildId);
+		const topics = await this._feedback.getAllTopics(interaction.guildId!);
 
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('FEEDBACK_GIVE_TOPIC_SELECT')
@@ -75,9 +75,16 @@ export class FeedbackGeneralCommands {
 		);
 
 		const topic = await this._feedback.getTopicById(
-			interaction.guildId,
+			interaction.guildId!,
 			parseInt(topicId, 10),
 		);
+
+		if (!topic) {
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} That topic doesn't exist`,
+				ephemeral: true,
+			});
+		}
 
 		const modal = new ModalBuilder()
 			.setTitle(topic.name)
@@ -105,7 +112,7 @@ export class FeedbackGeneralCommands {
 
 		await this._feedback.processFeedback(
 			topicId,
-			interaction.guildId,
+			interaction.guildId!,
 			interaction.user,
 			response,
 		);

@@ -1,0 +1,18 @@
+{
+	"collection": "@nestjs/schematics",
+	"sourceRoot": "apps/muse/src",
+	"compilerOptions": {
+		"deleteOutDir": true,
+		"plugins": [
+			{
+				"name": "@nestjs/swagger",
+				"options": {
+					"dtoFileNameSuffix": [".dto.ts", ".entity.ts", ".type.ts"],
+					"classValidatorShim": true,
+					"introspectComments": true
+				}
+			}
+		],
+		"tsConfigPath": "apps/muse/tsconfig.app.json"
+	}
+}

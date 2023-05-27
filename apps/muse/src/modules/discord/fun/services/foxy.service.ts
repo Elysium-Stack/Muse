@@ -7,9 +7,9 @@ export type RANDOM_KITTY_TYPES = 'normal' | 'gif' | 'cute' | 'random';
 export class FunFoxyService {
 	private readonly _logger = new Logger(FunFoxyService.name);
 
-	async getRandomFoxy() {
+	async getRandomFoxy(): Promise<{ image: string } | null> {
 		return fetch(`${FOXY_BASE_URL}/floof`)
-			.then((d) => {
+			.then((d: Response) => {
 				if (d.status !== 200) {
 					return new Promise((resolve) =>
 						setTimeout(() => resolve(this.getRandomFoxy()), 300),
@@ -21,6 +21,6 @@ export class FunFoxyService {
 			.catch((err) => {
 				this._logger.error(err);
 				return null;
-			});
+			}) as Promise<{ image: string } | null>;
 	}
 }

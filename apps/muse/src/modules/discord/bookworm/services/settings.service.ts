@@ -31,6 +31,11 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 	) {
+		const settings = await this.get(interaction.guildId!);
+		if (!settings) {
+			return;
+		}
+
 		const {
 			enabled,
 			channelId,
@@ -38,7 +43,7 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 			dailyChannelId,
 			dailyHour,
 			pingRoleId,
-		} = await this.get(interaction.guildId);
+		} = settings;
 
 		const hourOption = HOUR_OPTIONS.find((h) => h.value === dailyHour);
 		const embed = new EmbedBuilder()
@@ -68,7 +73,7 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 				},
 				{
 					name: 'Daily time',
-					value: hourOption.name,
+					value: hourOption?.name ?? '-',
 					inline: true,
 				},
 				{

@@ -3,7 +3,7 @@ import { format, transports, createLogger as wCreateLogger } from 'winston';
 import LokiTransport from 'winston-loki';
 import colors = require('colors/safe');
 
-const getColor = (level) => {
+const getColor = (level: string) => {
 	switch (level) {
 		case 'error':
 			return colors.red;

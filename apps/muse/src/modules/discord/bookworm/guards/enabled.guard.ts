@@ -19,14 +19,14 @@ export class BookwormEnabledGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS.split(',');
+		const admins = process.env.OWNER_IDS!.split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId);
+		const settings = await this._bookwormSettings.get(interaction.guildId!);
 
-		if (!settings.enabled) {
+		if (!settings?.enabled) {
 			throw new ModuleNotEnabledException('Music');
 		}
 
