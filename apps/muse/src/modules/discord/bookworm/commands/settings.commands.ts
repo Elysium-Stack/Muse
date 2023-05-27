@@ -1,7 +1,7 @@
 import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/constants';
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards/guild-admin.guard';
-import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { createHoursSelect } from '@muse/util/create-hour-select';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
@@ -230,7 +230,7 @@ export class BookwormSettingsCommands {
 		interaction: MessageComponentInteraction | CommandInteraction,
 		option: keyof BookwormSettingsInterface,
 	) {
-		let components: DiscordComponentsArray = [];
+		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
 
 		let currentValue = settings?.[option];

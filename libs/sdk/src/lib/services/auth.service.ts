@@ -9,9 +9,8 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-/* This is a test comment */
-import { ParsedTokenResponse } from '../models/parsed-token-response';
-import { TokensResponse } from '../models/tokens-response';
+import { ParsedTokenResponseDto } from '../models/parsed-token-response-dto';
+import { TokensResponseDto } from '../models/tokens-response-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -96,7 +95,7 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<TokensResponse>> {
+): Observable<StrictHttpResponse<TokensResponseDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthService.AuthControllerCallbackPath, 'get');
     if (params) {
@@ -110,7 +109,7 @@ export class AuthService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TokensResponse>;
+        return r as StrictHttpResponse<TokensResponseDto>;
       })
     );
   }
@@ -128,10 +127,10 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<TokensResponse> {
+): Observable<TokensResponseDto> {
 
     return this.authControllerCallback$Response(params,context).pipe(
-      map((r: StrictHttpResponse<TokensResponse>) => r.body as TokensResponse)
+      map((r: StrictHttpResponse<TokensResponseDto>) => r.body as TokensResponseDto)
     );
   }
 
@@ -152,7 +151,7 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<ParsedTokenResponse>> {
+): Observable<StrictHttpResponse<ParsedTokenResponseDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthService.AuthControllerWhoamiPath, 'get');
     if (params) {
@@ -165,7 +164,7 @@ export class AuthService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ParsedTokenResponse>;
+        return r as StrictHttpResponse<ParsedTokenResponseDto>;
       })
     );
   }
@@ -182,10 +181,10 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<ParsedTokenResponse> {
+): Observable<ParsedTokenResponseDto> {
 
     return this.authControllerWhoami$Response(params,context).pipe(
-      map((r: StrictHttpResponse<ParsedTokenResponse>) => r.body as ParsedTokenResponse)
+      map((r: StrictHttpResponse<ParsedTokenResponseDto>) => r.body as ParsedTokenResponseDto)
     );
   }
 
@@ -260,7 +259,7 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<TokensResponse>> {
+): Observable<StrictHttpResponse<TokensResponseDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthService.AuthControllerRefreshPath, 'get');
     if (params) {
@@ -273,7 +272,7 @@ export class AuthService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TokensResponse>;
+        return r as StrictHttpResponse<TokensResponseDto>;
       })
     );
   }
@@ -290,10 +289,10 @@ export class AuthService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<TokensResponse> {
+): Observable<TokensResponseDto> {
 
     return this.authControllerRefresh$Response(params,context).pipe(
-      map((r: StrictHttpResponse<TokensResponse>) => r.body as TokensResponse)
+      map((r: StrictHttpResponse<TokensResponseDto>) => r.body as TokensResponseDto)
     );
   }
 

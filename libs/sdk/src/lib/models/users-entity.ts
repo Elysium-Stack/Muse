@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface Users {
+
+export interface UsersEntity {
   discordId: string;
   discordRefreshToken: string;
   discordToken: string;

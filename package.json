@@ -26,7 +26,8 @@
 		"prisma:pull": "yarn prisma db pull",
 		"prisma:push": "yarn prisma db push",
 		"prisma:generate": "yarn prisma generate",
-		"prisma:migrate:deploy": "yarn prisma migrate deploy"
+		"prisma:migrate:deploy": "yarn prisma migrate deploy",
+		"sdk:all": "yarn sdk:generate && yarn prisma:generate"
 	},
 	"private": true,
 	"dependencies": {

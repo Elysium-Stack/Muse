@@ -1,6 +1,6 @@
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
-import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { camelCaseToSnakeCase } from '@muse/util/strings';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
@@ -162,7 +162,7 @@ export class ReactionTriggerSettingsCommands {
 		interaction: MessageComponentInteraction | CommandInteraction,
 		option: keyof ReactionTriggerSettingsInterface,
 	) {
-		let components: DiscordComponentsArray = [];
+		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
 
 		let currentValue: string | string[] | boolean | undefined =

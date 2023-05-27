@@ -9,8 +9,8 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-/* This is a test comment */
-import { Users } from '../models/users';
+import { Guild } from '../models/guild';
+import { UsersEntity } from '../models/users-entity';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,7 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<Array<Users>>> {
+): Observable<StrictHttpResponse<Array<Guild>>> {
 
     const rb = new RequestBuilder(this.rootUrl, GuildsService.GuildsControllerGuildsPath, 'get');
     if (params) {
@@ -53,7 +53,7 @@ export class GuildsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Users>>;
+        return r as StrictHttpResponse<Array<Guild>>;
       })
     );
   }
@@ -70,10 +70,10 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<Array<Users>> {
+): Observable<Array<Guild>> {
 
     return this.guildsControllerGuilds$Response(params,context).pipe(
-      map((r: StrictHttpResponse<Array<Users>>) => r.body as Array<Users>)
+      map((r: StrictHttpResponse<Array<Guild>>) => r.body as Array<Guild>)
     );
   }
 
@@ -94,7 +94,7 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<Array<Users>>> {
+): Observable<StrictHttpResponse<Array<UsersEntity>>> {
 
     const rb = new RequestBuilder(this.rootUrl, GuildsService.GuildsControllerTestPath, 'get');
     if (params) {
@@ -107,7 +107,7 @@ export class GuildsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Users>>;
+        return r as StrictHttpResponse<Array<UsersEntity>>;
       })
     );
   }
@@ -124,10 +124,10 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<Array<Users>> {
+): Observable<Array<UsersEntity>> {
 
     return this.guildsControllerTest$Response(params,context).pipe(
-      map((r: StrictHttpResponse<Array<Users>>) => r.body as Array<Users>)
+      map((r: StrictHttpResponse<Array<UsersEntity>>) => r.body as Array<UsersEntity>)
     );
   }
 

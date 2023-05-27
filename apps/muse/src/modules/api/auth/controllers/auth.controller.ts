@@ -1,9 +1,9 @@
-import type { AuthenticatedRequest } from '@muse/types/authenticated-request.type';
+import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
-	ParsedTokenResponse,
-	TokensResponse,
+	ParsedTokenResponseDTO,
+	TokensResponseDTO,
 } from '../../../../types/responses.type';
 import { AccessTokenGuard } from '../guards/access-token.guard';
 import { DiscordOAuthGuard } from '../guards/discord-oauth.guard';
@@ -28,10 +28,10 @@ export class AuthController {
 	@Get('callback')
 	@UseGuards(DiscordOAuthGuard)
 	callback(
-		@Request() req: AuthenticatedRequest,
+		@Request() req: AuthenticatedRequestDTO,
 		@Query('code') code: string,
-	): TokensResponse {
-		return req.user as TokensResponse;
+	): TokensResponseDTO {
+		return req.user as TokensResponseDTO;
 	}
 
 	/**
@@ -39,8 +39,8 @@ export class AuthController {
 	 */
 	@Get('me')
 	@UseGuards(AccessTokenGuard)
-	whoami(@Request() req: AuthenticatedRequest): ParsedTokenResponse {
-		return req.user as ParsedTokenResponse;
+	whoami(@Request() req: AuthenticatedRequestDTO): ParsedTokenResponseDTO {
+		return req.user as ParsedTokenResponseDTO;
 	}
 
 	/**
@@ -48,7 +48,7 @@ export class AuthController {
 	 */
 	@Get('logout')
 	@UseGuards(AccessTokenGuard)
-	logout(@Request() req: AuthenticatedRequest) {
+	logout(@Request() req: AuthenticatedRequestDTO) {
 		this._authService.signout(req.user.sub);
 	}
 
@@ -57,7 +57,9 @@ export class AuthController {
 	 */
 	@Get('refresh')
 	@UseGuards(RefreshTokenGuard)
-	refresh(@Request() req: AuthenticatedRequest): Promise<TokensResponse> {
+	refresh(
+		@Request() req: AuthenticatedRequestDTO,
+	): Promise<TokensResponseDTO> {
 		const userId = req.user.sub;
 		const refreshToken = req.user.refreshToken!;
 		return this._authService.refreshTokens(userId, refreshToken);

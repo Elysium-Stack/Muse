@@ -1,4 +1,5 @@
-export { TokensResponse } from './models/tokens-response';
-export { WhoamiDiscordResponse } from './models/whoami-discord-response';
-export { ParsedTokenResponse } from './models/parsed-token-response';
-export { Users } from './models/users';
+export { TokensResponseDto } from './models/tokens-response-dto';
+export { WhoamiDiscordResponseDto } from './models/whoami-discord-response-dto';
+export { ParsedTokenResponseDto } from './models/parsed-token-response-dto';
+export { Guild } from './models/guild';
+export { UsersEntity } from './models/users-entity';

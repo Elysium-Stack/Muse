@@ -3,7 +3,7 @@ import {
 	ForbiddenExceptionFilter,
 } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
-import { DiscordComponentsArray } from '@muse/types/discord-components-array.type';
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { MESSAGE_PREFIX } from '@muse/util/constants';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
@@ -251,7 +251,7 @@ export class ReactionTriggerGeneralCommands {
 		}
 
 		const buttons = [];
-		const components: DiscordComponentsArray = [];
+		const components: DiscordComponentsArrayDTO = [];
 
 		if (page > 1) {
 			buttons.push(

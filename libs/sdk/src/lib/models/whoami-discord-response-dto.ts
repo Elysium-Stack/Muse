@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface WhoamiDiscordResponse {
+
+export interface WhoamiDiscordResponseDto {
 
   /**
    * Discord accent color of the user.

@@ -1,6 +1,6 @@
 import { Request } from '@nestjs/common';
-import { ParsedTokenResponse } from './responses.type';
+import { ParsedTokenResponseDTO } from './responses.type';
 
-export interface AuthenticatedRequest extends Request {
-	user: ParsedTokenResponse;
+export interface AuthenticatedRequestDTO extends Request {
+	user: ParsedTokenResponseDTO;
 }

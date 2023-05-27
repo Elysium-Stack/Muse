@@ -7,7 +7,7 @@ import {
 	MessageActionRowComponentData,
 } from 'discord.js';
 
-export type DiscordComponentsArray = (
+export type DiscordComponentsArrayDTO = (
 	| JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>
 	| ActionRowData<
 			MessageActionRowComponentData | MessageActionRowComponentBuilder

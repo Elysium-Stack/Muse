@@ -1,4 +1,4 @@
-export class TokensResponse {
+export class TokensResponseDTO {
 	/**
 	 * The users's access token.
 	 */
@@ -10,7 +10,7 @@ export class TokensResponse {
 	refreshToken: string;
 }
 
-export class WhoamiDiscordResponse {
+export class WhoamiDiscordResponseDTO {
 	/**
 	 * Discord id of the user.
 	 */
@@ -84,7 +84,7 @@ export class WhoamiDiscordResponse {
 	avatar_decoration: string | null;
 }
 
-export class TokenResponse {
+export class TokenResponseDTO {
 	/**
 	 * The user's access token.
 	 */
@@ -96,7 +96,7 @@ export class TokenResponse {
 	refreshToken?: string;
 }
 
-export class ParsedTokenResponse extends TokenResponse {
+export class ParsedTokenResponseDTO extends TokenResponseDTO {
 	/**
 	 * ID of the user.
 	 */
@@ -105,7 +105,7 @@ export class ParsedTokenResponse extends TokenResponse {
 	/**
 	 * The discord user of the user.
 	 */
-	discord: WhoamiDiscordResponse;
+	discord: WhoamiDiscordResponseDTO;
 
 	/**
 	 * Time of issuing the access token.

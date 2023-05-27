@@ -1,5 +1,5 @@
-import { PrismaService, Users } from '@muse/modules/prisma';
-import type { AuthenticatedRequest } from '@muse/types/authenticated-request.type';
+import { PrismaService, UsersEntity } from '@muse/modules/prisma';
+import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Guild } from 'discord.js';
@@ -20,7 +20,7 @@ export class GuildsController {
 	@Get()
 	@UseGuards(AccessTokenGuard)
 	guilds(
-		@Request() { user: { sub } }: AuthenticatedRequest,
+		@Request() { user: { sub } }: AuthenticatedRequestDTO,
 	): Promise<Guild[]> {
 		return this._discord.request<Guild[]>(sub, '/users/@me/guilds');
 	}
@@ -29,7 +29,7 @@ export class GuildsController {
 	 */
 	@Get('test')
 	@UseGuards(AccessTokenGuard)
-	test(): Promise<Users[]> {
+	test(): Promise<UsersEntity[]> {
 		return this._prisma.users.findMany();
 	}
 }

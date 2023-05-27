@@ -1,7 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-import { WhoamiDiscordResponse } from './whoami-discord-response';
-export interface ParsedTokenResponse {
+
+import { WhoamiDiscordResponseDto } from './whoami-discord-response-dto';
+export interface ParsedTokenResponseDto {
 
   /**
    * The user's access token.
@@ -11,7 +12,7 @@ export interface ParsedTokenResponse {
   /**
    * The discord user of the user.
    */
-  discord: WhoamiDiscordResponse;
+  discord: WhoamiDiscordResponseDto;
 
   /**
    * Experation time of the access token.

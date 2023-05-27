@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface TokensResponse {
+
+export interface TokensResponseDto {
 
   /**
    * The users's access token.
