@@ -48,4 +48,4 @@ Thumbs.db
 
 .angular
 
-apps/muse/src/modules/prisma/dto
+libs/prisma/src/lib/dto

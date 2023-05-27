@@ -1,3 +1,21 @@
+diff --git a/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js b/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
+index a90534f..a8e4cdd 100644
+--- a/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
++++ b/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
+@@ -126,6 +126,13 @@ function replaceImportPath(typeReference, fileName) {
+             if (indexPos >= 0) {
+                 relativePath = relativePath.slice(0, indexPos);
+             }
++            const djsText = 'discord.js';
++            const typingsText = '/typings';
++            const djsPos = relativePath.indexOf(djsText);
++            const typingsPos = relativePath.indexOf(typingsText);
++            if (typingsPos >= 0 && djsPos >= 0) {
++                relativePath = relativePath.slice(0, typingsPos);
++            }
+         }
+         typeReference = typeReference.replace(importPath, relativePath);
+         return typeReference.replace('import', 'require');
 diff --git a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js b/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
 index f20e479..3d1c548 100644
 --- a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js

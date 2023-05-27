@@ -1,3 +1,10 @@
+import {
+	HasNoPlayerExceptionFilter,
+	MusicHasPlayerGuard,
+	MusicInVoiceGuard,
+	MusicPlayerService,
+	NotInVoiceExceptionFilter,
+} from '@muse/music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,
@@ -6,12 +13,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
-import { HasNoPlayerExceptionFilter } from '../filters/has-player.filter';
-import { NotInVoiceExceptionFilter } from '../filters/in-voice.filter';
-import { MusicHasPlayerGuard } from '../guards/has-player.guard';
-import { MusicInVoiceGuard } from '../guards/in-voice.guard';
 import { MusicCommandDecorator } from '../music.decorator';
-import { MusicPlayerService } from '../services/player.service';
 
 @UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
 @UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)

@@ -1,5 +1,3 @@
-export const MESSAGE_PREFIX = '𓏢';
-
 export const MODULES = ['Bookworm', 'Music', 'Reaction Trigger'];
 
 export const HOUR_OPTIONS = [

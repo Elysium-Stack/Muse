@@ -1,7 +1,7 @@
-import { MESSAGE_PREFIX, MODULES } from '@muse/constants';
+import { MODULES } from '@muse/constants';
 import { ForbiddenExceptionFilter } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
-import { chunks } from '@muse/util/arrays';
+import { MESSAGE_PREFIX, chunks } from '@muse/util';
 import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import {

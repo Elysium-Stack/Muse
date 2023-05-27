@@ -1,5 +1,5 @@
-import { PrismaService } from '@muse/modules/prisma';
-import { MESSAGE_PREFIX } from '@muse/util/constants';
+import { PrismaService } from '@muse/prisma';
+import { MESSAGE_PREFIX } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { getHours } from 'date-fns';

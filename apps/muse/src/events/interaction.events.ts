@@ -1,4 +1,4 @@
-import { getInteractionCommandName } from '@muse/util/get-interaction-command-name';
+import { getInteractionCommandName } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';

@@ -1,12 +1,12 @@
+import { createLogger } from '@muse/util';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { createLogger } from './util/create-logger';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
 		cors: true,
-		logger: createLogger(),
+		logger: createLogger('Muse'),
 	});
 	app.setGlobalPrefix('api');
 

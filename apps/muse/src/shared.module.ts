@@ -1,5 +1,5 @@
+import { PrismaModule } from '@muse/prisma';
 import { Module } from '@nestjs/common';
-import { PrismaModule } from './modules/prisma';
 import { SettingsSharedModule } from './modules/settings';
 
 @Module({

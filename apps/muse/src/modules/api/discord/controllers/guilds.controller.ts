@@ -1,4 +1,4 @@
-import { PrismaService, UsersEntity } from '@muse/modules/prisma';
+import { PrismaService, UsersEntity } from '@muse/prisma';
 import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

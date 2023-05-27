@@ -1,4 +1,4 @@
-import { LavalinkService } from '@muse/modules/discord/music/services/lavalink.service';
+import { MusicLavalinkService } from '@muse/music';
 import { Injectable } from '@nestjs/common';
 import {
 	HealthCheckError,
@@ -8,7 +8,7 @@ import {
 
 @Injectable()
 export class LavalinkHealthService extends HealthIndicator {
-	constructor(private readonly _lavalink: LavalinkService) {
+	constructor(private readonly _lavalink: MusicLavalinkService) {
 		super();
 	}
 

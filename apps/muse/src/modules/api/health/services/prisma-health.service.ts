@@ -1,4 +1,4 @@
-import { PrismaService } from '@muse/modules/prisma';
+import { PrismaService } from '@muse/prisma';
 import { Injectable } from '@nestjs/common';
 import {
 	HealthCheckError,

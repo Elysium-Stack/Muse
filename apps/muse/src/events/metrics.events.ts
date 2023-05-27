@@ -1,4 +1,4 @@
-import { getInteractionCommandName } from '@muse/util/get-interaction-command-name';
+import { getInteractionCommandName } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';

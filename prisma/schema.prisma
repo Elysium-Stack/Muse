@@ -7,7 +7,7 @@ generator client {
 
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../apps/muse/src/modules/prisma/dto"
+  output                          = "../libs/prisma/src/lib/dto"
   outputToNestJsResourceStructure = "false"
   exportRelationModifierClasses   = "true"
   reExport                        = "true"

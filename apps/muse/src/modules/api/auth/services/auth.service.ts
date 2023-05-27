@@ -1,4 +1,4 @@
-import { PrismaService } from '@muse/modules/prisma';
+import { PrismaService } from '@muse/prisma';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { HealthIndicator } from '@nestjs/terminus';

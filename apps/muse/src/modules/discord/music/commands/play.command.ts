@@ -1,4 +1,10 @@
 import { EnabledExceptionFilter } from '@muse/filters';
+import {
+	MusicInVoiceGuard,
+	MusicPlayerService,
+	NotInVoiceExceptionFilter,
+} from '@muse/music';
+import { PrismaService } from '@muse/prisma';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,
@@ -10,11 +16,8 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
-import { NotInVoiceExceptionFilter } from '../filters/in-voice.filter';
 import { MusicEnabledGuard } from '../guards/enabled.guard';
-import { MusicInVoiceGuard } from '../guards/in-voice.guard';
 import { MusicCommandDecorator } from '../music.decorator';
-import { MusicPlayerService } from '../services/player.service';
 import { MusicSettingsCommands } from './settings.commands';
 
 class MusicPlayOptions {
@@ -32,7 +35,10 @@ class MusicPlayOptions {
 export class MusicPlayCommands {
 	private readonly _logger = new Logger(MusicSettingsCommands.name);
 
-	constructor(private _player: MusicPlayerService) {}
+	constructor(
+		private _player: MusicPlayerService,
+		private _prisma: PrismaService,
+	) {}
 
 	@Subcommand({
 		name: 'play',
@@ -42,7 +48,7 @@ export class MusicPlayCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { song }: MusicPlayOptions,
 	) {
-		return this._player.play(interaction, song!);
+		return this._play(interaction, song);
 	}
 
 	@Button('MUSIC_PLAY/:song')
@@ -51,6 +57,42 @@ export class MusicPlayCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('song') song: string,
 	) {
-		return this._player.play(interaction, song);
+		return this._play(interaction, song);
+	}
+
+	private async _play(interaction, song) {
+		const data = await this._player.play(interaction, song!);
+
+		if (!data) {
+			return;
+		}
+
+		const { result } = data;
+
+		if (result) {
+			const tracks = [...result.tracks].map((track) => {
+				delete track.kazagumo;
+				return track;
+			});
+
+			await this._prisma.musicLog
+				.create({
+					data: {
+						guildId: interaction.guildId!,
+						userId: interaction.user.id,
+						query: song,
+						result: !tracks.length
+							? undefined
+							: JSON.stringify(
+									result.type === 'PLAYLIST'
+										? tracks
+										: tracks[0],
+							  ),
+					},
+				})
+				.catch(() => null);
+		}
+
+		// return reply;
 	}
 }

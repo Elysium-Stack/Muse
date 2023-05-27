@@ -1,15 +1,15 @@
+import { MusicModule as MusicLibModule } from '@muse/music';
 import { SharedModule } from '@muse/shared.module';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
-import { MusicSharedModule } from '../../discord/music/music.shared.module';
 import { HealthController } from './controllers/health.controller';
 import { LavalinkHealthService } from './services';
 import { DiscordHealthService } from './services/discord-health.service';
 import { PrismaHealthService } from './services/prisma-health.service';
 
 @Module({
-	imports: [SharedModule, HttpModule, TerminusModule, MusicSharedModule],
+	imports: [SharedModule, HttpModule, TerminusModule, MusicLibModule],
 	controllers: [HealthController],
 	providers: [
 		PrismaHealthService,

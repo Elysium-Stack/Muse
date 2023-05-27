@@ -15,6 +15,20 @@ services:
         depends_on:
             - db
             - lavalink
+    radio:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn radio:docker:start
+        env_file: ./.env
+        ports:
+            - '$EXPOSED_RADIO_API_PORT:3000'
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+            - lavalink
     dashboard:
         build:
             context: .

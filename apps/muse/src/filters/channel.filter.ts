@@ -1,5 +1,5 @@
+import { interactionReply } from '@muse/util';
 import { IncorrectChannelException } from '@muse/util/errors';
-import { interactionReply } from '@muse/util/interaction-replies';
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';

@@ -1,9 +1,9 @@
+import { intents } from '@muse/util';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import { GatewayIntentBits } from 'discord.js';
 import { NecordModule } from 'necord';
 import { AppEvents } from './events/app.events';
 import { GuildEvents } from './events/guild.events';
@@ -38,15 +38,7 @@ import { SharedModule } from './shared.module';
 					: false,
 			skipRegistration: process.env.REGISTER_COMMANDS === 'false',
 			token: process.env.DISCORD_TOKEN!,
-			intents: [
-				GatewayIntentBits.Guilds,
-				GatewayIntentBits.GuildMessages,
-				GatewayIntentBits.GuildMembers,
-				GatewayIntentBits.GuildVoiceStates,
-				GatewayIntentBits.MessageContent,
-				GatewayIntentBits.GuildEmojisAndStickers,
-				GatewayIntentBits.GuildMessageReactions,
-			],
+			intents,
 		}),
 		SentryModule.forRoot({
 			dsn: process.env.SENTRY_DNS,
@@ -104,6 +96,7 @@ import { SharedModule } from './shared.module';
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {
+		console.log('?');
 		consumer.apply(LoggerMiddleware).forRoutes({
 			path: '*',
 			method: RequestMethod.ALL,

@@ -1,4 +1,4 @@
-import { MESSAGE_PREFIX } from '@muse/util/constants';
+import { MESSAGE_PREFIX } from '@muse/util';
 import { Logger } from '@nestjs/common';
 import {
 	ActionRowBuilder,

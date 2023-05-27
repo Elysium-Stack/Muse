@@ -16,24 +16,7 @@
 				"tsConfig": "apps/muse/tsconfig.app.json",
 				"assets": [],
 				"isolatedConfig": true,
-				"webpackConfig": "apps/muse/webpack.config.js",
-				"transformers": [
-					{
-						"name": "@nestjs/swagger",
-						"options": {
-							"dtoFileNameSuffix": [
-								".type.ts",
-								".dto.ts",
-								".entity.ts"
-							],
-							"controllerFileNameSuffix": [".controller.ts"],
-							"classValidatorShim": true,
-							"dtoKeyOfComment": "description",
-							"controllerKeyOfComment": "description",
-							"introspectComments": true
-						}
-					}
-				]
+				"webpackConfig": "apps/muse/webpack.config.js"
 			},
 			"configurations": {
 				"development": {},

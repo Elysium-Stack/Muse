@@ -15,13 +15,16 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@muse/sdk": ["libs/sdk/src/index.ts"],
-			"@muse/sdk/*": ["libs/sdk/src/lib/*"],
 			"@muse": ["apps/muse/src"],
 			"@muse/*": ["apps/muse/src/*"],
 			"@muse/constants": ["apps/muse/src/util/constants"],
-			"@muse/prisma": ["apps/muse/src/modules/prisma"],
-			"@muse/settings": ["apps/muse/src/modules/settings"]
+			"@muse/music": ["libs/music/src/index.ts"],
+			"@muse/music/*": ["libs/music/src/lib/*"],
+			"@muse/prisma": ["libs/prisma/src/index.ts"],
+			"@muse/sdk": ["libs/sdk/src/index.ts"],
+			"@muse/sdk/*": ["libs/sdk/src/lib/*"],
+			"@muse/settings": ["apps/muse/src/modules/settings"],
+			"@muse/util": ["libs/util/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

@@ -1,7 +1,8 @@
 import { BaseSettingsService } from '@muse/base';
+import { HOUR_OPTIONS } from '@muse/constants';
 import { SettingsService } from '@muse/modules/settings';
 import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
-import { HOUR_OPTIONS, MESSAGE_PREFIX } from '@muse/util/constants';
+import { MESSAGE_PREFIX } from '@muse/util';
 import { Injectable } from '@nestjs/common';
 import {
 	ActionRowBuilder,

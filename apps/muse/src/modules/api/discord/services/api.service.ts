@@ -1,4 +1,4 @@
-import { PrismaService } from '@muse/modules/prisma';
+import { PrismaService } from '@muse/prisma';
 import { HttpService } from '@nestjs/axios';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';

@@ -1,5 +1,5 @@
-import { PrismaService } from '@muse/modules/prisma';
-import { escapeRegExp } from '@muse/util/regex';
+import { PrismaService } from '@muse/prisma';
+import { escapeRegExp } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client, Message } from 'discord.js';
 import { ReactionTriggerSettingsService } from './settings.service';

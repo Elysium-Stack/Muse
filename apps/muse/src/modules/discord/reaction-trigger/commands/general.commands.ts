@@ -4,7 +4,7 @@ import {
 } from '@muse/filters';
 import { GuildAdminGuard } from '@muse/guards';
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
-import { MESSAGE_PREFIX } from '@muse/util/constants';
+import { MESSAGE_PREFIX } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	ActionRowBuilder,

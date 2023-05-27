@@ -1,4 +1,4 @@
-import { interactionReply } from '@muse/util/interaction-replies';
+import { interactionReply } from '@muse/util';
 import {
 	ArgumentsHost,
 	Catch,
