@@ -2,6 +2,7 @@
 	"collection": "@nestjs/schematics",
 	"sourceRoot": "apps/muse/src",
 	"compilerOptions": {
+		"deleteOutDir": true,
 		"plugins": [
 			{
 				"name": "@nestjs/swagger",

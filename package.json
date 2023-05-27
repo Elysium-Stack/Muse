@@ -16,7 +16,7 @@
 		"muse:docker:start": "yarn nest start --watch",
 		"muse:start": "yarn serve muse",
 		"muse:start:prod": "yarn start:prod ./dist/apps/muse/main",
-		"muse:build": "yarn build muse",
+		"muse:build": "yarn nest build",
 		"dashboard:docker:start": "yarn docker:start dashboard",
 		"dashboard:start": "yarn serve dashboard",
 		"dashboard:build": "yarn build dashboard",
