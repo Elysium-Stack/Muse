@@ -1,0 +1,25 @@
+FROM node:18 as base
+
+WORKDIR /opt/app
+EXPOSE 3000
+
+FROM base as build
+
+COPY package.json yarn.lock ./
+COPY patches ./patches
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn prisma generate
+RUN yarn dashboard:build
+
+
+FROM nginx as production
+
+EXPOSE 80
+
+COPY --from=BUILD /opt/app/dist/apps/dashboard /usr/share/nginx/html
+COPY .docker/nginx.conf  /etc/nginx/conf.d/default.conf
+
