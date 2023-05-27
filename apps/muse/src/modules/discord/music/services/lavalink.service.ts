@@ -173,17 +173,31 @@ export class LavalinkService extends Kazagumo {
 		player: KazagumoPlayer,
 		data: TrackExceptionEvent,
 	) {
-		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
+		this._logger.error(`Player exception\n ${JSON.stringify(data)}`);
 
 		const channel = await this._client.channels.fetch(player.textId);
-		player.destroy();
+
+		let skipping = true;
+		if (!player.queue.size && player.loop === 'none') {
+			skipping = false;
+		}
+
+		if (skipping) {
+			player.skip();
+		}
+
+		if (!skipping) {
+			player.destroy();
+		}
 
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}
 
 		await channel.send({
-			content: `Something wen't wrong, please try again.`,
+			content: `Something wen't wrong, ${
+				skipping ? 'Skipping song' : 'please try again'
+			}.`,
 		});
 	}
 
