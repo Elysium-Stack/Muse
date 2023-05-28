@@ -1,10 +1,9 @@
-import { PrismaService } from '@muse/prisma';
-import { MESSAGE_PREFIX, interactionReply } from '@muse/util';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { PrismaService } from '@prisma';
+import { MESSAGE_PREFIX, interactionReply } from '@util';
 import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
 import { firstValueFrom, take } from 'rxjs';
-
 @Injectable()
 export class RadioService {
 	private readonly _logger = new Logger(RadioService.name);

@@ -1,5 +1,5 @@
-import { ForbiddenExceptionFilter, GuildAdminGuard } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { ForbiddenExceptionFilter, GuildAdminGuard } from '@util';
 import {
 	Button,
 	ButtonContext,
@@ -9,7 +9,6 @@ import {
 } from 'necord';
 import { RadioCommandDecorator } from '../radio.decorator';
 import { RadioService } from '../services';
-
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @RadioCommandDecorator()
@@ -20,13 +19,13 @@ export class RadioNextCommands {
 
 	@Subcommand({
 		name: 'next',
-		description: 'Play the next song in the queue',
+		description: 'Play the next song in the radio queue',
 	})
 	public async next(@Context() [interaction]: SlashCommandContext) {
 		return this._radio.next(interaction);
 	}
 
-	@Button('MUSIC_NEXT')
+	@Button('RADIO_NEXT')
 	public onButton(
 		@Context()
 		[interaction]: ButtonContext,

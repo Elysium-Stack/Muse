@@ -4,7 +4,7 @@ import {
 	MusicInVoiceGuard,
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
-} from '@muse/music';
+} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,

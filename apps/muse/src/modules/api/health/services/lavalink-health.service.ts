@@ -1,4 +1,4 @@
-import { MusicLavalinkService } from '@muse/music';
+import { MusicLavalinkService } from '@music';
 import { Injectable } from '@nestjs/common';
 import {
 	HealthCheckError,

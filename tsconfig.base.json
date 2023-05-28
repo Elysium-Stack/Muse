@@ -17,14 +17,17 @@
 		"paths": {
 			"@muse": ["apps/muse/src"],
 			"@muse/*": ["apps/muse/src/*"],
-			"@muse/constants": ["apps/muse/src/util/constants"],
-			"@muse/music": ["libs/music/src/index.ts"],
-			"@muse/music/*": ["libs/music/src/lib/*"],
-			"@muse/prisma": ["libs/prisma/src/index.ts"],
-			"@muse/sdk": ["libs/sdk/src/index.ts"],
-			"@muse/sdk/*": ["libs/sdk/src/lib/*"],
 			"@muse/settings": ["apps/muse/src/modules/settings"],
-			"@muse/util": ["libs/util/src/index.ts"]
+			"@radio": ["apps/radio/src"],
+			"@radio/*": ["apps/radio/src/*"],
+			"@music": ["libs/music/src/index.ts"],
+			"@music/*": ["libs/music/src/lib/*"],
+			"@prisma": ["libs/prisma/src/index.ts"],
+			"@prisma/*": ["libs/prisma/src/lib/*"],
+			"@sdk": ["libs/sdk/src/index.ts"],
+			"@sdk/*": ["libs/sdk/src/lib/*"],
+			"@util": ["libs/util/src/index.ts"],
+			"@util/*": ["libs/util/src/lib/*"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

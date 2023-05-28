@@ -1,7 +1,7 @@
-import { PrismaService } from '@muse/prisma';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { HealthIndicator } from '@nestjs/terminus';
+import { PrismaService } from '@prisma';
 import * as argon2 from 'argon2';
 import { User } from 'discord.js';
 import { DiscordApiService } from '../../discord/services';

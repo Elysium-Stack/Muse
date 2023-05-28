@@ -1,10 +1,10 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	ForbiddenExceptionFilter,
 	MESSAGE_PREFIX,
 	camelCaseToSnakeCase,
-} from '@muse/util';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -39,7 +39,6 @@ import { MusicCommandDecorator } from '..';
 import { MusicSettingsService } from '../services/settings.service';
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
-
 class MusicSettingsChangeOptions {
 	@StringOption({
 		name: 'option',

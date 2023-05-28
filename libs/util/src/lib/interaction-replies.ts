@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 export const interactionReply = async (
-	interaction: CommandInteraction | MessageComponentInteraction,
+	interaction: CommandInteraction | MessageComponentInteraction | null,
 	data: BaseMessageOptions,
 	ephemeral = true,
 ) => {

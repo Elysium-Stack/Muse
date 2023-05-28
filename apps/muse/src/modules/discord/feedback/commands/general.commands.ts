@@ -1,5 +1,5 @@
-import { MESSAGE_PREFIX } from '@muse/util';
 import { Logger } from '@nestjs/common';
+import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	Client,
@@ -25,7 +25,6 @@ import {
 } from 'necord';
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
-
 @FeedbackCommandDecorator()
 export class FeedbackGeneralCommands {
 	private readonly _logger = new Logger(FeedbackGeneralCommands.name);

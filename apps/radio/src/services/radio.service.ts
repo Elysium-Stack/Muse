@@ -1,6 +1,6 @@
-import { MusicPlayerService } from '@muse/music';
-import { PrismaService } from '@muse/prisma';
+import { MusicPlayerService } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class RadioService {

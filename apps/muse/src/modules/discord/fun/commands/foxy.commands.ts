@@ -1,8 +1,7 @@
-import { MESSAGE_PREFIX } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
+import { MESSAGE_PREFIX } from '@util';
 import { Context, SlashCommand, SlashCommandContext } from 'necord';
 import { FunFoxyService } from '../services/foxy.service';
-
 // class FunKittyRandomOptions {
 // 	@StringOption({
 // 		name: 'type',

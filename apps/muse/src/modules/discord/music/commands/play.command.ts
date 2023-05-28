@@ -2,10 +2,10 @@ import {
 	MusicInVoiceGuard,
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
-} from '@muse/music';
-import { PrismaService } from '@muse/prisma';
-import { EnabledExceptionFilter } from '@muse/util';
+} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { PrismaService } from '@prisma';
+import { EnabledExceptionFilter } from '@util';
 import {
 	Button,
 	ButtonContext,
@@ -19,7 +19,6 @@ import {
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicCommandDecorator } from '../music.decorator';
 import { MusicSettingsCommands } from './settings.commands';
-
 class MusicPlayOptions {
 	@StringOption({
 		name: 'song',

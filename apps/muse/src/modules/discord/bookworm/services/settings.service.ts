@@ -1,9 +1,9 @@
 import { BaseSettingsService } from '@muse/base';
-import { HOUR_OPTIONS } from '@muse/constants';
 import { SettingsService } from '@muse/modules/settings';
 import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
-import { MESSAGE_PREFIX } from '@muse/util';
+import { HOUR_OPTIONS } from '@muse/util/constants';
 import { Injectable } from '@nestjs/common';
+import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -20,7 +20,6 @@ import {
 	BOOKWORM_EMBED_COLOR,
 	BOOKWORM_SETTINGS_CHOICES,
 } from '../util/constants';
-
 @Injectable()
 export class BookwormSettingsService extends BaseSettingsService<BookwormSettingsInterface> {
 	protected _base = 'bookworm';

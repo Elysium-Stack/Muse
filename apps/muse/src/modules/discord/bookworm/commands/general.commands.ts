@@ -1,9 +1,9 @@
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	ChannelExceptionFilter,
 	EnabledExceptionFilter,
 	MESSAGE_PREFIX,
-} from '@muse/util';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+} from '@util';
 import { Client } from 'discord.js';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
 import { BookwormCommandDecorator } from '../bookworm.decorator';
@@ -11,7 +11,6 @@ import { BookwormChannelGuard } from '../guards/channel.guard';
 import { BookwormEnabledGuard } from '../guards/enabled.guard';
 import { BookwormQuestionService } from '../services/question.service';
 import { createQuestionEmbed } from '../util/create-question-embed';
-
 @UseGuards(BookwormEnabledGuard)
 @UseFilters(EnabledExceptionFilter)
 @BookwormCommandDecorator()

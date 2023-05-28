@@ -1,11 +1,10 @@
-import { getInteractionCommandName } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import { getInteractionCommandName } from '@util';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Client, Events } from 'discord.js';
 import { CommandsService, Context, ContextOf, On, Once } from 'necord';
 import { Counter, Gauge } from 'prom-client';
-
 @Injectable()
 export class MetricsEvents {
 	private readonly _logger = new Logger(MetricsEvents.name);

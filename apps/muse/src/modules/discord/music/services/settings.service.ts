@@ -1,8 +1,8 @@
 import { BaseSettingsService } from '@muse/base';
 import { SettingsService } from '@muse/modules/settings';
 import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
-import { MESSAGE_PREFIX } from '@muse/util';
 import { Injectable } from '@nestjs/common';
+import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -16,7 +16,6 @@ import {
 } from 'discord.js';
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_EMBED_COLOR, MUSIC_SETTINGS_CHOICES } from '../util/constants';
-
 @Injectable()
 export class MusicSettingsService extends BaseSettingsService<MusicSettingsInterface> {
 	protected _base = 'music';

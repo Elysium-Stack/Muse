@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { AuthService } from '@muse/sdk';
+import { AuthService } from '@sdk';
 import { take } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 

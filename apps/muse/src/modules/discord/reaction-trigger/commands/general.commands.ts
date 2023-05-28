@@ -1,10 +1,10 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	EnabledExceptionFilter,
 	ForbiddenExceptionFilter,
 	MESSAGE_PREFIX,
-} from '@muse/util';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -30,7 +30,6 @@ import { ReactionTriggerEnabledGuard } from '../guards/enabled.guard';
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerGeneralService } from '../services/general.service';
 import { REACTION_TRIGGER_EMBED_COLOR } from '../util/constants';
-
 class ReactionTriggerListOptions {
 	@NumberOption({
 		name: 'page',

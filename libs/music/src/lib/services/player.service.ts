@@ -1,5 +1,5 @@
-import { interactionReply } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
+import { interactionReply } from '@util';
 import {
 	ChannelType,
 	Client,
@@ -7,7 +7,6 @@ import {
 	MessageComponentInteraction,
 } from 'discord.js';
 import { MusicLavalinkService } from './lavalink.service';
-
 @Injectable()
 export class MusicPlayerService {
 	private readonly _logger = new Logger(MusicPlayerService.name);

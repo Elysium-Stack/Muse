@@ -1,11 +1,10 @@
-import { PrismaService } from '@muse/prisma';
-import { MESSAGE_PREFIX } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import { PrismaService } from '@prisma';
+import { MESSAGE_PREFIX } from '@util';
 import { getHours } from 'date-fns';
 import { ChannelType, Client } from 'discord.js';
 import { createQuestionEmbed } from '../util/create-question-embed';
-
 @Injectable()
 export class BookwormQuestionService {
 	private readonly _logger = new Logger(BookwormQuestionService.name);

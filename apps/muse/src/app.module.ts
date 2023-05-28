@@ -1,8 +1,8 @@
-import { intents } from '@muse/util';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
+import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
 import { AppEvents } from './events/app.events';

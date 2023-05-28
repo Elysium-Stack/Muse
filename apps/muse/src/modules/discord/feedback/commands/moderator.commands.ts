@@ -1,7 +1,7 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
-import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { FeedbackTopicsType } from '@prisma/client';
+import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -27,7 +27,6 @@ import {
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
-
 class FeedbackTopicsListOptions {
 	@NumberOption({
 		name: 'page',

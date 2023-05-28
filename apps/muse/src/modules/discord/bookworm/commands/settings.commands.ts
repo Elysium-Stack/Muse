@@ -1,12 +1,13 @@
-import { HOUR_OPTIONS } from '@muse/constants';
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
-import {
-	ForbiddenExceptionFilter, GuildAdminGuard,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase
-} from '@muse/util';
+import { HOUR_OPTIONS } from '@muse/util/constants';
 import { createHoursSelect } from '@muse/util/create-hour-select';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import {
+	ForbiddenExceptionFilter,
+	GuildAdminGuard,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -41,7 +42,6 @@ import { BookwormCommandDecorator } from '../bookworm.decorator';
 import { BookwormSettingsService } from '../services/settings.service';
 import { BookwormSettingsInterface } from '../types/settings.interface';
 import { BOOKWORM_SETTINGS_CHOICES } from '../util/constants';
-
 class BookwormSettingsChangeOptions {
 	@StringOption({
 		name: 'option',

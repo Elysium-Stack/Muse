@@ -1,9 +1,8 @@
-import { PrismaService } from '@muse/prisma';
-import { escapeRegExp } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@prisma';
+import { escapeRegExp } from '@util';
 import { Client, Message } from 'discord.js';
 import { ReactionTriggerSettingsService } from './settings.service';
-
 @Injectable()
 export class ReactionTriggerGeneralService {
 	private readonly _logger = new Logger(ReactionTriggerGeneralService.name);

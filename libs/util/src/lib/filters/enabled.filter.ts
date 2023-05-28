@@ -1,9 +1,8 @@
-import { interactionReply } from '@muse/util';
 import { ModuleNotEnabledException } from '@muse/util/errors';
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
+import { interactionReply } from '@util';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
-
 @Catch(ModuleNotEnabledException)
 export class EnabledExceptionFilter implements ExceptionFilter {
 	private readonly _logger = new Logger(EnabledExceptionFilter.name);

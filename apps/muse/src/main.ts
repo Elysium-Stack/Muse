@@ -1,8 +1,7 @@
-import { createLogger } from '@muse/util';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { createLogger } from '@util';
 import { AppModule } from './app.module';
-
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
 		cors: true,

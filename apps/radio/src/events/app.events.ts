@@ -1,6 +1,6 @@
-import { MusicLavalinkService } from '@muse/music';
-import { PrismaService } from '@muse/prisma';
+import { MusicLavalinkService } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@prisma';
 import { ActivityType, Client, Events } from 'discord.js';
 import { Context, ContextOf, On, Once } from 'necord';
 import { RadioService } from '../services/radio.service';

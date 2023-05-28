@@ -1,7 +1,7 @@
-import { PrismaService, UsersEntity } from '@muse/prisma';
 import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PrismaService, UsersEntity } from '@prisma';
 import { Guild } from 'discord.js';
 import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { DiscordApiService } from '../services/api.service';

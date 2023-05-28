@@ -1,5 +1,5 @@
 import { SharedModule } from '@muse';
-import { MusicModule as MusicLibModule } from '@muse/music';
+import { MusicModule as MusicLibModule } from '@music';
 import { Module } from '@nestjs/common';
 import { MusicLoopCommands } from './commands/loop.command';
 import { MusicNextCommands } from './commands/next.command';

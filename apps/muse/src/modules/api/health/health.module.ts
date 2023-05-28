@@ -1,5 +1,5 @@
-import { MusicModule as MusicLibModule } from '@muse/music';
 import { SharedModule } from '@muse/shared.module';
+import { MusicModule as MusicLibModule } from '@music';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';

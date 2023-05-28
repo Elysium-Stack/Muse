@@ -1,6 +1,6 @@
-import { PrismaService } from '@muse/prisma';
 import { HttpService } from '@nestjs/axios';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { PrismaService } from '@prisma';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import { DISCORD_API_URL } from '../utils/constants';

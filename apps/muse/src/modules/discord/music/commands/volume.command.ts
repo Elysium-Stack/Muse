@@ -4,9 +4,9 @@ import {
 	MusicInVoiceGuard,
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
-} from '@muse/music';
-import { EnabledExceptionFilter } from '@muse/util';
+} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { EnabledExceptionFilter } from '@util';
 import {
 	Button,
 	ButtonContext,
@@ -19,7 +19,6 @@ import {
 } from 'necord';
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicCommandDecorator } from '../music.decorator';
-
 class MusicVolumeOptions {
 	@NumberOption({
 		name: 'volume',
