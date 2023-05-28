@@ -20,7 +20,7 @@
 		"preradio:docker:start": "yarn",
 		"radio:docker:start": "yarn radio:start",
 		"radio:start": "yarn serve radio",
-		"radio:start:prod": "yarn start:prod ./dist/apps/radio/main",
+		"radio:start:prod": "node ./dist/apps/radio/main",
 		"radio:build": "yarn build radio",
 		"dashboard:docker:start": "yarn docker:start dashboard",
 		"dashboard:start": "yarn serve dashboard",
