@@ -1,7 +1,7 @@
 import { EmbedBuilder } from '@discordjs/builders';
+import { readableTime } from '@util';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, User } from 'discord.js';
 import { KazagumoPlayer, KazagumoTrack } from 'kazagumo';
-import { readableTime } from '../../../../../apps/muse/src/modules/discord/music/util/readable-time';
 
 export const createPlayingEmbed = (
 	player: KazagumoPlayer,

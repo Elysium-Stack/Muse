@@ -1,6 +1,6 @@
-import { IncorrectChannelException } from '@muse/util/errors';
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { interactionReply } from '@util';
+import { IncorrectChannelException } from '@util/errors';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
 @Catch(IncorrectChannelException)
