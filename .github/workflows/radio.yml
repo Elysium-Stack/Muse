@@ -1,4 +1,4 @@
-name: Build & Deploy Muse docker image
+name: Build & Deploy Radio docker image
 
 on:
     push:
@@ -7,7 +7,7 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_NAME: elysium-stack/muse
+    IMAGE_NAME: elysium-stack/radio
 
 jobs:
     docker:
@@ -36,7 +36,7 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
               with:
-                  file: ./Dockerfile.muse
+                  file: ./Dockerfile.radio
                   context: .
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}

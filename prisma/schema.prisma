@@ -60,7 +60,11 @@ model Settings {
   reactionTriggerEnabled                    Boolean?    @default(true)
   reactionTriggerIgnoredChannelIds          String[]    @default([])
 
-
+  // Radio
+  radioEnabled                              Boolean?    @default(true)
+  radioVoiceChannelId                       String?
+  radioTextChannelId                        String?
+  radioPlaylist                             String?
 
   // timestamps
   createdAt                                 DateTime    @default(now())
@@ -85,6 +89,15 @@ model MusicLog {
 
   query                                     String
   result                                    Json?
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
+}
+
+model RadioLog {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
 
   // timestamps
   createdAt                                 DateTime    @default(now())

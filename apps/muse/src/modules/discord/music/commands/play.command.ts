@@ -1,10 +1,10 @@
-import { EnabledExceptionFilter } from '@muse/filters';
 import {
 	MusicInVoiceGuard,
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@muse/music';
 import { PrismaService } from '@muse/prisma';
+import { EnabledExceptionFilter } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,

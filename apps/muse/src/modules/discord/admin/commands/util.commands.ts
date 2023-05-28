@@ -1,6 +1,6 @@
-import { ForbiddenExceptionFilter } from '@muse/filters';
-import { AdminGuard } from '@muse/guards/admin.guard';
+import { ForbiddenExceptionFilter } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { AdminGuard } from 'libs/util/src/lib/guards/admin.guard';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
 import { AdminCommandDecorator } from '..';
 

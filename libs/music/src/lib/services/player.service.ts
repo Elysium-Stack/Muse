@@ -1,15 +1,21 @@
 import { interactionReply } from '@muse/util';
 import { Injectable, Logger } from '@nestjs/common';
-import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
+import {
+	ChannelType,
+	Client,
+	CommandInteraction,
+	MessageComponentInteraction,
+} from 'discord.js';
 import { MusicLavalinkService } from './lavalink.service';
 
 @Injectable()
 export class MusicPlayerService {
 	private readonly _logger = new Logger(MusicPlayerService.name);
 
-	protected _base = 'music';
-
-	constructor(protected _lavalink: MusicLavalinkService) {}
+	constructor(
+		protected _lavalink: MusicLavalinkService,
+		private _client: Client,
+	) {}
 
 	get(guildId: string) {
 		return this._lavalink.players.get(guildId);
@@ -81,10 +87,93 @@ export class MusicPlayerService {
 		};
 	}
 
-	async stop(interaction: MessageComponentInteraction | CommandInteraction) {
-		this._logger.verbose(`Stopping song for ${interaction.user.tag}`);
+	async radio(
+		guildId: string,
+		playlist: string,
+		voiceChannelId: string,
+		textChannelId: string,
+	) {
+		this._logger.verbose(`Starting radio for ${guildId}: ${playlist}`);
 
-		const player = await this.get(interaction.guildId!);
+		const guild = await this._client.guilds.fetch(guildId);
+
+		if (!guild) {
+			return {
+				result: 'GUILD_NOT_FOUND',
+			};
+		}
+
+		const voiceChannel = await guild.channels.fetch(voiceChannelId);
+
+		if (!voiceChannel || voiceChannel.type !== ChannelType.GuildVoice) {
+			return {
+				result: 'NO_VOICE_CHANNEL',
+			};
+		}
+
+		const result = await this._lavalink.search(playlist);
+
+		if (result.type !== 'PLAYLIST') {
+			return {
+				result: 'NO_PLAYLIST',
+			};
+		}
+
+		if (!result.tracks.length) {
+			return {
+				result: 'NO_TRACKS_FOUND',
+			};
+		}
+
+		const player = await this._lavalink.createPlayer({
+			guildId: guildId,
+			textId: textChannelId,
+			voiceId: voiceChannel.id,
+			volume: 50,
+			deaf: true,
+		});
+		player.data.set('previousVolume', 50);
+		player.data.set('radio', true);
+
+		if (player.queue.size > 0) {
+			player.queue.clear();
+		}
+
+		for (const track of result.tracks) {
+			player.queue.add(track);
+		}
+
+		player.setLoop('queue');
+		player.queue.shuffle();
+		player.data.set('shuffled', true);
+
+		if (!player.playing && !player.paused) {
+			player.play();
+		}
+
+		return {
+			data: {
+				tracks: result.tracks,
+				voiceChannelId,
+				playlistName: result.playlistName,
+			},
+			result: 'PLAYING',
+		};
+	}
+
+	async stop(
+		interaction: MessageComponentInteraction | CommandInteraction | null,
+		guildId?: string,
+	) {
+		this._logger.verbose(
+			`Stopping song for ${interaction?.user.tag ?? guildId}`,
+		);
+
+		if (!guildId && !interaction?.guildId) {
+			return;
+		}
+
+		const player = await this.get(guildId ?? interaction!.guildId!);
 
 		if (!player) {
 			return;

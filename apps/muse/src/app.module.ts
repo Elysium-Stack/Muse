@@ -24,11 +24,11 @@ import {
 	FunModule,
 	HealthModule,
 	MusicModule,
+	RadioModule,
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
 import { SharedModule } from './shared.module';
-
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -47,7 +47,7 @@ import { SharedModule } from './shared.module';
 				process.env.NODE_ENV === 'production'
 					? 'production'
 					: 'development',
-			logLevels: ['error'], //based on sentry.io loglevel //
+			logLevels: ['error'],
 			sampleRate: 1,
 			close: {
 				enabled: process.env.NODE_ENV === 'production',
@@ -73,6 +73,7 @@ import { SharedModule } from './shared.module';
 		MusicModule,
 		ReactionTriggerModule,
 		FeedbackModule,
+		RadioModule,
 	],
 	providers: [
 		{

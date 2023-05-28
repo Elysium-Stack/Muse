@@ -14,6 +14,7 @@ services:
             - ./:/opt/app
         depends_on:
             - db
+            - redis
             - lavalink
     radio:
         build:
@@ -28,6 +29,7 @@ services:
             - ./:/opt/app
         depends_on:
             - db
+            - redis
             - lavalink
     dashboard:
         build:
@@ -52,6 +54,10 @@ services:
         image: fredboat/lavalink:latest
         volumes:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
+    redis:
+        image: redis
+        ports:
+            - '6379:6379'
     prometheus:
         image: prom/prometheus
         volumes:

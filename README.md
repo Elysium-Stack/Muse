@@ -32,7 +32,7 @@ $ git clone git@github.com:Elysium-Stack/Muse.git
 ### Running the app
 
 ```bash
-$ docker-compose up -d db lavalink
+$ docker-compose up -d db redis lavalink
 $ docker-compose up muse
 ```
 
@@ -50,6 +50,7 @@ $ docker-compose exec -it muse yarn prisma migrate dev
 
 -   [NodeJS 18.x](https://nodejs.org/en/download)
 -   [PostgresDB](https://www.postgresql.org/)
+-   [Redis](https://redis.io/)
 -   [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
 
 #### Installing

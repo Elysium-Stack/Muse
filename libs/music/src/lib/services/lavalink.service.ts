@@ -80,6 +80,7 @@ export class MusicLavalinkService extends Kazagumo {
 			this.shoukaku.on('error', (name, error) =>
 				this._logger.error(`Lavalink ${name}: Error Caught,`, error),
 			);
+
 			if (moved) {
 				return;
 			}
@@ -217,6 +218,10 @@ export class MusicLavalinkService extends Kazagumo {
 			clearTimeout(timeout);
 		}
 
+		if (player.data.get('radio')) {
+			return;
+		}
+
 		if (!player.voiceId) {
 			return;
 		}
@@ -265,7 +270,9 @@ export class MusicLavalinkService extends Kazagumo {
 
 		const res = await channel.send({
 			embeds: [createPlayingEmbed(player, track)],
-			components: createPlayingComponents(player),
+			components: player.data.get('radio')
+				? []
+				: createPlayingComponents(player),
 		});
 		player.data.set('message', res);
 	}

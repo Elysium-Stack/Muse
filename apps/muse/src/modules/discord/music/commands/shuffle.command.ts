@@ -1,4 +1,3 @@
-import { EnabledExceptionFilter } from '@muse/filters';
 import {
 	HasNoPlayerExceptionFilter,
 	MusicHasPlayerGuard,
@@ -6,6 +5,7 @@ import {
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@muse/music';
+import { EnabledExceptionFilter } from '@muse/util';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	Button,

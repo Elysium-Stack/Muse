@@ -15,11 +15,15 @@ export const createPlayingEmbed = (
 				value: `[${track.title}](${track.uri})`,
 				inline: true,
 			},
-			{
-				name: 'Requested by',
-				value: `<@${(track.requester as User).id}>`,
-				inline: true,
-			},
+			...(track.requester
+				? [
+						{
+							name: 'Requested by',
+							value: `<@${(track.requester as User).id}>`,
+							inline: true,
+						},
+				  ]
+				: []),
 			{
 				name: 'Duration',
 				value: `\`${readableTime(track.length!)}\``,
