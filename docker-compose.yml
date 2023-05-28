@@ -17,6 +17,8 @@ services:
         restart: unless-stopped
         tty: true
         env_file: ./.env
+        ports:
+            - '$EXPOSED_RADIO_PORT:3000'
         depends_on:
             - db
             - redis
