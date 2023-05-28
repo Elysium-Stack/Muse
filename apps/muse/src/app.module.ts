@@ -97,7 +97,6 @@ import { SharedModule } from './shared.module';
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {
-		console.log('?');
 		consumer.apply(LoggerMiddleware).forRoutes({
 			path: '*',
 			method: RequestMethod.ALL,
