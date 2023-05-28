@@ -16,7 +16,6 @@ services:
         image: ghcr.io/elysium-stack/radio:main
         restart: unless-stopped
         tty: true
-        command: yarn radio:docker:start
         env_file: ./.env
         depends_on:
             - db
