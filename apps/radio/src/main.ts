@@ -15,7 +15,13 @@ async function bootstrap() {
 			},
 		},
 	);
-	await app.listen();
+
+	const prometheus = await NestFactory.create(AppModule, {
+		logger: createLogger('Muse Radio'),
+	});
+	prometheus.setGlobalPrefix('api');
+
+	await Promise.all([app.listen(), prometheus.listen(3000)]);
 }
 
 bootstrap();

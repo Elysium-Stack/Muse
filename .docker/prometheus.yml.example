@@ -16,6 +16,13 @@ scrape_configs:
 
       static_configs:
           - targets: ['muse:3000']
+    - job_name: 'radio'
+
+      scrape_interval: 5s
+      metrics_path: /api/metrics
+
+      static_configs:
+          - targets: ['radio:3000']
     - job_name: 'lavalink'
 
       scrape_interval: 5s
