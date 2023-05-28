@@ -23,8 +23,6 @@ services:
         tty: true
         command: yarn radio:docker:start
         env_file: ./.env
-        ports:
-            - '$EXPOSED_RADIO_API_PORT:3000'
         volumes:
             - ./:/opt/app
         depends_on:
