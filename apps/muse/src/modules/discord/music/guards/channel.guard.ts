@@ -1,10 +1,10 @@
-import { IncorrectChannelException } from '@muse/util/errors';
 import {
 	CanActivate,
 	ExecutionContext,
 	Injectable,
 	Logger,
 } from '@nestjs/common';
+import { IncorrectChannelException } from '@util/errors';
 import { Client, PermissionsBitField } from 'discord.js';
 import { NecordExecutionContext } from 'necord';
 import { MusicSettingsService } from '../services/settings.service';

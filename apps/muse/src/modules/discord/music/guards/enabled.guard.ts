@@ -1,10 +1,10 @@
-import { ModuleNotEnabledException } from '@muse/util/errors';
 import {
 	CanActivate,
 	ExecutionContext,
 	Injectable,
 	Logger,
 } from '@nestjs/common';
+import { ModuleNotEnabledException } from '@util/errors';
 import { NecordExecutionContext } from 'necord';
 import { MusicSettingsService } from '../services/settings.service';
 
