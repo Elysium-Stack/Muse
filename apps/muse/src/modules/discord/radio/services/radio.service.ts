@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PrismaService } from '@prisma';
-import { MESSAGE_PREFIX, interactionReply } from '@util';
+import { MESSAGE_PREFIX } from '@util';
 import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
 import { firstValueFrom, take } from 'rxjs';
 @Injectable()
@@ -36,9 +36,8 @@ export class RadioService {
 				});
 			}
 
-			return interaction.reply({
+			return interaction.editReply({
 				content,
-				ephemeral: true,
 			});
 		}
 
@@ -57,8 +56,16 @@ export class RadioService {
 		) as Promise<{ result: string; data: any }>);
 
 		if (!radio) {
-			return interactionReply(interaction, {
-				content: `${MESSAGE_PREFIX} Something wen't wrong, try again later!`,
+			const content = `${MESSAGE_PREFIX} Something wen't wrong, try again later!`;
+
+			if (interaction instanceof MessageComponentInteraction) {
+				return interaction.update({
+					content,
+				});
+			}
+
+			return interaction.editReply({
+				content,
 			});
 		}
 
