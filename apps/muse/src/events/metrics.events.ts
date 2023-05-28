@@ -51,7 +51,7 @@ export class MetricsEvents {
 	) {
 		const shardId = interaction.guild?.shardId
 			? interaction.guild.shardId.toString()
-			: 'NONE';
+			: 'None';
 		const commandName = getInteractionCommandName(interaction, '/');
 		this.onInteractionTotal
 			.labels(shardId, interaction.constructor.name, commandName)
@@ -63,7 +63,7 @@ export class MetricsEvents {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		@Context() [_, shardId]: ContextOf<Events.ShardResume>,
 	) {
-		this.connected.labels(shardId ? shardId.toString() : 'NONE').set(1);
+		this.connected.labels(shardId ? shardId.toString() : 'None').set(1);
 	}
 
 	@On(Events.ShardReady)
@@ -71,7 +71,7 @@ export class MetricsEvents {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		@Context() [_, shardId]: ContextOf<Events.ShardReady>,
 	) {
-		this.connected.labels(shardId ? shardId.toString() : 'NONE').set(1);
+		this.connected.labels(shardId ? shardId.toString() : 'None').set(1);
 	}
 
 	@On(Events.ShardDisconnect)
@@ -79,7 +79,7 @@ export class MetricsEvents {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		@Context() [_, shardId]: ContextOf<Events.ShardDisconnect>,
 	) {
-		this.connected.labels(shardId ? shardId.toString() : 'NONE').set(0);
+		this.connected.labels(shardId ? shardId.toString() : 'None').set(0);
 	}
 
 	@On(Events.GuildCreate)
