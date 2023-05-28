@@ -1,6 +1,8 @@
 import { MusicPlayerService } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Gauge } from 'prom-client';
 
 @Injectable()
 export class RadioService {
@@ -9,6 +11,9 @@ export class RadioService {
 	constructor(
 		private _prisma: PrismaService,
 		private _player: MusicPlayerService,
+
+		@InjectMetric('discord_playing')
+		public playing: Gauge<string>,
 	) {}
 
 	async startWithoutConfig(guildId: string) {
@@ -45,6 +50,7 @@ export class RadioService {
 	) {
 		const player = this._player.get(guildId);
 		if (player) {
+			this.playing.labels('None').dec(1);
 			player.destroy();
 		}
 
@@ -60,6 +66,7 @@ export class RadioService {
 			radioVoiceChannelId!,
 			radioTextChannelId,
 		);
+		this.playing.labels('None').inc(1);
 
 		if (!data?.result || data.result !== 'PLAYING') {
 			return data;
@@ -82,6 +89,10 @@ export class RadioService {
 	}
 
 	async stop(guildId: string) {
+		if (this._player.get(guildId)) {
+			this.playing.labels('None').dec(1);
+		}
+
 		await this._player.stop(null, guildId);
 
 		await this._prisma.radioLog.deleteMany({

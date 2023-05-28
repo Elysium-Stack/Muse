@@ -4,24 +4,22 @@ import { createLogger } from '@util';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-	const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-		AppModule,
-		{
-			logger: createLogger('Muse Radio'),
-			transport: Transport.REDIS,
-			options: {
-				host: process.env.REDIS_HOST,
-				port: parseInt(process.env.REDIS_PORT, 10),
-			},
-		},
-	);
-
-	const prometheus = await NestFactory.create(AppModule, {
+	const app = await NestFactory.create(AppModule, {
 		logger: createLogger('Muse Radio'),
 	});
-	prometheus.setGlobalPrefix('api');
 
-	await Promise.all([app.listen(), prometheus.listen(3000)]);
+	app.connectMicroservice<MicroserviceOptions>({
+		transport: Transport.REDIS,
+		options: {
+			host: process.env.REDIS_HOST,
+			port: parseInt(process.env.REDIS_PORT, 10),
+		},
+	});
+
+	app.setGlobalPrefix('api');
+
+	await app.startAllMicroservices();
+	await app.listen(3000);
 }
 
 bootstrap();

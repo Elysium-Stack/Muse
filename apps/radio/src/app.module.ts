@@ -7,6 +7,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
 import { RadioController } from './controllers/radio.controller';
 import { AppEvents } from './events/app.events';
+import { botMetrics } from './metrics/bot.metrics';
 import { RadioService } from './services/radio.service';
 @Module({
 	imports: [
@@ -26,6 +27,12 @@ import { RadioService } from './services/radio.service';
 		MusicModule,
 	],
 	controllers: [RadioController],
-	providers: [RadioService, AppEvents],
+	providers: [
+		RadioService,
+		AppEvents,
+
+		// prometheus
+		...botMetrics,
+	],
 })
 export class AppModule {}
