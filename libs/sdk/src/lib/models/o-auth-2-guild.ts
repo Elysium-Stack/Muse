@@ -1,4 +1,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export { Guild } from 'discord.js';
+export { OAuth2Guild } from 'discord.js';

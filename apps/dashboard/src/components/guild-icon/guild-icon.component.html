@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="type$()">
+	<div
+		*ngSwitchCase="'letters'"
+		class="rounded-full bg-gray-200 text-base font-semibold text-base-100 flex items-center justify-center"
+		[style]="{
+			width: size$(),
+			height: size$()
+		}"
+	>
+		{{ letters$() }}
+	</div>
+
+	<img
+		*ngSwitchCase="'icon'"
+		[src]="iconUrl$()"
+		[width]="size"
+		[height]="size"
+		[alt]="guild$()!.name"
+		class="rounded-full"
+	/>
+</ng-container>

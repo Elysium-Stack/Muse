@@ -1,0 +1,28 @@
+<div class="flex gap-2 items-center text-white" *ngIf="segments$().length > 0">
+	<a routerLink="./">Dashboard</a>
+	<ng-icon name="cssChevronRight"></ng-icon>
+
+	<ng-container *ngFor="let segment of segments$(); let i = index">
+		<a
+			[class]="
+				'capitalize' +
+				(!segment.link && i != segments$().length - 1
+					? ' text-white/40'
+					: '')
+			"
+			[class.text-primary]="i == segments$().length - 1"
+			[class.font-medium]="i == segments$().length - 1"
+			[routerLink]="segment.link"
+		>
+			{{ segment.label }}
+		</a>
+		<ng-icon
+			*ngIf="i < segments$().length - 1"
+			name="cssChevronRight"
+		></ng-icon>
+	</ng-container>
+</div>
+
+<!-- <span class="text-white/40">Modules</span>
+	<ng-icon name="cssChevronRight"></ng-icon>
+	<span class="text-primary font-medium">Dashboard</span> -->

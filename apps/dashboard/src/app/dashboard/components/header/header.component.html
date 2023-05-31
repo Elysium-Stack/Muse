@@ -1,0 +1,20 @@
+<div class="flex gap-4 items-center">
+	<img
+		src="/assets/images/logo.png"
+		width="48"
+		height="48"
+		alt="Muse logo"
+		class="z-0"
+	/>
+
+	<button
+		(click)="showSidebar()"
+		class="btn btn-ghost p-1 text-2xl aspect-square block lg:hidden"
+	>
+		<ng-icon name="cssMenuLeft"></ng-icon>
+	</button>
+	<m-dashboard-breacrumbs class="hidden lg:block" />
+	<m-user-button [showDashboard]="false" class="ml-auto" />
+</div>
+
+<m-dashboard-breacrumbs class="block lg:hidden my-2" />

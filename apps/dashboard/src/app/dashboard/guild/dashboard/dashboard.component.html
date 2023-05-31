@@ -1,0 +1,14 @@
+<m-dashboard-page-title>
+	Welcome
+	<div
+		*ngIf="loadingUser$() || !user$(); else welcomeTemplate"
+		class="ghost-loader w-56 h-8"
+	></div>
+	<ng-template #welcomeTemplate>
+		{{ user$().username }}#{{ user$().discriminator }}
+	</ng-template>
+</m-dashboard-page-title>
+
+Coming soon!
+
+<pre class="mt-8">{{ selectedGuild$() | json }}</pre>

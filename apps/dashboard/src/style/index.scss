@@ -1,8 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap');
-@import url('https://css.gg/css');
 /* The integration's default injected base.css file */
 @tailwind base;
 @tailwind components;
+
+.ghost-loader {
+	@apply rounded;
+	background: #eee;
+	background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+	background-size: 200% 100%;
+	animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+	to {
+		background-position-x: -200%;
+	}
+}
+
 @tailwind utilities;
 
 html,
@@ -13,4 +27,32 @@ body {
 
 .link {
 	@apply opacity-75 hover:opacity-100 transition-opacity no-underline hover:underline;
+}
+
+.menu {
+	&.menu-normal,
+	&.menu-compact,
+	&:not(.menu-compact),
+	&:not(.menu-normal) {
+		> .menu-title {
+			@apply opacity-100;
+
+			> span {
+				@apply text-secondary text-xs font-semibold uppercase;
+			}
+		}
+	}
+
+	> li a {
+		@apply rounded-lg;
+
+		&:hover {
+			@apply bg-gray-100;
+		}
+
+		&.active {
+			@apply bg-primary/10 text-base-100/80;
+			@apply font-semibold;
+		}
+	}
 }

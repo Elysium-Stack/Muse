@@ -1,0 +1,53 @@
+<m-particles />
+<main class="container mx-auto px-4 text-content-base-100 min-h-screen">
+	<m-navigation />
+	<div
+		class="mx-auto mt-32 md:mt-60 flex flex-col items-center justify-center group gap-3"
+	>
+		<h1 class="text-5xl text-white mt-8 font-black text-center">Servers</h1>
+
+		<ng-container *ngIf="loadingGuilds$(); else guildsTemplate">
+			<div class="flex gap-4 mt-8">
+				<div class="ghost-loader w-16 h-16 rounded-full"></div>
+				<div class="ghost-loader w-16 h-16 rounded-full"></div>
+				<div class="ghost-loader w-16 h-16 rounded-full"></div>
+				<div class="ghost-loader w-16 h-16 rounded-full"></div>
+			</div>
+		</ng-container>
+		<ng-template #guildsTemplate>
+			<ng-container *ngIf="availableGuilds$().length">
+				<p class="text-gray-300 text-center">
+					Select a server you want to configure Muse for.
+				</p>
+
+				<div class="flex gap-4">
+					<a
+						*ngFor="let guild of availableGuilds$()"
+						[routerLink]="['./', guild.id]"
+					>
+						<m-guild-icon [guild]="guild" [size]="64" />
+					</a>
+				</div>
+			</ng-container>
+
+			<p
+				class="text-gray-300 text-center"
+				[class.mt-6]="availableGuilds$().length"
+			>
+				Invite Muse to your server
+			</p>
+			<div class="flex gap-4">
+				<a
+					*ngFor="let guild of unavailableGuilds$()"
+					[href]="inviteUrl"
+					target="_INVITE"
+				>
+					<m-guild-icon
+						[guild]="guild"
+						[size]="availableGuilds$().length ? 48 : 64"
+					/>
+				</a>
+			</div>
+		</ng-template>
+	</div>
+</main>

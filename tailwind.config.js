@@ -7,7 +7,14 @@ module.exports = {
 		'node_modules/react-daisyui/dist/**/*.js',
 	],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				'base-0': '#090909',
+			},
+			rounded: {
+				'2xl': '2rem',
+			},
+		},
 	},
 	daisyui: {
 		themes: [

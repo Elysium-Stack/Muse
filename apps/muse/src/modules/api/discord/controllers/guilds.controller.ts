@@ -2,9 +2,10 @@ import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PrismaService, UsersEntity } from '@prisma';
-import { Guild } from 'discord.js';
+import { Client, OAuth2Guild, PermissionsBitField } from 'discord.js';
 import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { DiscordApiService } from '../services/api.service';
+import { BotOAuth2GuildDTO } from '../types/guild.type';
 
 @Controller('discord/guilds')
 @ApiTags('Guilds')
@@ -12,6 +13,7 @@ export class GuildsController {
 	constructor(
 		private _discord: DiscordApiService,
 		private _prisma: PrismaService,
+		private _client: Client,
 	) {}
 
 	/**
@@ -19,10 +21,26 @@ export class GuildsController {
 	 */
 	@Get()
 	@UseGuards(AccessTokenGuard)
-	guilds(
+	async guilds(
 		@Request() { user: { sub } }: AuthenticatedRequestDTO,
-	): Promise<Guild[]> {
-		return this._discord.request<Guild[]>(sub, '/users/@me/guilds');
+	): Promise<BotOAuth2GuildDTO[]> {
+		const guilds = await this._discord.request<OAuth2Guild[]>(
+			sub,
+			'/users/@me/guilds',
+		);
+		return guilds
+			.filter((g) =>
+				new PermissionsBitField((g as any).permissions_new).has(
+					PermissionsBitField.Flags.ManageGuild,
+				),
+			)
+			.map(
+				(guild) =>
+					new BotOAuth2GuildDTO(
+						this._client.guilds.cache.has(guild.id),
+						guild,
+					),
+			);
 	}
 	/**
 	 * This is a test

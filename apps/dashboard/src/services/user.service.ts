@@ -1,19 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { AuthService } from '@sdk';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+	private _tokenStorage = inject(TokenStorageService);
+	private _auth = inject(AuthService);
+
 	public accessToken$ = signal<string | null>(null);
 	public refreshToken$ = signal<string | null>(null);
 	public user$ = signal<any>(null);
 	public loadingUser$ = signal<boolean>(false);
 
-	constructor(
-		private _tokenStorage: TokenStorageService,
-		private _auth: AuthService,
-	) {
+	constructor() {
 		const storageAccessToken = this._tokenStorage.getAccessToken();
 		const storageRefreshToken = this._tokenStorage.getRefreshToken();
 
@@ -30,24 +30,32 @@ export class UserService {
 		}
 	}
 
-	signin(code: string) {
+	signin$(code: string) {
 		this.loadingUser$.set(true);
-		this._auth
-			.authControllerCallback({ code })
-			.pipe(take(1))
-			.subscribe({
+		return this._auth.authControllerCallback({ code }).pipe(
+			take(1),
+			tap({
 				next: ({ accessToken, refreshToken }) => {
 					this.saveAccessToken(accessToken);
 					this.saveRefreshToken(refreshToken);
 					this._loadUser();
 				},
 				error: () => this.signout(),
-			});
+			}),
+		);
 	}
 
-	refreshToken(token?: string) {
-		const refreshToken = token ?? this.refreshToken$();
-		return this._auth.authControllerRefresh({ refreshToken }).pipe(take(1));
+	refreshToken() {
+		return this._auth.authControllerRefresh().pipe(
+			take(1),
+			tap({
+				next: ({ accessToken, refreshToken }) => {
+					this.saveAccessToken(accessToken);
+					this.saveRefreshToken(refreshToken);
+				},
+				error: () => this.signout(),
+			}),
+		);
 	}
 
 	saveAccessToken(accessToken: string) {

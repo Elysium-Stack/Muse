@@ -8,8 +8,6 @@ const USER_KEY = 'muse-user';
 	providedIn: 'root',
 })
 export class TokenStorageService {
-	constructor() {}
-
 	signout(): void {
 		window.sessionStorage.clear();
 	}

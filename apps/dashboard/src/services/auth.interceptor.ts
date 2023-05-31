@@ -5,21 +5,20 @@ import {
 	HttpInterceptor,
 	HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
-import { AuthService } from '@sdk';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { UserService } from './user.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+	private _user = inject(UserService);
+
 	private isRefreshing = false;
 	private accessTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
 		null,
 	);
-
-	constructor(private _auth: AuthService, private _user: UserService) {}
 
 	intercept(
 		req: HttpRequest<any>,
@@ -60,12 +59,9 @@ export class AuthInterceptor implements HttpInterceptor {
 			const token = this._user.refreshToken$();
 
 			if (token) {
-				return this._auth.authControllerRefresh().pipe(
+				return this._user.refreshToken().pipe(
 					switchMap((token: any) => {
 						this.isRefreshing = false;
-
-						this._user.saveAccessToken(token.accessToken);
-						this._user.saveRefreshToken(token.refreshToken);
 
 						return next.handle(
 							this.addTokenHeader(request, token.accessToken),

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { filter, map, take } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -12,21 +12,22 @@ import { UserService } from '../services/user.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-	constructor(
-		private _router: Router,
-		private _route: ActivatedRoute,
-		private _user: UserService,
-	) {
+	private _router = inject(Router);
+	private _route = inject(ActivatedRoute);
+	private _user = inject(UserService);
+
+	constructor() {
 		this._route.queryParamMap
 			.pipe(
 				takeUntilDestroyed(),
 				filter((params) => params.has('code')),
 				take(1),
 				map((params) => params.get('code')!),
+				switchMap((code) => {
+					this._router.navigate([]);
+					return this._user.signin$(code).pipe(take(1));
+				}),
 			)
-			.subscribe((code) => {
-				this._router.navigate([]);
-				this._user.signin(code);
-			});
+			.subscribe();
 	}
 }

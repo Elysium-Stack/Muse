@@ -9,7 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { Guild } from '../models/guild';
+import { BotOAuth2GuildDto } from '../models/bot-o-auth-2-guild-dto';
 import { UsersEntity } from '../models/users-entity';
 
 @Injectable({
@@ -40,7 +40,7 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<Array<Guild>>> {
+): Observable<StrictHttpResponse<Array<BotOAuth2GuildDto>>> {
 
     const rb = new RequestBuilder(this.rootUrl, GuildsService.GuildsControllerGuildsPath, 'get');
     if (params) {
@@ -53,7 +53,7 @@ export class GuildsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Guild>>;
+        return r as StrictHttpResponse<Array<BotOAuth2GuildDto>>;
       })
     );
   }
@@ -70,10 +70,10 @@ export class GuildsService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<Array<Guild>> {
+): Observable<Array<BotOAuth2GuildDto>> {
 
     return this.guildsControllerGuilds$Response(params,context).pipe(
-      map((r: StrictHttpResponse<Array<Guild>>) => r.body as Array<Guild>)
+      map((r: StrictHttpResponse<Array<BotOAuth2GuildDto>>) => r.body as Array<BotOAuth2GuildDto>)
     );
   }
 
