@@ -1,9 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChannelType, Client, Events, VoiceState } from 'discord.js';
+import { MESSAGE_PREFIX } from '@util';
+import { ChannelType, Client, Events, Snowflake, VoiceState } from 'discord.js';
 import { Kazagumo, KazagumoPlayer, KazagumoTrack, State } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
 import { On } from 'necord';
-import { Connectors, TrackExceptionEvent, TrackStuckEvent } from 'shoukaku';
+import {
+	Connectors,
+	TrackExceptionEvent,
+	TrackStuckEvent,
+	WebSocketClosedEvent,
+} from 'shoukaku';
 import {
 	createPlayingComponents,
 	createPlayingEmbed,
@@ -101,11 +107,7 @@ export class MusicLavalinkService extends Kazagumo {
 
 		// basic errors
 		this.on('playerClosed', (player, data) =>
-			this._logger.warn(
-				`Player closed for ${player.guildId} ${
-					player.textId
-				} ${JSON.stringify(data)}`,
-			),
+			this._onPlayerClose(player, data),
 		);
 		this.on('playerResolveError', (player, track, message) =>
 			this._logger.error(
@@ -135,6 +137,42 @@ export class MusicLavalinkService extends Kazagumo {
 		player.data.get('message')?.delete();
 	}
 
+	private async _onPlayerClose(
+		player: KazagumoPlayer,
+		data: WebSocketClosedEvent,
+	) {
+		this._logger.warn(
+			`Player closed for ${player.guildId} ${
+				player.textId
+			} ${JSON.stringify(data)}`,
+		);
+
+		if (data.byRemote && player.data.get('radio')) {
+			this._logger.warn(
+				"Resuming the closed player because it's the radio",
+			);
+			await new Promise((resolve) =>
+				setTimeout(async () => {
+					await player.setVoiceChannel(player.voiceId as Snowflake);
+					await player.play();
+
+					const channel = await this._client.channels.fetch(
+						player.textId,
+					);
+					if (channel?.type !== ChannelType.GuildText) {
+						return;
+					}
+
+					await channel.send({
+						content: `${MESSAGE_PREFIX} Radio reconnected. If this was a mistake, please stop the radio manually.`,
+					});
+
+					resolve(player);
+				}, 1000),
+			);
+		}
+	}
+
 	private async _onPlayerEmpty(player: KazagumoPlayer) {
 		this._logger.log(`Player empty for ${player.guildId}`);
 
@@ -146,7 +184,7 @@ export class MusicLavalinkService extends Kazagumo {
 		player.data.get('message')?.delete();
 
 		await channel.send({
-			content: `No more songs to play, disconnecting.`,
+			content: `${MESSAGE_PREFIX} No more songs to play, disconnecting.`,
 		});
 
 		player.destroy();
@@ -166,7 +204,7 @@ export class MusicLavalinkService extends Kazagumo {
 		}
 
 		await channel.send({
-			content: `Player got stuck, please try again.`,
+			content: `${MESSAGE_PREFIX} Player got stuck, please try again.`,
 		});
 	}
 
@@ -196,7 +234,7 @@ export class MusicLavalinkService extends Kazagumo {
 		}
 
 		await channel.send({
-			content: `Something wen't wrong, ${
+			content: `${MESSAGE_PREFIX} Something wen't wrong, ${
 				skipping ? 'Skipping song' : 'please try again'
 			}.`,
 		});
@@ -241,7 +279,7 @@ export class MusicLavalinkService extends Kazagumo {
 			setTimeout(async () => {
 				if (textChannel?.type === ChannelType.GuildText) {
 					await textChannel.send({
-						content: `Disconnected player due to inactivity.`,
+						content: `${MESSAGE_PREFIX} Disconnected player due to inactivity.`,
 					});
 				}
 				player.destroy();
