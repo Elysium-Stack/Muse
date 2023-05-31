@@ -28,6 +28,6 @@ export class AppComponent {
 					return this._user.signin$(code).pipe(take(1));
 				}),
 			)
-			.subscribe();
+			.subscribe(() => this._router.navigate(['/dashboard']));
 	}
 }

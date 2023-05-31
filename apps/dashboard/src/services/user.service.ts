@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { EventEmitter, Injectable, inject, signal } from '@angular/core';
 import { AuthService } from '@sdk';
 import { take, tap } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
@@ -12,6 +12,8 @@ export class UserService {
 	public refreshToken$ = signal<string | null>(null);
 	public user$ = signal<any>(null);
 	public loadingUser$ = signal<boolean>(false);
+
+	public signout$ = new EventEmitter<void>();
 
 	constructor() {
 		const storageAccessToken = this._tokenStorage.getAccessToken();
@@ -73,6 +75,7 @@ export class UserService {
 		this.accessToken$.set(null);
 		this.refreshToken$.set(null);
 		this._tokenStorage.signout();
+		this.signout$.next();
 	}
 
 	private _loadUser() {

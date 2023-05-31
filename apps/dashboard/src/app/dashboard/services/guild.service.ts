@@ -1,11 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { GuildsService } from '@sdk';
 import { BotOAuth2GuildDto } from '@sdk/models/bot-o-auth-2-guild-dto';
+import { UserService } from 'apps/dashboard/src/services/user.service';
 import { BehaviorSubject, take } from 'rxjs';
 
 @Injectable()
 export class DashboardGuildService {
 	private _guild = inject(GuildsService);
+	private _user = inject(UserService);
 
 	public guildsLoaded$ = new BehaviorSubject<boolean>(false);
 
@@ -35,6 +37,11 @@ export class DashboardGuildService {
 		if (!this.guilds$().length) {
 			this.loadGuilds();
 		}
+
+		this._user.signout$.subscribe(() => {
+			this.guildsLoaded$.next(false);
+			this.guilds$.set([]);
+		});
 	}
 
 	loadGuilds() {
