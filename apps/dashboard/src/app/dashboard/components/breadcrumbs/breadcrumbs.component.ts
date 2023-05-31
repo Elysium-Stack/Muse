@@ -9,18 +9,29 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { cssChevronRight } from '@ng-icons/css.gg';
+import { UserService } from 'apps/dashboard/src/services/user.service';
 import { filter, map } from 'rxjs';
+import { DashboardPageTitleComponent } from '../page-title/page-title.component';
 
 @Component({
 	standalone: true,
 	selector: 'm-dashboard-breacrumbs',
-	imports: [CommonModule, NgIconComponent, RouterModule],
+	imports: [
+		CommonModule,
+		NgIconComponent,
+		RouterModule,
+		DashboardPageTitleComponent,
+	],
 	providers: [provideIcons({ cssChevronRight })],
 	templateUrl: './breadcrumbs.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardBreadcrumbsComponent {
 	private _router = inject(Router);
+	private _user = inject(UserService);
+
+	public loadingUser$ = this._user.loadingUser$;
+	public user$ = this._user.user$;
 
 	public segments$ = signal<
 		{

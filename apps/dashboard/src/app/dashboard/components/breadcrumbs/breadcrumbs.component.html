@@ -1,4 +1,7 @@
-<div class="flex gap-2 items-center text-white" *ngIf="segments$().length > 0">
+<div
+	class="flex gap-2 items-center text-white"
+	*ngIf="segments$().length > 0; else welcomeUserTemplate"
+>
 	<a routerLink="./">Dashboard</a>
 	<ng-icon name="cssChevronRight"></ng-icon>
 
@@ -22,6 +25,19 @@
 		></ng-icon>
 	</ng-container>
 </div>
+
+<ng-template #welcomeUserTemplate>
+	<m-dashboard-page-title [margin]="false">
+		Welcome
+		<div
+			*ngIf="loadingUser$() || !user$(); else welcomeTemplate"
+			class="ghost-loader w-56 h-8"
+		></div>
+		<ng-template #welcomeTemplate>
+			{{ user$().username }}#{{ user$().discriminator }}
+		</ng-template>
+	</m-dashboard-page-title>
+</ng-template>
 
 <!-- <span class="text-white/40">Modules</span>
 	<ng-icon name="cssChevronRight"></ng-icon>

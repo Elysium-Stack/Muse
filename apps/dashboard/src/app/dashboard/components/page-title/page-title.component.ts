@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
 	standalone: true,
@@ -8,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	templateUrl: './page-title.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardPageTitleComponent {}
+export class DashboardPageTitleComponent {
+	@Input() margin = true;
+}

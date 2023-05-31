@@ -7,7 +7,6 @@ import { User } from 'discord.js';
 import { DiscordApiService } from '../../discord/services';
 import { avatarIdToString } from '../../discord/utils/avatar-id-to-string';
 import { DiscordPayload } from '../types/discord-payload.type';
-import { TokenPayload } from '../types/token-payload.type';
 import { JWT_REFRESh_SECRET, JWT_SECRET } from '../util/constants';
 
 @Injectable()
@@ -44,7 +43,7 @@ export class AuthService extends HealthIndicator {
 			},
 		});
 
-		const tokens = await this._getTokens(user.id, payload);
+		const tokens = await this._getTokens(user.id);
 		await this._updateRefreshToken(user.id, tokens.refreshToken);
 		return tokens;
 	}
@@ -69,11 +68,7 @@ export class AuthService extends HealthIndicator {
 			throw new ForbiddenException('Access Denied');
 		}
 
-		const tokens = await this._getTokens(user.id, {
-			id: user.discordId,
-			username: user.username,
-			discriminator: user.discriminator,
-		});
+		const tokens = await this._getTokens(user.id);
 		await this._updateRefreshToken(user.id, tokens.refreshToken);
 
 		return tokens;
@@ -90,10 +85,7 @@ export class AuthService extends HealthIndicator {
 		});
 	}
 
-	private async _getTokens(
-		userId: number,
-		{ id, username, discriminator }: TokenPayload,
-	) {
+	private async _getTokens(userId: number) {
 		const discordUser = await this._discord.request<User>(
 			userId,
 			'/users/@me',
