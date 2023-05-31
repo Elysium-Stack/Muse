@@ -1,7 +1,7 @@
 <aside
 	[class.translate-x-4]="show$()"
 	[class.-translate-x-full]="!show$()"
-	class="absolute left-0 top-0 h-[calc(100vh-2rem)] -ml-4 lg:ml-0 rounded-2xl mt-4 w-[calc(100vw-2rem)] md:w-64 bg-white duration-200 ease-linear lg:static lg:translate-x-0 text-gray-600 flex flex-col p-2"
+	class="absolute left-0 top-0 h-[calc(100vh-2rem)] -ml-4 lg:ml-0 rounded-2xl mt-4 w-[calc(100vw-2rem)] md:w-64 bg-base-0 duration-200 ease-linear lg:static lg:translate-x-0 text-white flex flex-col p-2"
 >
 	<!-- overflow-y-hidden -->
 	<div class="dropdown dropdown-bottom md:dropdown-right">
@@ -34,10 +34,14 @@
 		<ul
 			*ngIf="!loadingGuilds$()"
 			tabindex="0"
-			class="menu dropdown-content p-2 shadow bg-white rounded-box max-w-[16rem] max-h-[80vh] md:max-h-[calc(100vh-2rem)] md:ml-4 md:-mt-2 overflow-y-auto flex flex-col flex-nowrap"
+			class="menu dropdown-content p-2 shadow bg-base-0 rounded-box max-w-[16rem] max-h-[80vh] md:max-h-[calc(100vh-2rem)] md:ml-4 md:-mt-2 overflow-y-auto flex flex-col flex-nowrap"
 		>
 			<li class="w-full" *ngFor="let guild of availableGuilds$()">
-				<a class="flex gap-4 w-full" [routerLink]="['../', guild.id]">
+				<a
+					class="flex gap-4 w-full"
+					[routerLink]="['../', guild.id]"
+					routerLinkActive="active"
+				>
 					<m-guild-icon [guild]="guild" />
 					<p
 						class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"

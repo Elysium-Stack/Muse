@@ -52,11 +52,11 @@ body {
 		@apply rounded-lg;
 
 		&:hover {
-			@apply bg-gray-100;
+			@apply bg-white/10;
 		}
 
 		&.active {
-			@apply bg-primary/10 text-base-100/80;
+			@apply bg-white/10 text-white;
 			@apply font-semibold;
 		}
 	}
