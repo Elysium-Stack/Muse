@@ -68,7 +68,7 @@
 		"colors": "^1.4.0",
 		"daisyui": "^2.51.6",
 		"date-fns": "^2.29.3",
-		"discord.js": "14.9.0",
+		"discord.js": "^14.11.0",
 		"ioredis": "^5.3.2",
 		"kazagumo": "^2.3.2",
 		"kazagumo-spotify": "^1.2.0",
