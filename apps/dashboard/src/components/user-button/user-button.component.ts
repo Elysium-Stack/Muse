@@ -5,7 +5,7 @@ import {
 	Input,
 	inject,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { cssChevronDown, cssRedo } from '@ng-icons/css.gg';
 import { environment } from '../../environment/environment';
@@ -21,6 +21,7 @@ import { UserService } from '../../services/user.service';
 })
 export class UserButtonComponent {
 	private _user = inject(UserService);
+	private _router = inject(Router);
 
 	public signinUrl = `${environment.api.baseUrl}/api/auth`;
 
@@ -31,5 +32,6 @@ export class UserButtonComponent {
 
 	signout() {
 		this._user.signout();
+		this._router.navigate(['/']);
 	}
 }
