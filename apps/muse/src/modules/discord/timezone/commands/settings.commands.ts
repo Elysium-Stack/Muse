@@ -13,11 +13,13 @@ import {
 	ChannelType,
 	CommandInteraction,
 	MessageComponentInteraction,
+	TextChannel,
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
+	ChannelOption,
 	ChannelSelect,
 	ComponentParam,
 	Context,
@@ -44,6 +46,15 @@ class TimezoneSettingsChangeOptions {
 		choices: TIMEZONE_SETTINGS_CHOICES,
 	})
 	option: keyof TimezoneSettingsInterface | undefined;
+}
+
+class TimezoneIgnoreOptions {
+	@ChannelOption({
+		name: 'channel',
+		description: 'The channel to ignore/unignore',
+		required: false,
+	})
+	channel: TextChannel | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -81,19 +92,26 @@ export class TimezoneSettingsCommands {
 		name: 'ignore',
 		description: 'Ignore the current channel',
 	})
-	public async ignore(@Context() [interaction]: SlashCommandContext) {
+	public async ignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { channel }: TimezoneIgnoreOptions,
+	) {
 		this._logger.verbose(
-			`Ignoring timezone channel for ${interaction.guildId} - ${interaction.channelId}`,
+			`Ignoring timezone channel for ${interaction.guildId} - ${
+				channel?.id ?? interaction.channelId
+			}`,
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
-			interaction.channelId,
+			channel?.id ?? interaction.channelId,
 			true,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Timezone module is now **disabled** for this channel!`,
+			content: `${MESSAGE_PREFIX} Timezone module is now **ignoring** ${
+				channel?.id ? `<#${channel.id}>` : 'this channel'
+			}!`,
 			ephemeral: true,
 		});
 	}
@@ -102,19 +120,26 @@ export class TimezoneSettingsCommands {
 		name: 'unignore',
 		description: 'Unignore the current channel',
 	})
-	public async unignore(@Context() [interaction]: SlashCommandContext) {
+	public async unignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { channel }: TimezoneIgnoreOptions,
+	) {
 		this._logger.verbose(
-			`Unignoring timezone channel for ${interaction.guildId} - ${interaction.channelId}`,
+			`Unignoring timezone channel for ${interaction.guildId} - ${
+				channel?.id ?? interaction.channelId
+			}`,
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
-			interaction.channelId,
+			channel?.id ?? interaction.channelId,
 			false,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Timezone module is now **enabled** for this channel!`,
+			content: `${MESSAGE_PREFIX} Timezone module is now **unignoring** ${
+				channel?.id ? `<#${channel.id}>` : 'this channel'
+			}!`,
 			ephemeral: true,
 		});
 	}

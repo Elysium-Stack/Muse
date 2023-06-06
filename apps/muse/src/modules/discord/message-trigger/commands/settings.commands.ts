@@ -13,11 +13,13 @@ import {
 	ChannelType,
 	CommandInteraction,
 	MessageComponentInteraction,
+	TextChannel,
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
+	ChannelOption,
 	ChannelSelect,
 	ComponentParam,
 	Context,
@@ -44,6 +46,15 @@ class MessageTriggerSettingsChangeOptions {
 		choices: MESSAGE_TRIGGER_SETTINGS_CHOICES,
 	})
 	option: keyof MessageTriggerSettingsInterface | undefined;
+}
+
+class MessageTriggerIgnoreOptions {
+	@ChannelOption({
+		name: 'channel',
+		description: 'The channel to ignore/unignore',
+		required: false,
+	})
+	channel: TextChannel | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -73,19 +84,26 @@ export class MessageTriggerSettingsCommands {
 		name: 'ignore',
 		description: 'Ignore the current channel',
 	})
-	public async ignore(@Context() [interaction]: SlashCommandContext) {
+	public async ignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { channel }: MessageTriggerIgnoreOptions,
+	) {
 		this._logger.verbose(
-			`Ignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId}`,
+			`Ignoring reaction trigger channel for ${interaction.guildId} - ${
+				channel?.id ?? interaction.channelId
+			}`,
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
-			interaction.channelId,
+			channel?.id ?? interaction.channelId,
 			true,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Message triggers are now **ignored** for this channel!`,
+			content: `${MESSAGE_PREFIX} Message triggers are now **ignored** for ${
+				channel?.id ? `<#${channel.id}>` : 'this channel'
+			}!`,
 			ephemeral: true,
 		});
 	}
@@ -94,19 +112,26 @@ export class MessageTriggerSettingsCommands {
 		name: 'unignore',
 		description: 'Unignore the current channel',
 	})
-	public async unignore(@Context() [interaction]: SlashCommandContext) {
+	public async unignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { channel }: MessageTriggerIgnoreOptions,
+	) {
 		this._logger.verbose(
-			`Unignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId}`,
+			`Unignoring reaction trigger channel for ${interaction.guildId} - ${
+				channel?.id ?? interaction.channelId
+			}`,
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
-			interaction.channelId,
+			channel?.id ?? interaction.channelId,
 			false,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Message triggers are now **unignored** for this channel!`,
+			content: `${MESSAGE_PREFIX} Message triggers are now **unignored** for ${
+				channel?.id ? `<#${channel.id}>` : 'this channel'
+			}!`,
 			ephemeral: true,
 		});
 	}
