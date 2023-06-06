@@ -1,4 +1,9 @@
-export const MODULES = ['Bookworm', 'Music', 'Reaction Trigger'];
+export const MODULES = [
+	'Bookworm',
+	'Music',
+	'Reaction Trigger',
+	'Message Trigger',
+];
 
 export const HOUR_OPTIONS = [
 	{

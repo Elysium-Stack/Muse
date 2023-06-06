@@ -1,0 +1,123 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@prisma';
+import { escapeRegExp } from '@util';
+import { Message } from 'discord.js';
+import { MessageTriggerSettingsService } from './settings.service';
+@Injectable()
+export class MessageTriggerGeneralService {
+	private readonly _logger = new Logger(MessageTriggerGeneralService.name);
+
+	constructor(
+		private _prisma: PrismaService,
+		private _settings: MessageTriggerSettingsService,
+	) {}
+
+	public async getMessageTriggers(guildId: string, page = 1) {
+		const where = {
+			guildId,
+		};
+
+		const triggers = await this._prisma.messageTriggers.findMany({
+			where,
+		});
+
+		return {
+			triggers: triggers.slice(10 * (page - 1), 10 * page),
+			total: triggers.length,
+		};
+	}
+
+	public async getMessageTriggerById(guildId: string, id: number) {
+		return this._prisma.messageTriggers.findFirst({
+			where: {
+				id,
+				guildId,
+			},
+		});
+	}
+
+	public addMessageTriggerByWord(
+		guildId: string,
+		phrase: string,
+		exact: boolean,
+		message: string,
+	) {
+		return this._prisma.messageTriggers.create({
+			data: {
+				guildId,
+				phrase,
+				exact,
+				message,
+			},
+		});
+	}
+
+	public async removeMessageTriggerByID(guildId: string, id: number) {
+		const trigger = await this._prisma.messageTriggers.findFirst({
+			where: {
+				guildId,
+				id,
+			},
+		});
+
+		if (!trigger) {
+			return null;
+		}
+
+		await this._prisma.messageTriggers.delete({
+			where: {
+				id: trigger.id,
+			},
+		});
+
+		return trigger;
+	}
+
+	public async checkForMessageTriggers(message: Message) {
+		if (!message.inGuild() || message.author.bot) {
+			return;
+		}
+
+		const settings = await this._settings.get(message.guildId);
+		if (!settings) {
+			return;
+		}
+
+		const { ignoredChannelIds } = settings;
+		if (ignoredChannelIds.indexOf(message.channelId) >= 0) {
+			return;
+		}
+
+		const where = {
+			guildId: message.guildId,
+		};
+
+		const triggersCount = await this._prisma.messageTriggers.count({
+			where,
+		});
+
+		if (!triggersCount) {
+			return;
+		}
+
+		const triggers = await this._prisma.messageTriggers.findMany({
+			where,
+		});
+
+		for (const { phrase, exact, message: msg } of triggers) {
+			const regexInstance = new RegExp(escapeRegExp(phrase), 'ig');
+			const test = exact
+				? phrase === message.content
+				: regexInstance.test(message.content);
+
+			if (!test) {
+				continue;
+			}
+
+			this._logger.debug(
+				`Got a match for ${regexInstance} on ${message.guildId}, replying with message:\n"${msg}"`,
+			);
+			message.channel.send(msg);
+		}
+	}
+}

@@ -56,6 +56,10 @@ model Settings {
   musicChannelId                            String?
   musicDjRoleId                             String?
 
+  // Message trigger
+  messageTriggerEnabled                     Boolean?    @default(true)
+  messageTriggerIgnoredChannelIds           String[]    @default([])
+
   // Reaction trigger
   reactionTriggerEnabled                    Boolean?    @default(true)
   reactionTriggerIgnoredChannelIds          String[]    @default([])
@@ -109,6 +113,16 @@ model ReactionTriggers {
 
   phrase                                    String
   emojiId                                   String
+
+  exact                                     Boolean     @default(false)
+}
+
+model MessageTriggers {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+
+  phrase                                    String
+  message                                   String
 
   exact                                     Boolean     @default(false)
 }

@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { ModuleNotEnabledException } from '@util/errors';
 import { NecordExecutionContext } from 'necord';
-import { ReactionTriggerSettingsService } from '../services/settings.service';
+import { MessageTriggerSettingsService } from '../services/settings.service';
 
 @Injectable()
-export class ReactionTriggerEnabledGuard implements CanActivate {
-	private readonly _logger = new Logger(ReactionTriggerEnabledGuard.name);
+export class MessageTriggerEnabledGuard implements CanActivate {
+	private readonly _logger = new Logger(MessageTriggerEnabledGuard.name);
 
 	constructor(
-		private readonly _reactionTriggerSettings: ReactionTriggerSettingsService,
+		private readonly _messageTriggerSettings: MessageTriggerSettingsService,
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,12 +26,12 @@ export class ReactionTriggerEnabledGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._reactionTriggerSettings.get(
+		const settings = await this._messageTriggerSettings.get(
 			interaction.guildId!,
 		);
 
 		if (!settings?.enabled) {
-			throw new ModuleNotEnabledException('Reaction Trigger');
+			throw new ModuleNotEnabledException('Message Trigger');
 		}
 
 		return true;
