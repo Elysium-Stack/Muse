@@ -18,7 +18,7 @@ export class ReactionTriggerGeneralService {
 			guildId,
 		};
 
-		const triggers = await this._prisma.messageReactionTriggers.findMany({
+		const triggers = await this._prisma.reactionTriggers.findMany({
 			where,
 		});
 
@@ -47,7 +47,7 @@ export class ReactionTriggerGeneralService {
 		exact: boolean,
 		emojiId: string,
 	) {
-		return this._prisma.messageReactionTriggers.create({
+		return this._prisma.reactionTriggers.create({
 			data: {
 				guildId,
 				phrase,
@@ -58,7 +58,7 @@ export class ReactionTriggerGeneralService {
 	}
 
 	public async removeReactionTriggerByID(guildId: string, id: number) {
-		const trigger = await this._prisma.messageReactionTriggers.findFirst({
+		const trigger = await this._prisma.reactionTriggers.findFirst({
 			where: {
 				guildId,
 				id,
@@ -69,7 +69,7 @@ export class ReactionTriggerGeneralService {
 			return null;
 		}
 
-		await this._prisma.messageReactionTriggers.delete({
+		await this._prisma.reactionTriggers.delete({
 			where: {
 				id: trigger.id,
 			},
@@ -97,7 +97,7 @@ export class ReactionTriggerGeneralService {
 			guildId: message.guildId,
 		};
 
-		const triggersCount = await this._prisma.messageReactionTriggers.count({
+		const triggersCount = await this._prisma.reactionTriggers.count({
 			where,
 		});
 
@@ -105,7 +105,7 @@ export class ReactionTriggerGeneralService {
 			return;
 		}
 
-		const triggers = await this._prisma.messageReactionTriggers.findMany({
+		const triggers = await this._prisma.reactionTriggers.findMany({
 			where,
 		});
 
