@@ -16,7 +16,6 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
-	BooleanOption,
 	Button,
 	ButtonContext,
 	ChannelSelect,
@@ -46,16 +45,6 @@ class ReactionTriggerSettingsChangeOptions {
 	option: keyof ReactionTriggerSettingsInterface | undefined;
 }
 
-class ReactionTriggerSettingsIgnoreOptions {
-	@BooleanOption({
-		name: 'value',
-		description:
-			'Wether the channel should be ignored or not (default: true)',
-		required: false,
-	})
-	value: boolean | undefined;
-}
-
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @ReactionTriggerCommandDecorator({
@@ -83,28 +72,40 @@ export class ReactionTriggerSettingsCommands {
 		name: 'ignore',
 		description: 'Ignore the current channel',
 	})
-	public async ignore(
-		@Context() [interaction]: SlashCommandContext,
-		@Options() { value }: ReactionTriggerSettingsIgnoreOptions,
-	) {
+	public async ignore(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Ignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId} - value: ${value}`,
+			`Ignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId}`,
 		);
-
-		if (value === undefined || value === null) {
-			value = true;
-		}
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
 			interaction.channelId,
-			value,
+			true,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Timezone module is now **${
-				value ? 'enabled' : 'disabled'
-			}** for this channel!`,
+			content: `${MESSAGE_PREFIX} Reaction triggers are now **ignored** for this channel!`,
+			ephemeral: true,
+		});
+	}
+
+	@Subcommand({
+		name: 'unignore',
+		description: 'Unignore the current channel',
+	})
+	public async unignore(@Context() [interaction]: SlashCommandContext) {
+		this._logger.verbose(
+			`Unignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId}`,
+		);
+
+		await this._settings.ignoreChannel(
+			interaction.guildId,
+			interaction.channelId,
+			false,
+		);
+
+		return interaction.reply({
+			content: `${MESSAGE_PREFIX} Reaction triggers are now **unignored** for this channel!`,
 			ephemeral: true,
 		});
 	}
