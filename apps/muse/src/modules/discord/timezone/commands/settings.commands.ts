@@ -16,6 +16,7 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
+	BooleanOption,
 	Button,
 	ButtonContext,
 	ChannelSelect,
@@ -44,6 +45,16 @@ class TimezoneSettingsChangeOptions {
 		choices: TIMEZONE_SETTINGS_CHOICES,
 	})
 	option: keyof TimezoneSettingsInterface | undefined;
+}
+
+class TimezoneSettingsIgnoreOptions {
+	@BooleanOption({
+		name: 'value',
+		description:
+			'Wether the channel should be ignored or not (default: true)',
+		required: false,
+	})
+	value: boolean | undefined;
 }
 
 @UseGuards(GuildAdminGuard)
@@ -75,6 +86,36 @@ export class TimezoneSettingsCommands {
 		[interaction]: ButtonContext,
 	) {
 		return this._settings.showSettings(interaction);
+	}
+
+	@Subcommand({
+		name: 'ignore',
+		description: 'Ignore the current channel',
+	})
+	public async ignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { value }: TimezoneSettingsIgnoreOptions,
+	) {
+		this._logger.verbose(
+			`Ignoring timezone channel for ${interaction.guildId} - ${interaction.channelId} - value: ${value}`,
+		);
+
+		if (value === undefined || value === null) {
+			value = true;
+		}
+
+		await this._settings.ignoreChannel(
+			interaction.guildId,
+			interaction.channelId,
+			value,
+		);
+
+		return interaction.reply({
+			content: `${MESSAGE_PREFIX} Reaction triggers are now **${
+				value ? 'ignored' : 'unignored'
+			}** for this channel!`,
+			ephemeral: true,
+		});
 	}
 
 	// settings change flow

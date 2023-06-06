@@ -16,6 +16,7 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
+	BooleanOption,
 	Button,
 	ButtonContext,
 	ChannelSelect,
@@ -45,6 +46,16 @@ class ReactionTriggerSettingsChangeOptions {
 	option: keyof ReactionTriggerSettingsInterface | undefined;
 }
 
+class ReactionTriggerSettingsIgnoreOptions {
+	@BooleanOption({
+		name: 'value',
+		description:
+			'Wether the channel should be ignored or not (default: true)',
+		required: false,
+	})
+	value: boolean | undefined;
+}
+
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @ReactionTriggerCommandDecorator({
@@ -66,6 +77,36 @@ export class ReactionTriggerSettingsCommands {
 		);
 
 		return this._settings.showSettings(interaction);
+	}
+
+	@Subcommand({
+		name: 'ignore',
+		description: 'Ignore the current channel',
+	})
+	public async ignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { value }: ReactionTriggerSettingsIgnoreOptions,
+	) {
+		this._logger.verbose(
+			`Ignoring reaction trigger channel for ${interaction.guildId} - ${interaction.channelId} - value: ${value}`,
+		);
+
+		if (value === undefined || value === null) {
+			value = true;
+		}
+
+		await this._settings.ignoreChannel(
+			interaction.guildId,
+			interaction.channelId,
+			value,
+		);
+
+		return interaction.reply({
+			content: `${MESSAGE_PREFIX} Timezone module is now **${
+				value ? 'enabled' : 'disabled'
+			}** for this channel!`,
+			ephemeral: true,
+		});
 	}
 
 	@Button('REACTION_TRIGGER_SETTINGS_SHOW')

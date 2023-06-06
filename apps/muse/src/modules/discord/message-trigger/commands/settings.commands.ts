@@ -16,6 +16,7 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
+	BooleanOption,
 	Button,
 	ButtonContext,
 	ChannelSelect,
@@ -46,6 +47,16 @@ class MessageTriggerSettingsChangeOptions {
 	option: keyof MessageTriggerSettingsInterface | undefined;
 }
 
+class MessageTriggerSettingsIgnoreOptions {
+	@BooleanOption({
+		name: 'value',
+		description:
+			'Wether the channel should be ignored or not (default: true)',
+		required: false,
+	})
+	value: boolean | undefined;
+}
+
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @MessageTriggerCommandDecorator({
@@ -67,6 +78,36 @@ export class MessageTriggerSettingsCommands {
 		);
 
 		return this._settings.showSettings(interaction);
+	}
+
+	@Subcommand({
+		name: 'ignore',
+		description: 'Ignore the current channel',
+	})
+	public async ignore(
+		@Context() [interaction]: SlashCommandContext,
+		@Options() { value }: MessageTriggerSettingsIgnoreOptions,
+	) {
+		this._logger.verbose(
+			`Ignoring message trigger channel for ${interaction.guildId} - ${interaction.channelId} - value: ${value}`,
+		);
+
+		if (value === undefined || value === null) {
+			value = true;
+		}
+
+		await this._settings.ignoreChannel(
+			interaction.guildId,
+			interaction.channelId,
+			value,
+		);
+
+		return interaction.reply({
+			content: `${MESSAGE_PREFIX} Message triggers are now **${
+				value ? 'ignored' : 'unignored'
+			}** for this channel!`,
+			ephemeral: true,
+		});
 	}
 
 	@Button('MESSAGE_TRIGGER_SETTINGS_SHOW')

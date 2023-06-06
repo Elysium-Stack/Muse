@@ -129,4 +129,33 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 			ephemeral: true,
 		});
 	}
+
+	async ignoreChannel(
+		guildId: string,
+		channelId: string,
+		value: boolean = true,
+	) {
+		const settings = await this.get(guildId);
+
+		if (!settings) {
+			return;
+		}
+
+		const { ignoredChannelIds } = settings;
+		const index = ignoredChannelIds.indexOf(channelId);
+
+		if (!value) {
+			if (index >= 0) {
+				ignoredChannelIds.splice(index, 1);
+			}
+		}
+
+		if (value) {
+			if (index === -1) {
+				ignoredChannelIds.push(channelId);
+			}
+		}
+
+		return this.set(guildId, 'ignoredChannelIds', ignoredChannelIds);
+	}
 }
