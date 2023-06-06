@@ -131,7 +131,7 @@ export class MessageTriggerSettingsCommands {
 		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Reaction trigger has been ${
+			content: `${MESSAGE_PREFIX} Message trigger has been ${
 				parsedValue ? 'enabled' : 'disabled'
 			}`,
 			components: [this._getBackButtonRow()],
@@ -151,7 +151,7 @@ export class MessageTriggerSettingsCommands {
 		);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
+			content: `${MESSAGE_PREFIX} Message trigger ignored channels has been changed to:${
 				ids.length
 					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
 					: ' None'

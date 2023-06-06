@@ -79,7 +79,7 @@ export class MessageTriggerGeneralService {
 		}
 
 		const settings = await this._settings.get(message.guildId);
-		if (!settings) {
+		if (!settings?.enabled) {
 			return;
 		}
 
