@@ -3,6 +3,7 @@ export const MODULES = [
 	'Music',
 	'Reaction Trigger',
 	'Message Trigger',
+	'Timezone',
 ];
 
 export const HOUR_OPTIONS = [

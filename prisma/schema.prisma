@@ -70,6 +70,10 @@ model Settings {
   radioTextChannelId                        String?
   radioPlaylist                             String?
 
+  // Message trigger
+  timezoneEnabled                           Boolean?    @default(false)
+  timezoneIgnoredChannelIds                 String[]    @default([])
+
   // timestamps
   createdAt                                 DateTime    @default(now())
   updatedAt                                 DateTime    @updatedAt
@@ -140,6 +144,13 @@ model FeedbackTopics {
   referenceId                               String
 
   name                                      String
+}
+
+model TimezoneData {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+  userId                                    String
+  timezone                                  String
 }
 
 // model GoogleAuthTokens {

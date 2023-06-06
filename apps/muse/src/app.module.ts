@@ -29,6 +29,7 @@ import {
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
+import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
 @Module({
 	imports: [
@@ -68,6 +69,7 @@ import { SharedModule } from './shared.module';
 
 		// Discord modules
 		AdminModule,
+		TimezoneModule,
 		FunModule,
 		SettingsModule,
 		BookwormModule,
