@@ -35,6 +35,8 @@ body {
 }
 
 .menu {
+	@apply gap-1;
+
 	&.menu-normal,
 	&.menu-compact,
 	&:not(.menu-compact),
