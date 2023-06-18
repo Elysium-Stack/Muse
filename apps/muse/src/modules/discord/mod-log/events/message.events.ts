@@ -81,7 +81,12 @@ export class ModLogMessageEvents {
 		const { guildId } = original;
 		const { enabled, editChannelId } = await this._settings.get(guildId);
 
-		if (!enabled || !editChannelId?.length || message.author.bot) {
+		if (
+			!enabled ||
+			!editChannelId?.length ||
+			original.author.bot ||
+			updated.author.bot
+		) {
 			return;
 		}
 
