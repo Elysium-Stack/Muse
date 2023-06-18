@@ -17,7 +17,7 @@ export class ModLogMessageEvents {
 		const { guildId } = message;
 		const { enabled, deleteChannelId } = await this._settings.get(guildId);
 
-		if (!enabled || !deleteChannelId?.length) {
+		if (!enabled || !deleteChannelId?.length || message.author.bot) {
 			return;
 		}
 
@@ -81,7 +81,7 @@ export class ModLogMessageEvents {
 		const { guildId } = original;
 		const { enabled, editChannelId } = await this._settings.get(guildId);
 
-		if (!enabled || !editChannelId?.length) {
+		if (!enabled || !editChannelId?.length || message.author.bot) {
 			return;
 		}
 
