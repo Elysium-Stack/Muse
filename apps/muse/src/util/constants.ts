@@ -1,10 +1,25 @@
+import { HexColorString } from 'discord.js';
+
 export const MODULES = [
 	'Bookworm',
 	'Music',
 	'Reaction Trigger',
 	'Message Trigger',
 	'Timezone',
+	'Mod log',
 ];
+
+export const EMBED_STATUS_COLORS: {
+	success: HexColorString;
+	warning: HexColorString;
+	danger: HexColorString;
+	info: HexColorString;
+} = {
+	success: '#00ff0c',
+	warning: '#ff8c00',
+	danger: '#ff0000',
+	info: '#00f2ff',
+};
 
 export const HOUR_OPTIONS = [
 	{

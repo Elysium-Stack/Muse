@@ -24,6 +24,7 @@ import {
 	FunModule,
 	HealthModule,
 	MessageTriggerModule,
+	ModLogModule,
 	MusicModule,
 	RadioModule,
 	ReactionTriggerModule,
@@ -31,6 +32,7 @@ import {
 } from './modules';
 import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
+
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -69,6 +71,7 @@ import { SharedModule } from './shared.module';
 
 		// Discord modules
 		AdminModule,
+		ModLogModule,
 		TimezoneModule,
 		FunModule,
 		SettingsModule,
