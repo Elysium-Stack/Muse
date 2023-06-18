@@ -129,12 +129,18 @@ export class MusicLavalinkService extends Kazagumo {
 
 	private async _onPlayerEnd(player: KazagumoPlayer) {
 		this._logger.log(`Player end for ${player.guildId}`);
-		player.data.get('message')?.delete();
+		player.data
+			.get('message')
+			?.delete()
+			.catch(() => null);
 	}
 
 	private async _onPlayerDestroy(player: KazagumoPlayer) {
 		this._logger.log(`Player destroyed for ${player.guildId}`);
-		player.data.get('message')?.delete();
+		player.data
+			.get('message')
+			?.delete()
+			.catch(() => null);
 	}
 
 	private async _onPlayerClose(
@@ -181,7 +187,10 @@ export class MusicLavalinkService extends Kazagumo {
 			return;
 		}
 
-		player.data.get('message')?.delete();
+		player.data
+			.get('message')
+			?.delete()
+			.catch(() => null);
 
 		await channel.send({
 			content: `${MESSAGE_PREFIX} No more songs to play, disconnecting.`,
