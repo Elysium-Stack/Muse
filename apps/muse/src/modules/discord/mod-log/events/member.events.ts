@@ -26,7 +26,6 @@ export class ModLogMemberEvents {
 
 		const user = await this._client.users.fetch(member.user.id);
 
-		console.log(user);
 		this._logger.log(`Mod log member join running for ${guildId}`);
 
 		const embed = new EmbedBuilder()
@@ -83,7 +82,6 @@ export class ModLogMemberEvents {
 
 		const user = await this._client.users.fetch(member.user.id);
 
-		console.log(user);
 		this._logger.log(`Mod log member leave running for ${guildId}`);
 
 		const roles = await member.roles.cache
