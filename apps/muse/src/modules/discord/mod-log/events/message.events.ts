@@ -109,8 +109,7 @@ export class ModLogMessageEvents {
 		try {
 			const originalContent =
 				original.content.match(/(.|[\r\n]){1,1024}/g);
-			const updatedContent =
-				original.content.match(/(.|[\r\n]){1,1024}/g);
+			const updatedContent = updated.content.match(/(.|[\r\n]){1,1024}/g);
 
 			const embeds = [];
 
