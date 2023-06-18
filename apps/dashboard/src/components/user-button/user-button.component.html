@@ -14,10 +14,18 @@
 					class="mask mask-squircle"
 					width="32"
 					height="32"
-					[alt]="user.username + '#' + user.discriminator"
+					[alt]="
+						user.username +
+						(user.discriminator === '0'
+							? ''
+							: '#' + user.discriminator)
+					"
 				/>
 				<span class="text-white">
-					{{ user.username }}#{{ user.discriminator }}
+					{{ user.username
+					}}<ng-container *ngIf="user.discriminator !== '0'"
+						>#{{ user.discriminator }}</ng-container
+					>
 				</span>
 				<ng-icon name="cssChevronDown"></ng-icon>
 			</label>

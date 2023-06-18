@@ -13,7 +13,13 @@ export class InteractionEvents {
 		const commandName = getInteractionCommandName(interaction);
 
 		this._logger.log(
-			`Interaction "${commandName}" (${interaction.constructor.name}) used by ${interaction.user.username}:${interaction.user.discriminator}!`,
+			`Interaction "${commandName}" (${
+				interaction.constructor.name
+			}) used by ${interaction.user.username}${
+				interaction.user.discriminator === '0'
+					? ''
+					: `#${interaction.user.discriminator}!`
+			}`,
 		);
 	}
 }

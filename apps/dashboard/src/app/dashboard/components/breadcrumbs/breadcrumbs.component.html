@@ -34,7 +34,10 @@
 			class="ghost-loader w-56 h-8"
 		></div>
 		<ng-template #welcomeTemplate>
-			{{ user$().username }}#{{ user$().discriminator }}
+			{{ user$().username
+			}}<ng-container *ngIf="user$().discriminator !== '0'"
+				>#{{ user$().discriminator }}</ng-container
+			>
 		</ng-template>
 	</m-dashboard-page-title>
 </ng-template>
