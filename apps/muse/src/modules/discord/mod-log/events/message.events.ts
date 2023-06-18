@@ -17,7 +17,11 @@ export class ModLogMessageEvents {
 		const { guildId } = message;
 		const { enabled, deleteChannelId } = await this._settings.get(guildId);
 
-		if (!enabled || !deleteChannelId?.length || message.author.bot) {
+		if (!enabled || !deleteChannelId?.length) {
+			return;
+		}
+
+		if (message.author.bot) {
 			return;
 		}
 
@@ -88,12 +92,15 @@ export class ModLogMessageEvents {
 		const { guildId } = original;
 		const { enabled, editChannelId } = await this._settings.get(guildId);
 
-		if (
-			!enabled ||
-			!editChannelId?.length ||
-			original.author.bot ||
-			updated.author.bot
-		) {
+		if (!enabled || !editChannelId?.length) {
+			return;
+		}
+
+		if (original.author.bot || updated.author.bot) {
+			return;
+		}
+
+		if (original.cleanContent === updated.cleanContent) {
 			return;
 		}
 
@@ -106,6 +113,7 @@ export class ModLogMessageEvents {
 		if (!(channel instanceof TextChannel)) {
 			return;
 		}
+
 		try {
 			const originalContent =
 				original.content.match(/(.|[\r\n]){1,1024}/g);
