@@ -1,5 +1,9 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
+import {
+	ForbiddenExceptionFilter,
+	GuildAdminGuard,
+	MESSAGE_PREFIX,
+} from '@util';
 import {
 	ActionRowBuilder,
 	ModalActionRowComponentBuilder,
@@ -7,24 +11,21 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import { AdminGuard } from 'libs/util/src/lib/guards/admin.guard';
 import {
 	Context,
 	Ctx,
 	Modal,
 	ModalContext,
+	SlashCommand,
 	SlashCommandContext,
-	Subcommand,
 } from 'necord';
-import { AdminCommandDecorator } from '..';
 
-@UseGuards(AdminGuard)
+@UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
-@AdminCommandDecorator()
-export class AdminSayCommands {
-	private readonly _logger = new Logger(AdminSayCommands.name);
+export class FunSayCommands {
+	private readonly _logger = new Logger(FunSayCommands.name);
 
-	@Subcommand({
+	@SlashCommand({
 		name: 'say',
 		description: 'Make the bot say something',
 	})
@@ -46,6 +47,14 @@ export class AdminSayCommands {
 						.setStyle(TextInputStyle.Short)
 						.setValue(interaction.channelId),
 				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					new TextInputBuilder()
+						.setCustomId('replyId')
+						.setLabel('Reply to message ID')
+						.setStyle(TextInputStyle.Short)
+						.setRequired(false)
+						.setValue(''),
+				),
 			]);
 
 		return interaction.showModal(modal);
@@ -55,6 +64,7 @@ export class AdminSayCommands {
 	public async onFeedbackModalResponse(@Ctx() [interaction]: ModalContext) {
 		const message = interaction.fields.getTextInputValue('message');
 		let channelId = interaction.fields.getTextInputValue('channelId');
+		let replyId = interaction.fields.getTextInputValue('replyId');
 
 		if (!message?.length) {
 			return interaction.reply({
@@ -70,6 +80,7 @@ export class AdminSayCommands {
 		const channel = await interaction.guild.channels
 			.fetch(channelId)
 			.catch((err) => null);
+
 		if (!channel) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Could not find the channel with id "${channelId}"!`,
@@ -84,7 +95,28 @@ export class AdminSayCommands {
 			});
 		}
 
-		channel.send(message);
+		if (!replyId?.length) {
+			// send the message to a channel beacuse there is no replyId
+			await channel.send(message);
+
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} Sent your message!`,
+				ephemeral: true,
+			});
+		}
+
+		const replyMessage = await channel.messages
+			.fetch(replyId)
+			.catch((err) => null);
+
+		if (!replyMessage) {
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} Could not find the message with id "${replyId}" in <#${channelId}> to reply to!`,
+				ephemeral: true,
+			});
+		}
+
+		await replyMessage.reply(message);
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Sent your message!`,
