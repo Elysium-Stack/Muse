@@ -44,16 +44,18 @@ export class ModLogMessageEvents {
 					`https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`,
 				)
 				.addFields(
-					...content.map((part, i) => ({
-						name: i === 0 ? 'Content' : ' ',
-						value: part,
-					})),
+					...(content?.length
+						? content.map((part, i) => ({
+								name: i === 0 ? 'Content' : ' ',
+								value: part,
+						  }))
+						: []),
 					...(message.attachments.size
 						? [
 								{
 									name: 'Attachments',
 									value: message.attachments
-										.map((a) => a.url)
+										.map((a) => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
 						  ]
@@ -67,6 +69,7 @@ export class ModLogMessageEvents {
 					} | ${message.author.id}`,
 					iconURL: message.author.displayAvatarURL() || undefined,
 				})
+				.setImage(message.attachments.first()?.url || undefined)
 				.setColor(EMBED_STATUS_COLORS.danger)
 				.setTimestamp();
 
@@ -78,7 +81,9 @@ export class ModLogMessageEvents {
 				return;
 			}
 
-			await deleteChannel.send({ embeds: [embed] });
+			await deleteChannel.send({
+				embeds: [embed],
+			});
 		} catch (err) {
 			console.log(err);
 			this._logger.error(err);
@@ -150,7 +155,7 @@ export class ModLogMessageEvents {
 								{
 									name: 'Original attachments',
 									value: original.attachments
-										.map((a) => a.url)
+										.map((a) => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
 						  ]
@@ -160,7 +165,7 @@ export class ModLogMessageEvents {
 								{
 									name: 'Edited attachments',
 									value: updated.attachments
-										.map((a) => a.url)
+										.map((a) => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
 						  ]
@@ -175,6 +180,7 @@ export class ModLogMessageEvents {
 					iconURL: original.author.displayAvatarURL() || undefined,
 				})
 				.setColor(EMBED_STATUS_COLORS.warning)
+				.setImage(updated.attachments.first()?.url || undefined)
 				.setTimestamp();
 
 			embeds.push(embed);
