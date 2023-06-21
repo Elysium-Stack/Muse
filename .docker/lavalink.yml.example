@@ -1,41 +1,34 @@
 plugins:
     lavasrc:
         providers: # Custom providers for track loading. This is the default
-            # - "dzisrc:%ISRC%" # Deezer ISRC provider
-            # - "dzsearch:%QUERY%" # Deezer search provider
+            - 'dzisrc:%ISRC%' # Deezer ISRC provider
+            - 'dzsearch:%QUERY%' # Deezer search provider
             - 'ytsearch:"%ISRC%"' # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
             - 'ytsearch:%QUERY%' # Will be used if track has no ISRC or no track could be found for the ISRC
             #  you can add multiple other fallback sources here
         sources:
             spotify: true # Enable Spotify source
             applemusic: false # Enable Apple Music source
-            deezer: false # Enable Deezer source
+            deezer: true # Enable Deezer source
             yandexmusic: false # Enable Yandex Music source
+        deezer:
+            masterDecryptionKey: 'MASTER_DECRYPTION_KEY' # the master key used for decrypting the deezer tracks. (yes this is not here you need to get it from somewhere else)
         spotify:
-            clientId: ''
-            clientSecret: ''
-            countryCode: 'US' # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+            clientId: 'CLIENT_ID'
+            clientSecret: 'CLIENT_SECRET'
+            countryCode: 'EU' # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
             playlistLoadLimit: 10 # The number of pages at 100 tracks each
-            albumLoadLimit: 10 # The number of pages at 50 tracks each
-        #applemusic:
-        #  countryCode: "US" # the country code you want to use for filtering the artists top tracks and language. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-        #  mediaAPIToken: "..." # Can be used to bypass the auto token fetching which is likely to break again in the future
-        #  playlistLoadLimit: 6 # The number of pages at 300 tracks each
-        #  albumLoadLimit: 6 # The number of pages at 300 tracks each
-        #deezer:
-        #  masterDecryptionKey: "your master decryption key" # the master key used for decrypting the deezer tracks. (yes this is not here you need to get it from somewhere else)
-        #yandexmusic:
-        #  accessToken: "your access token" # the token used for accessing the yandex music api. See https://github.com/TopiSenpai/LavaSrc#yandex-music
-
+            albumLoadLimit: 20 # The number of pages at 50 tracks each
+ 
 server: # REST and WS server
     port: 2333
     address: 0.0.0.0
 lavalink:
     plugins:
-        - dependency: 'com.github.TopiSenpai.LavaSrc:lavasrc-plugin:3.2.3'
+        - dependency: 'com.github.TopiSenpai.LavaSrc:lavasrc-plugin:3.2.4'
           repository: 'https://maven.topi.wtf/releases'
     server:
-        password: 'youshallnotpass'
+        password: 'docker'
         sources:
             youtube: true
             bandcamp: true
@@ -56,12 +49,6 @@ lavalink:
         youtubeSearchEnabled: true
         soundcloudSearchEnabled: true
         gc-warnings: true
-        #ratelimit:
-        #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
-        #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
-        #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-        #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
-        #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
 
 metrics:
     prometheus:
@@ -71,9 +58,6 @@ metrics:
 sentry:
     dsn: ''
     environment: ''
-#  tags:
-#    some_key: some_value
-#    another_key: another_value
 
 logging:
     file:

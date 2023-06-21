@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
+import { DeveloperLogService, MESSAGE_PREFIX } from '@util';
 import { ChannelType, Client, Events, Snowflake, VoiceState } from 'discord.js';
 import { Kazagumo, KazagumoPlayer, KazagumoTrack, State } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
@@ -19,7 +19,10 @@ import {
 export class MusicLavalinkService extends Kazagumo {
 	private readonly _logger = new Logger(MusicLavalinkService.name);
 
-	constructor(private _client: Client) {
+	constructor(
+		private _client: Client,
+		private _developerLog: DeveloperLogService,
+	) {
 		super(
 			{
 				defaultSearchEngine: 'spotify',
@@ -79,13 +82,23 @@ export class MusicLavalinkService extends Kazagumo {
 		this.shoukaku.on('debug', (name, info) =>
 			this._logger.debug(`Lavalink ${name}: Debug,`, info),
 		);
-		this.shoukaku.on('error', (name, ...args) =>
-			this._logger.error(`Lavalink ${name}: Error,`, ...args),
-		);
-		this.shoukaku.on('disconnect', (name, players, moved) => {
-			this.shoukaku.on('error', (name, error) =>
-				this._logger.error(`Lavalink ${name}: Error Caught,`, error),
+		this.shoukaku.on('error', async (name, ...args) => {
+			this._logger.error(`Lavalink ${name}: Error,`, ...args);
+			await this._developerLog.sendError(
+				{ args },
+				`Lavalink ${name}: Error`,
+				'MusicLavalinkService',
 			);
+		});
+		this.shoukaku.on('disconnect', (name, players, moved) => {
+			this.shoukaku.on('error', async (name, error) => {
+				this._logger.error(`Lavalink ${name}: Error Caught,`, error);
+				await this._developerLog.sendError(
+					error,
+					`Lavalink ${name}: Error`,
+					'MusicLavalinkService',
+				);
+			});
 
 			if (moved) {
 				return;
@@ -111,7 +124,7 @@ export class MusicLavalinkService extends Kazagumo {
 		);
 		this.on('playerResolveError', (player, track, message) =>
 			this._logger.error(
-				`Player start\n ${JSON.stringify({ player, track, message })}`,
+				`Player resolve error\n ${JSON.stringify({ message })}`,
 			),
 		);
 		this.on('playerStuck', (player, data) =>
@@ -212,6 +225,12 @@ export class MusicLavalinkService extends Kazagumo {
 			return;
 		}
 
+		await this._developerLog.sendError(
+			data,
+			`Player got stuck, please try again.`,
+			'MusicLavalinkService',
+			player.guildId,
+		);
 		await channel.send({
 			content: `${MESSAGE_PREFIX} Player got stuck, please try again.`,
 		});
@@ -242,11 +261,14 @@ export class MusicLavalinkService extends Kazagumo {
 			return;
 		}
 
-		await channel.send({
-			content: `${MESSAGE_PREFIX} Something wen't wrong, ${
+		await this._developerLog.sendError(
+			data,
+			`Something wen't wrong, ${
 				skipping ? 'Skipping song' : 'please try again'
 			}.`,
-		});
+			'MusicLavalinkService',
+			player.guildId,
+		);
 	}
 
 	@On(Events.VoiceStateUpdate)
