@@ -51,7 +51,7 @@ services:
         ports:
             - '$EXPOSED_DB_PORT:5432'
     lavalink:
-        image: fredboat/lavalink:latest
+        image: ghcr.io/lavalink-devs/lavalink:latest
         volumes:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
     redis:
