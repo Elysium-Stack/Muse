@@ -2,6 +2,7 @@ export * from './lib/arrays';
 export * from './lib/bot-intents';
 export * from './lib/constants';
 export * from './lib/create-logger';
+export * from './lib/developer-log';
 export * from './lib/filters';
 export * from './lib/get-interaction-command-name';
 export * from './lib/guards';
