@@ -1,3 +1,4 @@
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { isValid } from 'date-fns';
@@ -62,16 +63,35 @@ export class TimezoneGeneralService {
 			return;
 		}
 
-		const embed = new EmbedBuilder()
-			.setFooter({
-				text: `Above time (${formatInTimeZone(
-					utcDate,
-					data.timezone,
-					'HH:mm zzz',
-					{ locale: enUS },
-				)}) in your local time`,
-			})
-			.setTimestamp(utcDate.getTime());
+		const embed = new EmbedBuilder().addFields(
+			{
+				name: `${getUsername(message.author)}'s time`,
+				value: formatInTimeZone(utcDate, data.timezone, 'HH:mm zzz', {
+					locale: enUS,
+				}),
+				inline: true,
+			},
+			{
+				name: '     ',
+				value: '     ',
+				inline: true,
+			},
+			{
+				name: `Your time`,
+				value: `<t:${Math.round(utcDate.getTime() / 1000)}:t>`,
+				inline: true,
+			},
+		);
+
+		// .setDescription(
+		// 	`**${getUsername(message.author)}'s time:** ${formatInTimeZone(
+		// 		utcDate,
+		// 		data.timezone,
+		// 		'HH:mm zzz',
+		// 		{ locale: enUS },
+		// 	)}
+		// **Your time:**: <t:${utcDate.getTime()}:t>`,
+		// )
 
 		return message.channel.send({
 			embeds: [embed],
