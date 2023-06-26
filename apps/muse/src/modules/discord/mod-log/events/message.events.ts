@@ -1,4 +1,5 @@
 import { EMBED_STATUS_COLORS } from '@muse/util/constants';
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { EmbedBuilder, Events, TextChannel } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
@@ -62,11 +63,9 @@ export class ModLogMessageEvents {
 						: []),
 				)
 				.setAuthor({
-					name: `${message.author.username}${
-						message.author.discriminator === '0'
-							? ''
-							: `#${message.author.discriminator}`
-					} | ${message.author.id}`,
+					name: `${getUsername(message.author)} | ${
+						message.author.id
+					}`,
 					iconURL: message.author.displayAvatarURL() || undefined,
 				})
 				.setImage(message.attachments.first()?.url || undefined)
@@ -172,11 +171,9 @@ export class ModLogMessageEvents {
 						: []),
 				)
 				.setAuthor({
-					name: `${original.author.username}${
-						original.author.discriminator === '0'
-							? ''
-							: `#${original.author.discriminator}`
-					} | ${original.author.id}`,
+					name: `${getUsername(original.author)} | ${
+						original.author.id
+					}`,
 					iconURL: original.author.displayAvatarURL() || undefined,
 				})
 				.setColor(EMBED_STATUS_COLORS.warning)
@@ -202,11 +199,9 @@ export class ModLogMessageEvents {
 						// 	})),
 						// )
 						.setAuthor({
-							name: `${original.author.username}${
-								original.author.discriminator === '0'
-									? ''
-									: `#${original.author.discriminator}`
-							} | ${original.author.id}`,
+							name: `${getUsername(original.author)} | ${
+								original.author.id
+							}`,
 							iconURL:
 								original.author.displayAvatarURL() || undefined,
 						})
@@ -232,11 +227,9 @@ export class ModLogMessageEvents {
 						// 	})),
 						// )
 						.setAuthor({
-							name: `${updated.author.username}${
-								updated.author.discriminator === '0'
-									? ''
-									: `#${updated.author.discriminator}`
-							} | ${updated.author.id}`,
+							name: `${getUsername(updated.author)} | ${
+								updated.author.id
+							}`,
 							iconURL:
 								updated.author.displayAvatarURL() || undefined,
 						})

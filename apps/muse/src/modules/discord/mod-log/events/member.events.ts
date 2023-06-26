@@ -1,4 +1,5 @@
 import { EMBED_STATUS_COLORS } from '@muse/util/constants';
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client, EmbedBuilder, Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
@@ -52,9 +53,7 @@ export class ModLogMemberEvents {
 				},
 			)
 			.setAuthor({
-				name: `${user.username}${
-					user.discriminator === '0' ? '' : `#${user.discriminator}`
-				}`,
+				name: getUsername(user),
 				iconURL: user.displayAvatarURL() || undefined,
 			})
 			.setColor(EMBED_STATUS_COLORS.success)
@@ -120,9 +119,7 @@ export class ModLogMemberEvents {
 				},
 			)
 			.setAuthor({
-				name: `${user.username}${
-					user.discriminator === '0' ? '' : `#${user.discriminator}`
-				}`,
+				name: getUsername(user),
 				iconURL: user.displayAvatarURL() || undefined,
 			})
 			.setColor(EMBED_STATUS_COLORS.danger)

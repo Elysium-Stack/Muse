@@ -1,3 +1,4 @@
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { getInteractionCommandName } from '@util';
 import { Events } from 'discord.js';
@@ -15,11 +16,7 @@ export class InteractionEvents {
 		this._logger.log(
 			`Interaction "${commandName}" (${
 				interaction.constructor.name
-			}) used by ${interaction.user.username}${
-				interaction.user.discriminator === '0'
-					? ''
-					: `#${interaction.user.discriminator}!`
-			}`,
+			}) used by ${getUsername(interaction.user)}!`,
 		);
 	}
 }
