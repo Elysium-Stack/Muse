@@ -72,11 +72,6 @@ export class TimezoneGeneralService {
 				inline: true,
 			},
 			{
-				name: '     ',
-				value: '     ',
-				inline: true,
-			},
-			{
 				name: `Your time`,
 				value: `<t:${Math.round(utcDate.getTime() / 1000)}:t>`,
 				inline: true,
