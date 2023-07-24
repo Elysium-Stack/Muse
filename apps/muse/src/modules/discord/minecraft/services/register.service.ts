@@ -35,6 +35,29 @@ export class MinecraftRegisterService {
 		return response;
 	}
 
+	async removeAll(guildId, userId) {
+		const items = await this._prisma.minecraftMapping.findMany({
+			where: {
+				guildId,
+				userId,
+			},
+		});
+
+		if (!items?.length) {
+			return;
+		}
+
+		for (const item of items) {
+			await this._sendRcon(`whitelist remove ${item.uuid}`);
+			await this._prisma.minecraftMapping.delete({
+				where: {
+					id: item.id,
+				},
+			});
+			this._logger.log(`Removed minecraft mapping for ${item.username}`);
+		}
+	}
+
 	private async _saveInDB(guildId, userId, uuid, username) {
 		const item = await this._prisma.minecraftMapping.findFirst({
 			where: {
