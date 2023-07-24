@@ -7,6 +7,7 @@ export const MODULES = [
 	'Message Trigger',
 	'Timezone',
 	'Mod log',
+	'Minecraft',
 ];
 
 export const EMBED_STATUS_COLORS: {

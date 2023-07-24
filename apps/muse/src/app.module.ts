@@ -24,6 +24,7 @@ import {
 	FunModule,
 	HealthModule,
 	MessageTriggerModule,
+	MinecraftModule,
 	ModLogModule,
 	MusicModule,
 	RadioModule,
@@ -81,6 +82,7 @@ import { SharedModule } from './shared.module';
 		MessageTriggerModule,
 		FeedbackModule,
 		RadioModule,
+		MinecraftModule,
 	],
 	providers: [
 		{

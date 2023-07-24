@@ -81,6 +81,11 @@ model Settings {
   modLogJoinChannelId                        String?
   modLogLeaveChannelId                       String?
 
+  // Minecraft
+  minecraftEnabled                          Boolean?    @default(true)
+  minecraftRequiredRoleId                   String?
+  minecraftConnectUrl                       String?
+
   // timestamps
   createdAt                                 DateTime    @default(now())
   updatedAt                                 DateTime    @updatedAt
@@ -158,6 +163,14 @@ model TimezoneData {
   guildId                                   String
   userId                                    String
   timezone                                  String
+}
+
+model MinecraftMapping {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+  userId                                    String
+  uuid                                      String
+  username                                  String
 }
 
 // model GoogleAuthTokens {

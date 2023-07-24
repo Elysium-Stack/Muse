@@ -82,6 +82,7 @@
 		"passport-local": "^1.0.0",
 		"postcss": "8.4.23",
 		"prom-client": "^14.2.0",
+		"rcon-ts": "^1.2.3",
 		"react-daisyui": "^3.1.2",
 		"react-icons": "^4.8.0",
 		"react-particles": "^2.9.3",

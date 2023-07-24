@@ -6,13 +6,15 @@ import {
 } from '@nestjs/common';
 import { ModuleNotEnabledException } from '@util/errors';
 import { NecordExecutionContext } from 'necord';
-import { BookwormSettingsService } from '../services/settings.service';
+import { MinecraftSettingsService } from '../services/settings.service';
 
 @Injectable()
-export class BookwormEnabledGuard implements CanActivate {
-	private readonly _logger = new Logger(BookwormEnabledGuard.name);
+export class MinecraftEnabledGuard implements CanActivate {
+	private readonly _logger = new Logger(MinecraftEnabledGuard.name);
 
-	constructor(private readonly _bookwormSettings: BookwormSettingsService) {}
+	constructor(
+		private readonly _minecraftSettings: MinecraftSettingsService,
+	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const ctx = NecordExecutionContext.create(context);
@@ -24,10 +26,12 @@ export class BookwormEnabledGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId!);
+		const settings = await this._minecraftSettings.get(
+			interaction.guildId!,
+		);
 
 		if (!settings?.enabled) {
-			throw new ModuleNotEnabledException('Bookworm');
+			throw new ModuleNotEnabledException('Minecraft');
 		}
 
 		return true;

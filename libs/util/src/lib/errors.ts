@@ -15,3 +15,9 @@ export class IncorrectChannelException extends ForbiddenException {
 		);
 	}
 }
+
+export class RequiredRoleException extends ForbiddenException {
+	constructor() {
+		super(`You're not allowed to use this command.`);
+	}
+}
