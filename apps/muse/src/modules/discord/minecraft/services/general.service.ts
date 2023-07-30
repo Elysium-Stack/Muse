@@ -66,6 +66,10 @@ export class MinecraftGeneralService {
 		const settings = await this._settings.get(message.guildId);
 		const { chatChannelId } = settings;
 
+		if (message.webhookId) {
+			return;
+		}
+
 		if (!chatChannelId) {
 			return;
 		}
