@@ -70,6 +70,10 @@ export class MinecraftGeneralService {
 			return;
 		}
 
+		if(message.author.bot) {
+			return;
+		}
+
 		if (!chatChannelId) {
 			return;
 		}
