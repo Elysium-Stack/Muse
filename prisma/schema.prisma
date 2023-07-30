@@ -85,6 +85,7 @@ model Settings {
   minecraftEnabled                          Boolean?    @default(true)
   minecraftRequiredRoleId                   String?
   minecraftConnectUrl                       String?
+  minecraftChatChannelId                    String?
 
   // timestamps
   createdAt                                 DateTime    @default(now())

@@ -11,7 +11,7 @@ import {
 import { MinecraftEnabledGuard } from '../guards/enabled.guard';
 import { MinecraftRequiredRoleGuard } from '../guards/required-role.guard';
 import { MinecraftCommandDecorator } from '../minecraft.decorator';
-import { MinecraftRegisterService } from '../services/register.service';
+import { MinecraftGeneralService } from '../services/general.service';
 import { MinecraftSettingsService } from '../services/settings.service';
 
 class MinecraftRegisterOptions {
@@ -30,7 +30,7 @@ export class MinecraftRegisterCommands {
 	private readonly _logger = new Logger(MinecraftRegisterCommands.name);
 
 	constructor(
-		private _register: MinecraftRegisterService,
+		private _general: MinecraftGeneralService,
 		private _settings: MinecraftSettingsService,
 		private _client: Client,
 	) {}
@@ -54,7 +54,7 @@ export class MinecraftRegisterCommands {
 			});
 		}
 
-		const userData = await this._register.fetchUserData(username);
+		const userData = await this._general.fetchUserData(username);
 
 		if (!userData?.id) {
 			return interaction.reply({
@@ -64,7 +64,7 @@ export class MinecraftRegisterCommands {
 			});
 		}
 
-		const response = await this._register.register(
+		const response = await this._general.register(
 			interaction.guildId,
 			interaction.user.id,
 			userData.uuid,

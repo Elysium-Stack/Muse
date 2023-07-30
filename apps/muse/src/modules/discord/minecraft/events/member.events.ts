@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
-import { MinecraftRegisterService } from '../services/register.service';
+import { MinecraftGeneralService } from '../services/general.service';
 
 @Injectable()
 export class MinecraftMemberEvents {
 	private readonly _logger = new Logger(MinecraftMemberEvents.name);
 
-	constructor(private _register: MinecraftRegisterService) {}
+	constructor(private _register: MinecraftGeneralService) {}
 
 	@On(Events.GuildMemberRemove)
 	public async onGuildMemberRemove(

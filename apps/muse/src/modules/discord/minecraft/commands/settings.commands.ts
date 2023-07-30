@@ -10,6 +10,8 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ChannelSelectMenuBuilder,
+	ChannelType,
 	CommandInteraction,
 	MessageComponentInteraction,
 	ModalActionRowComponentBuilder,
@@ -21,14 +23,17 @@ import {
 import {
 	Button,
 	ButtonContext,
+	ChannelSelect,
 	ComponentParam,
 	Context,
 	Ctx,
+	ISelectedChannels,
 	ISelectedRoles,
 	Modal,
 	ModalContext,
 	Options,
 	RoleSelect,
+	SelectedChannels,
 	SelectedRoles,
 	SelectedStrings,
 	SlashCommandContext,
@@ -170,6 +175,22 @@ export class MinecraftSettingsCommands {
 		});
 	}
 
+	@ChannelSelect('MINECRAFT_SETTINGS_CHANGE_CHAT_CHANNEL_ID')
+	public async onChatChannelChange(
+		@Context() [interaction]: ButtonContext,
+		@SelectedChannels() data: ISelectedChannels,
+	) {
+		const id = [...data.keys()][0];
+		await this._settings.set(interaction.guildId!, 'chatChannelId', id);
+
+		return interaction.update({
+			content: `${MESSAGE_PREFIX} Minecraft Chat Channel changed to:${
+				id.length ? `\n<#${id}>` : ' None'
+			}`,
+			components: [this._getBackButtonRow()],
+		});
+	}
+
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		option: keyof MinecraftSettingsInterface,
@@ -208,23 +229,41 @@ export class MinecraftSettingsCommands {
 					),
 				];
 				break;
-			case 'requiredRoleId':
-				readableOption = 'Required role';
-				currentValue = settings?.[option]
-					? `<@&${settings[option]}>`
-					: 'none';
-				components = [
-					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
-						new RoleSelectMenuBuilder()
-							.setCustomId(
-								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
-							)
-							.setPlaceholder('Select a role'),
-					),
-				];
-				break;
+				case 'requiredRoleId':
+					readableOption = 'Required role';
+					currentValue = settings?.[option]
+						? `<@&${settings[option]}>`
+						: 'none';
+					components = [
+						new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
+							new RoleSelectMenuBuilder()
+								.setCustomId(
+									`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+										option,
+									).toUpperCase()}`,
+								)
+								.setPlaceholder('Select a role'),
+						),
+					];
+					break;
+				case 'chatChannelId':
+					readableOption = 'Chat Channel';
+					currentValue = settings?.[option]?.length
+						? `<#${settings?.[option]}>`
+						: 'none';
+					components = [
+						new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
+							new ChannelSelectMenuBuilder()
+								.setCustomId(
+									`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
+										option,
+									).toUpperCase()}`,
+								)
+								.addChannelTypes(ChannelType.GuildText)
+								.setPlaceholder('Select the channel to listen for chats'),
+						),
+					];
+					break;
 			case 'connectUrl':
 				readableOption = 'Connect Url';
 				currentValue = settings?.[option] ?? 'none';

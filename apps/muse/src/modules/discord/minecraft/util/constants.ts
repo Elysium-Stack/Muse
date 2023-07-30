@@ -12,6 +12,12 @@ export const MINECRAFT_SETTINGS_CHOICES = [
 		value: 'requiredRoleId',
 	},
 	{
+		name: 'Chat Channel',
+		description:
+			'The channel to listen to for chats to send to the server.',
+		value: 'chatChannelId',
+	},
+	{
 		name: 'Connect url',
 		description: 'The url to be used to connect to your server.',
 		value: 'connectUrl',

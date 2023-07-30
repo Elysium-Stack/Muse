@@ -3,7 +3,8 @@ import { Module } from '@nestjs/common';
 import { MinecraftRegisterCommands } from './commands/register.commands';
 import { MinecraftSettingsCommands } from './commands/settings.commands';
 import { MinecraftMemberEvents } from './events/member.events';
-import { MinecraftRegisterService } from './services/register.service';
+import { MinecraftMessageEvents } from './events/message.events';
+import { MinecraftGeneralService } from './services/general.service';
 import { MinecraftSettingsService } from './services/settings.service';
 
 @Module({
@@ -12,9 +13,10 @@ import { MinecraftSettingsService } from './services/settings.service';
 	providers: [
 		MinecraftSettingsService,
 		MinecraftSettingsCommands,
-		MinecraftRegisterService,
+		MinecraftGeneralService,
 		MinecraftRegisterCommands,
 		MinecraftMemberEvents,
+		MinecraftMessageEvents,
 	],
 })
 export class MinecraftModule {}

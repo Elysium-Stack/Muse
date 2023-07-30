@@ -35,7 +35,7 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 			return;
 		}
 
-		const { enabled, requiredRoleId, connectUrl } = settings;
+		const { enabled, requiredRoleId, connectUrl, chatChannelId } = settings;
 
 		const embed = new EmbedBuilder()
 			.setColor(MINECRAFT_EMBED_COLOR)
@@ -50,6 +50,11 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 				{
 					name: 'Required Role',
 					value: requiredRoleId ? `<@${requiredRoleId}>` : '-',
+					inline: true,
+				},
+				{
+					name: 'Chat Channel',
+					value: chatChannelId ? `<#${chatChannelId}>` : '-',
 					inline: true,
 				},
 				{
