@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
+import { TriggerMatch } from '@prisma/client';
 import { escapeRegExp } from '@util';
 import { Message } from 'discord.js';
 import { MessageTriggerSettingsService } from './settings.service';
@@ -39,14 +40,14 @@ export class MessageTriggerGeneralService {
 	public addMessageTriggerByWord(
 		guildId: string,
 		phrase: string,
-		exact: boolean,
+		match: TriggerMatch,
 		message: string,
 	) {
 		return this._prisma.messageTriggers.create({
 			data: {
 				guildId,
 				phrase,
-				exact,
+				match,
 				message,
 			},
 		});
@@ -104,11 +105,26 @@ export class MessageTriggerGeneralService {
 			where,
 		});
 
-		for (const { phrase, exact, message: msg } of triggers) {
-			const regexInstance = new RegExp(escapeRegExp(phrase), 'ig');
-			const test = exact
-				? phrase === message.content
-				: regexInstance.test(message.content);
+		for (const { phrase, match, message: msg } of triggers) {
+			let regexInstance: RegExp;
+			let test = false;
+
+			switch (match) {
+				case 'word':
+					regexInstance = new RegExp(
+						`\\b${escapeRegExp(phrase)}\\b`,
+						'gim',
+					);
+					test = regexInstance.test(message.cleanContent);
+					break;
+				case 'message':
+					test = phrase === message.cleanContent;
+					break;
+				default:
+					regexInstance = new RegExp(escapeRegExp(phrase), 'gim');
+					test = regexInstance.test(message.cleanContent);
+					break;
+			}
 
 			if (!test) {
 				continue;

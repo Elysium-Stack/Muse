@@ -1,5 +1,6 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { TriggerMatch } from '@prisma/client';
 import {
 	EnabledExceptionFilter,
 	ForbiddenExceptionFilter,
@@ -15,7 +16,6 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
-	BooleanOption,
 	Button,
 	ButtonContext,
 	ComponentParam,
@@ -58,12 +58,26 @@ class MessageTriggerAddOptions {
 	})
 	message: string | undefined;
 
-	@BooleanOption({
-		name: 'exact',
-		description: 'Wether the message should be an exact match',
+	@StringOption({
+		name: 'match',
+		description: 'The type of matching applied to the phrase',
 		required: false,
+		choices: [
+			{
+				name: 'Any',
+				value: 'any',
+			},
+			{
+				name: 'Word',
+				value: 'word',
+			},
+			{
+				name: 'Message',
+				value: 'message',
+			},
+		],
 	})
-	exact: boolean | undefined;
+	match: TriggerMatch;
 }
 
 class MessageTriggerRemoveOptions {
@@ -174,7 +188,7 @@ export class MessageTriggerGeneralCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { phrase, message, exact }: MessageTriggerAddOptions,
+		@Options() { phrase, message, match }: MessageTriggerAddOptions,
 	) {
 		this._logger.verbose(
 			`Adding message trigger for ${interaction.guildId} - ${phrase}\n"${message}"`,
@@ -183,7 +197,7 @@ export class MessageTriggerGeneralCommands {
 		await this._general.addMessageTriggerByWord(
 			interaction.guildId!,
 			phrase!,
-			exact ?? false,
+			match ?? 'any',
 			message,
 		);
 
@@ -278,7 +292,10 @@ export class MessageTriggerGeneralCommands {
 					name: 'Phrase',
 					value: triggers
 						.map(
-							(t) => `${t.exact ? '**Exact:** ' : ''}${t.phrase}`,
+							(t) =>
+								`${t.match !== 'any' ? `[${t.match}] ` : ''}${
+									t.phrase
+								}`,
 						)
 						.join('\n'),
 					inline: true,

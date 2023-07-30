@@ -1,5 +1,6 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { TriggerMatch } from '@prisma/client';
 import {
 	EnabledExceptionFilter,
 	ForbiddenExceptionFilter,
@@ -15,7 +16,6 @@ import {
 } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
-	BooleanOption,
 	Button,
 	ButtonContext,
 	ComponentParam,
@@ -57,12 +57,26 @@ class ReactionTriggerAddOptions {
 	})
 	emoji: string | undefined;
 
-	@BooleanOption({
-		name: 'exact',
-		description: 'Wether the message should be an exact match',
+	@StringOption({
+		name: 'match',
+		description: 'The type of matching applied to the phrase',
 		required: false,
+		choices: [
+			{
+				name: 'Any',
+				value: 'any',
+			},
+			{
+				name: 'Word',
+				value: 'word',
+			},
+			{
+				name: 'Message',
+				value: 'message',
+			},
+		],
 	})
-	exact: boolean | undefined;
+	match: TriggerMatch;
 }
 
 class ReactionTriggerRemoveOptions {
@@ -113,7 +127,7 @@ export class ReactionTriggerGeneralCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { phrase, emoji, exact }: ReactionTriggerAddOptions,
+		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions,
 	) {
 		const splittedEmoji = emoji!.split(':');
 		const emojiId = splittedEmoji[splittedEmoji.length - 1].replace(
@@ -136,7 +150,7 @@ export class ReactionTriggerGeneralCommands {
 		await this._general.addReactionTriggerByWord(
 			interaction.guildId!,
 			phrase!,
-			exact ?? false,
+			match ?? 'any',
 			resolvedEmoji.id,
 		);
 
@@ -236,7 +250,10 @@ export class ReactionTriggerGeneralCommands {
 					name: 'Phrase',
 					value: triggers
 						.map(
-							(t) => `${t.exact ? '**Exact:** ' : ''}${t.phrase}`,
+							(t) =>
+								`${t.match !== 'any' ? `[${t.match}] ` : ''}${
+									t.phrase
+								}`,
 						)
 						.join('\n'),
 					inline: true,

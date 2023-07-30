@@ -131,7 +131,7 @@ model ReactionTriggers {
   phrase                                    String
   emojiId                                   String
 
-  exact                                     Boolean     @default(false)
+  match                                     TriggerMatch @default(any)
 }
 
 model MessageTriggers {
@@ -141,7 +141,7 @@ model MessageTriggers {
   phrase                                    String
   message                                   String
 
-  exact                                     Boolean     @default(false)
+  match                                     TriggerMatch @default(any)
 }
 
 enum FeedbackTopicsType {
@@ -183,3 +183,9 @@ model MinecraftMapping {
 //   client_secret                             String
 //   refresh_token                             String
 // }
+
+enum TriggerMatch {
+  any
+  word
+  message
+}

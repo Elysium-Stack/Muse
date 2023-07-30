@@ -66,12 +66,10 @@ export class MinecraftGeneralService {
 		const settings = await this._settings.get(message.guildId);
 		const { chatChannelId } = settings;
 
-		console.log(chatChannelId);
 		if (!chatChannelId) {
 			return;
 		}
 
-		console.log(chatChannelId, message.channelId);
 		if (chatChannelId !== message.channelId) {
 			return;
 		}
