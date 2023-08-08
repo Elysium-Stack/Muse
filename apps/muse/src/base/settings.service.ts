@@ -23,6 +23,17 @@ export abstract class BaseSettingsService<T> {
 		this._settings.setKey(guildId, defaultKey, value);
 	}
 
+	async setObj(guildId: string, obj: Partial<T>) {
+		const newObj = {};
+		for (const key of Object.keys(obj)) {
+			newObj[
+				`${this._base}${key.charAt(0).toUpperCase()}${key.slice(1)}`
+			] = obj[key];
+		}
+
+		this._settings.setObj(guildId, newObj);
+	}
+
 	private _formatSettings(settings: Settings): T {
 		const newSettings: any = {};
 

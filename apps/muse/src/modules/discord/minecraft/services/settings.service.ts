@@ -35,7 +35,17 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 			return;
 		}
 
-		const { enabled, requiredRoleId, connectUrl, chatChannelId } = settings;
+		const {
+			enabled,
+			bedrockEnabled,
+			requiredRoleId,
+			connectUrl,
+			chatChannelId,
+			bedrockPort,
+			rconHost,
+			rconPort,
+			rconPass,
+		} = settings;
 
 		const embed = new EmbedBuilder()
 			.setColor(MINECRAFT_EMBED_COLOR)
@@ -58,9 +68,49 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 					inline: true,
 				},
 				{
-					name: 'ConnectUrl',
+					name: 'Bedrock enabled',
+					value: bedrockEnabled ? 'Enabled' : 'Disabled',
+					inline: true,
+				},
+				{
+					name: ' ',
+					value: ' ',
+					inline: true,
+				},
+				{
+					name: ' ',
+					value: ' ',
+					inline: true,
+				},
+				{
+					name: 'Connect Url',
 					value: connectUrl ?? '-',
-					inline: false,
+					inline: true,
+				},
+				{
+					name: 'Bedrock port',
+					value: bedrockPort ?? '-',
+					inline: true,
+				},
+				{
+					name: ' ',
+					value: ' ',
+					inline: true,
+				},
+				{
+					name: 'RCON Host',
+					value: rconHost ?? '-',
+					inline: true,
+				},
+				{
+					name: 'RCON Port',
+					value: rconPort ?? '-',
+					inline: true,
+				},
+				{
+					name: 'RCON Pass',
+					value: rconPass ? `✶✶✶✶✶✶✶` : '-',
+					inline: true,
 				},
 			);
 

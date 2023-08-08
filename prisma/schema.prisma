@@ -84,8 +84,13 @@ model Settings {
   // Minecraft
   minecraftEnabled                          Boolean?    @default(true)
   minecraftRequiredRoleId                   String?
+  minecraftBedrockEnabled                   Boolean?    @default(true)
   minecraftConnectUrl                       String?
+  minecraftBedrockPort                      String?
   minecraftChatChannelId                    String?
+  minecraftRconHost                         String?
+  minecraftRconPort                         String?
+  minecraftRconPass                         String?
 
   // timestamps
   createdAt                                 DateTime    @default(now())
@@ -172,6 +177,7 @@ model MinecraftMapping {
   userId                                    String
   uuid                                      String
   username                                  String
+  bedrock                                   Boolean     @default(false)
 }
 
 // model GoogleAuthTokens {

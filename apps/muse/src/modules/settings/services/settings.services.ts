@@ -50,4 +50,18 @@ export class SettingsService {
 			},
 		});
 	}
+
+	async setObj(guildId: string, obj: any) {
+		const settings = await this.getSettings(guildId);
+
+		return this._prisma.settings.update({
+			where: {
+				guildId,
+			},
+			data: {
+				...settings,
+				...obj,
+			},
+		});
+	}
 }

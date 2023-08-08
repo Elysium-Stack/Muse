@@ -10,6 +10,7 @@ export class MinecraftGeneralService {
 	private readonly _logger = new Logger(MinecraftGeneralService.name);
 
 	private _uuidUrl = 'https://api.mojang.com/users/profiles/minecraft';
+	private _xuidUrl = 'https://xbl-web-api.int-max.eu.org/xuid/{username}/raw';
 
 	constructor(
 		private _prisma: PrismaService,
@@ -18,24 +19,30 @@ export class MinecraftGeneralService {
 
 	async fetchUserData(
 		username,
+		bedrock = false,
 	): Promise<null | { id: string; uuid: string; name: string }> {
-		let data = fetch(`${this._uuidUrl}/${username}`)
-			.then((res) => res.json())
-			.then((res) =>
-				res?.id ? { ...res, uuid: stringToUuid(res.id) } : null,
-			)
-			.catch(() => null);
+		let data = bedrock
+			? this._getBedrockData(username)
+			: this._getJavaData(username);
 
 		data = await data;
 		this._logger.log(
-			`Received data for ${username}: ${JSON.stringify(data)}`,
+			`Received data for ${
+				bedrock ? ' [bedrock]' : ''
+			}${username}: ${JSON.stringify(data)}`,
 		);
 		return data;
 	}
 
-	async register(guildId, userId, uuid, username) {
-		const response = await this._sendRcon(`whitelist add ${uuid}`);
-		await this._saveInDB(guildId, userId, uuid, username);
+	async register(guildId, userId, uuid, username, bedrock = false) {
+		console.log(uuid);
+		const response = await this._sendRcon(
+			guildId,
+			`whitelist ${bedrock ? 'x-' : ''}add ${
+				bedrock ? username.replace(/ /g, '') : uuid
+			}`,
+		);
+		await this._saveInDB(guildId, userId, uuid, username, bedrock);
 		return response;
 	}
 
@@ -52,7 +59,12 @@ export class MinecraftGeneralService {
 		}
 
 		for (const item of items) {
-			await this._sendRcon(`whitelist remove ${item.uuid}`);
+			await this._sendRcon(
+				guildId,
+				`whitelist ${item.bedrock ? 'x-' : ''}remove ${
+					item.bedrock ? item.username.replace(/ /g, '') : item.uuid
+				}`,
+			);
 			await this._prisma.minecraftMapping.delete({
 				where: {
 					id: item.id,
@@ -70,7 +82,7 @@ export class MinecraftGeneralService {
 			return;
 		}
 
-		if(message.author.bot) {
+		if (message.author.bot) {
 			return;
 		}
 
@@ -98,15 +110,38 @@ export class MinecraftGeneralService {
 		const mcMessage = `&${member.displayHexColor}& ${
 			member.nickname ?? member.displayName
 		}&f: ${message.cleanContent}`;
-		return this._sendRcon(`discord ${mcMessage}`);
+		return this._sendRcon(message.guildId, `discord ${mcMessage}`);
 	}
 
-	private async _saveInDB(guildId, userId, uuid, username) {
+	private _getJavaData(username: string) {
+		return fetch(`${this._uuidUrl}/${username}`)
+			.then((res) => res.json())
+			.then((res) =>
+				res?.id ? { ...res, uuid: stringToUuid(res.id) } : null,
+			)
+			.catch(() => null);
+	}
+
+	private _getBedrockData(username: string) {
+		return fetch(
+			this._xuidUrl.replace('{username}', username.replace(/ /g, '')),
+		)
+			.then((res) => res.text())
+			.then((res) => ({
+				id: res,
+				name: username,
+				uuid: stringToUuid(`00000000${res}`),
+			}))
+			.catch(() => null);
+	}
+
+	private async _saveInDB(guildId, userId, uuid, username, bedrock) {
 		const item = await this._prisma.minecraftMapping.findFirst({
 			where: {
 				guildId,
 				uuid,
 				userId,
+				bedrock,
 			},
 		});
 
@@ -117,6 +152,7 @@ export class MinecraftGeneralService {
 					username,
 					userId,
 					uuid,
+					bedrock,
 				},
 			});
 		}
@@ -128,15 +164,20 @@ export class MinecraftGeneralService {
 			data: {
 				username,
 				userId,
+				bedrock,
 			},
 		});
 	}
 
-	private async _sendRcon(command: string) {
+	private async _sendRcon(guildId, command: string) {
+		const { rconHost, rconPort, rconPass } = await this._settings.get(
+			guildId,
+		);
+
 		const client = new Rcon({
-			host: process.env.MC_RCON_HOST,
-			port: parseInt(process.env.MC_RCON_PORT, 10),
-			password: process.env.MC_RCON_PASS,
+			host: rconHost,
+			port: parseInt(rconPort, 10),
+			password: rconPass,
 			timeout: 1000,
 		});
 

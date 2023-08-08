@@ -18,8 +18,18 @@ export const MINECRAFT_SETTINGS_CHOICES = [
 		value: 'chatChannelId',
 	},
 	{
-		name: 'Connect url',
-		description: 'The url to be used to connect to your server.',
-		value: 'connectUrl',
+		name: 'Bedrock enabled',
+		description: 'Wether to enable bedrock registrations/',
+		value: 'bedrockEnabled',
+	},
+	{
+		name: 'Connection information',
+		description: 'The information used to connect to your server.',
+		value: 'connectionInformation',
+	},
+	{
+		name: 'RCON Connection',
+		description: 'Change the RCON connection information.',
+		value: 'rconConnection',
 	},
 ];

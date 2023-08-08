@@ -1,7 +1,12 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { EnabledExceptionFilter, ForbiddenExceptionFilter } from '@util';
+import {
+	EnabledExceptionFilter,
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+} from '@util';
 import { Client } from 'discord.js';
 import {
+	BooleanOption,
 	Context,
 	Options,
 	SlashCommandContext,
@@ -21,6 +26,13 @@ class MinecraftRegisterOptions {
 		required: true,
 	})
 	username: string | undefined;
+
+	@BooleanOption({
+		name: 'bedrock',
+		description: "Wether your'e playing on bedrock or not",
+		required: false,
+	})
+	bedrock: boolean | undefined;
 }
 
 @UseGuards(MinecraftEnabledGuard)
@@ -43,23 +55,34 @@ export class MinecraftRegisterCommands {
 	})
 	public async register(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { username }: MinecraftRegisterOptions,
+		@Options() { username, bedrock }: MinecraftRegisterOptions,
 	) {
 		this._logger.verbose(`Register for the minecraft server`);
 
+		bedrock = bedrock ?? false;
+
 		if (!username) {
 			return interaction.reply({
-				content: 'Please provide a username',
+				content: `${MESSAGE_PREFIX} Please provide a username`,
 				ephemeral: true,
 			});
 		}
 
-		const userData = await this._general.fetchUserData(username);
+		const { connectUrl, bedrockPort, bedrockEnabled } =
+			await this._settings.get(interaction.guildId);
 
-		if (!userData?.id) {
+		if (bedrock && !bedrockEnabled) {
 			return interaction.reply({
-				content:
-					'I am sorry, but I could not find a user with that username on the minecraft database.',
+				content: `${MESSAGE_PREFIX} I am sorry, but bedrock registrations are disabled.`,
+				ephemeral: true,
+			});
+		}
+
+		const userData = await this._general.fetchUserData(username, bedrock);
+
+		if (!userData?.uuid) {
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} I am sorry, but I could not find a user with that username on the minecraft database.`,
 				ephemeral: true,
 			});
 		}
@@ -69,20 +92,25 @@ export class MinecraftRegisterCommands {
 			interaction.user.id,
 			userData.uuid,
 			userData.name,
+			bedrock,
 		);
+		console.log(response);
 		if (response === null) {
 			return interaction.reply({
-				content: `Something wen't wrong registering you to our server, please try again later`,
+				content: `${MESSAGE_PREFIX} Something wen't wrong registering you to our server, please try again later`,
 				ephemeral: true,
 			});
 		}
 
-		const { connectUrl } = await this._settings.get(interaction.guildId);
 		return interaction.reply({
-			content: `Welcome ${
+			content: `${MESSAGE_PREFIX} Welcome ${
 				userData.name
 			}, You've been whitelisted on our server.${
-				connectUrl ? `\nJoin now at **${connectUrl}**` : ''
+				connectUrl
+					? `\nJoin now at **${connectUrl}**${
+							bedrock ? ` with port **${bedrockPort}**` : ''
+					  }`
+					: ''
 			}`,
 			ephemeral: true,
 		});
