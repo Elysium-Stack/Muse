@@ -35,7 +35,6 @@ export class MinecraftGeneralService {
 	}
 
 	async register(guildId, userId, uuid, username, bedrock = false) {
-		console.log(uuid);
 		const response = await this._sendRcon(
 			guildId,
 			`whitelist ${bedrock ? 'x-' : ''}add ${

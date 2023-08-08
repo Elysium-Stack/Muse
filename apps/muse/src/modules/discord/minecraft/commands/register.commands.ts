@@ -94,7 +94,6 @@ export class MinecraftRegisterCommands {
 			userData.name,
 			bedrock,
 		);
-		console.log(response);
 		if (response === null) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Something wen't wrong registering you to our server, please try again later`,
