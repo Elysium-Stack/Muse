@@ -56,7 +56,7 @@ export class AdminPurgeService {
 		}
 
 		const inactiveMessages = await this._getLatestMessageOfInactiveMembers(
-			members.values(),
+			members,
 			guild,
 			userToken,
 			timestampXMonthsAgo,
