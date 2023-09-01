@@ -119,19 +119,39 @@ ${memberUserids.join('\n')}
 		const settings = await this._settings.getSettings(guild.id, false);
 		const ignoredParents = settings.purgeIgnoredParentChannelIds;
 
-		for (let channel of textChannels.values()) {
-			if (ignoredParents.includes(channel.parentId)) {
-				console.log(
-					`Ignoring ${channel.name} because it's category is ${channel.parent.name}`,
-				);
-				continue;
-			}
+		const chunked = [...textChannels.values()]
+			.filter((c) => !ignoredParents.includes(c.parentId))
+			.reduce((resultArray, item, index) => {
+				const chunkIndex = Math.floor(index / 10);
 
-			console.log(`Starting on ${channel.name}`);
-			const channelMessages = await this._fetchMessagesUntil(
-				channel as TextChannel,
-				timestamp,
+				if (!resultArray[chunkIndex]) {
+					resultArray[chunkIndex] = []; // start a new chunk
+				}
+
+				resultArray[chunkIndex].push(item);
+
+				return resultArray;
+			}, []);
+
+		for (let chunk of chunked) {
+			console.log(
+				`Starting on ${chunk.length}: ${chunk
+					.map((c) => c.name)
+					.join(', ')}`,
 			);
+			const promises = await Promise.allSettled(
+				chunk.map((c) =>
+					this._fetchMessagesUntil(c as TextChannel, timestamp),
+				),
+			);
+
+			const channelMessages = promises
+				.filter((p) => p.status === 'fulfilled')
+				.map(
+					(p: PromiseFulfilledResult<Collection<string, Message>>) =>
+						p.value,
+				)
+				.reduce((messages, next) => messages.concat(next));
 
 			messages = messages.concat(channelMessages);
 		}
