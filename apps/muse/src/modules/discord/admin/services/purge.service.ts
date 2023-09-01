@@ -1,6 +1,7 @@
 import { SettingsService } from '@muse/modules/settings';
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
+import { MESSAGE_PREFIX, delay } from '@util';
 import { isBefore, startOfDay, sub } from 'date-fns';
 import { Client, Guild, TextChannel, User } from 'discord.js';
 
@@ -55,7 +56,7 @@ export class AdminPurgeService {
 		}
 
 		const inactiveMessages = await this._getLatestMessageOfInactiveMembers(
-			members,
+			members.values(),
 			guild,
 			userToken,
 			timestampXMonthsAgo,
@@ -128,9 +129,15 @@ ${result}
 					.join(', ')}`,
 			);
 			const promises = await Promise.allSettled(
-				chunk.map((user) =>
-					this._getUserLastMessage(user, guild.id, userToken),
-				),
+				chunk.map(async (user, index) => {
+					await delay(500 * index);
+					const data = await this._getUserLastMessage(
+						user,
+						guild.id,
+						userToken,
+					);
+					return data;
+				}),
 			);
 
 			const chunkMessages = promises
@@ -148,12 +155,14 @@ ${result}
 				);
 
 			messages = messages.concat(chunkMessages);
+
+			await delay(500);
 		}
 
 		return messages;
 	}
 
-	private async _getUserLastMessage(user, guildId, userToken) {
+	private async _getUserLastMessage(user, guildId, userToken, retry = 0) {
 		const data = await fetch(
 			`https://discord.com/api/guilds/${guildId}/messages/search?author_id=${user.id}`,
 			{
@@ -163,7 +172,35 @@ ${result}
 					Authorization: userToken,
 				},
 			},
-		).catch(() => null);
+		).catch(async (err) => {
+			if (retry === 4) {
+				throw err;
+			}
+
+			await delay(1000);
+			return this._getUserLastMessage(
+				user,
+				guildId,
+				userToken,
+				retry + 1,
+			);
+		});
+
+		if (data.status === 429) {
+			const delayMs = parseInt(data.headers.get('retry-after'), 10) * 10;
+			this._logger.warn(
+				`Received a rate limit for ${getUsername(
+					user,
+				)}, retrying after ${delayMs}ms`,
+			);
+			await delay(delayMs);
+			return this._getUserLastMessage(
+				user,
+				guildId,
+				userToken,
+				retry + 1,
+			);
+		}
 
 		if (!data) {
 			return false;

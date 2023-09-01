@@ -104,6 +104,7 @@ export class AdminPurgeCommands {
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Getting a list of purgeable members has started. **This can take a while.**\nA response will be sent to this channel with the outcome.`,
+			ephemeral: true,
 		});
 	}
 }
