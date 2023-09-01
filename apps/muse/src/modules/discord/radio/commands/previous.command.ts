@@ -1,5 +1,5 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { ForbiddenExceptionFilter, GuildAdminGuard } from '@util';
+import { ForbiddenExceptionFilter, GuildModeratorGuard } from '@util';
 import {
 	Button,
 	ButtonContext,
@@ -9,7 +9,8 @@ import {
 } from 'necord';
 import { RadioCommandDecorator } from '../radio.decorator';
 import { RadioService } from '../services';
-@UseGuards(GuildAdminGuard)
+
+@UseGuards(GuildModeratorGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @RadioCommandDecorator()
 export class RadioPreviousCommands {

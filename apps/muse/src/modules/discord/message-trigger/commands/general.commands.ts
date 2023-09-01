@@ -6,6 +6,7 @@ import {
 	ForbiddenExceptionFilter,
 	MESSAGE_PREFIX,
 } from '@util';
+import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -14,7 +15,6 @@ import {
 	CommandInteraction,
 	EmbedBuilder,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -98,7 +98,7 @@ class MessageTriggerViewOptions {
 	id: number | undefined;
 }
 
-@UseGuards(MessageTriggerEnabledGuard, GuildAdminGuard)
+@UseGuards(MessageTriggerEnabledGuard, GuildModeratorGuard)
 @UseFilters(EnabledExceptionFilter, ForbiddenExceptionFilter)
 @MessageTriggerCommandDecorator()
 export class MessageTriggerGeneralCommands {

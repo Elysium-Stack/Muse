@@ -6,6 +6,7 @@ import {
 	ForbiddenExceptionFilter,
 	MESSAGE_PREFIX,
 } from '@util';
+import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -14,7 +15,6 @@ import {
 	CommandInteraction,
 	EmbedBuilder,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -88,7 +88,7 @@ class ReactionTriggerRemoveOptions {
 	id: number | undefined;
 }
 
-@UseGuards(ReactionTriggerEnabledGuard, GuildAdminGuard)
+@UseGuards(ReactionTriggerEnabledGuard, GuildModeratorGuard)
 @UseFilters(EnabledExceptionFilter, ForbiddenExceptionFilter)
 @ReactionTriggerCommandDecorator()
 export class ReactionTriggerGeneralCommands {

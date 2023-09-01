@@ -2,6 +2,7 @@ import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { FeedbackTopicsType } from '@prisma/client';
 import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
+import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -11,7 +12,6 @@ import {
 	EmbedBuilder,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -80,7 +80,7 @@ class FeedbackTopicRemoveOptions {
 	id: number | undefined;
 }
 
-@UseGuards(GuildAdminGuard)
+@UseGuards(GuildModeratorGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @FeedbackCommandDecorator({
 	name: 'topic',
