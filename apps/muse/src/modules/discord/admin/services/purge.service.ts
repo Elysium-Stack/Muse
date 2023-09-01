@@ -1,23 +1,15 @@
 import { SettingsService } from '@muse/modules/settings';
-import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { MESSAGE_PREFIX } from '@util';
-import { startOfDay, sub } from 'date-fns';
-import {
-	ChannelType,
-	Collection,
-	Guild,
-	Message,
-	TextChannel,
-	User,
-} from 'discord.js';
+import { isBefore, startOfDay, sub } from 'date-fns';
+import { Client, Guild, TextChannel, User } from 'discord.js';
 
 @Injectable()
 export class AdminPurgeService {
 	private readonly _logger = new Logger(AdminPurgeService.name);
 	private _purgeListMap = new Map<string, string>();
 
-	constructor(private _settings: SettingsService) {}
+	constructor(private _settings: SettingsService, private _client: Client) {}
 
 	clearMap() {
 		this._purgeListMap.clear();
@@ -31,6 +23,7 @@ export class AdminPurgeService {
 		author: User,
 		guild: Guild,
 		channel: TextChannel,
+		userToken: string,
 		months = 6,
 		userIdsOnly = false,
 	) {
@@ -61,39 +54,46 @@ export class AdminPurgeService {
 			return false;
 		}
 
-		const memberids = members.map((m) => m.user.id);
-		const messages = await this._collectMessages(
+		const inactiveMessages = await this._getLatestMessageOfInactiveMembers(
+			members,
 			guild,
+			userToken,
 			timestampXMonthsAgo,
-			memberids,
 		);
 
-		const filteredMessages = messages.filter((m) =>
-			memberids.includes(m.author.id),
-		);
-		const memberIdsThatTalked = filteredMessages
-			.reduce((memberIds: string[], message: Message) => {
-				if (!memberIds.includes(message.author.id)) {
-					memberIds.push(message.author.id);
-				}
+		if (!inactiveMessages.length) {
+			this._purgeListMap.delete(guild.id);
+			await channel.send({
+				content: `**${MESSAGE_PREFIX} Purge list result**\nNo inactive members found in given timeframe of ${
+					months === 1 ? 'a month' : `${months} months`
+				}.\n<@${author.id}>`,
+			});
+			return false;
+		}
 
-				return memberIds;
-			}, [])
-			.filter((id) => !!id);
+		let result =
+			`\n` +
+			inactiveMessages
+				.map(
+					(m, index) =>
+						`${index + 1}. <@${m.author.id}>: ${
+							m.id === 'never'
+								? 'Never sent a message'
+								: `https://discord.com/channels/${guild.id}/${m.channel_id}/${m.id}`
+						}`,
+				)
+				.join('\n');
 
-		const membersThatWereInactive = members.filter(
-			(m) => !memberIdsThatTalked.includes(m.user.id),
-		);
+		if (userIdsOnly) {
+			result = `\`\`\`
+${inactiveMessages.map((m) => m.author.id).join('\n')}
+\`\`\``;
+		}
 
-		const memberUserids = membersThatWereInactive.map((m) =>
-			userIdsOnly ? m.user.id : `${getUsername(m.user)} - ${m.user.id}`,
-		);
 		await channel.send({
 			content: `**${MESSAGE_PREFIX} Purge list result**
 Below you can find a list of all users that were inactive.
-\`\`\`
-${memberUserids.join('\n')}
-\`\`\`
+${result}
 <@${author.id}>`,
 		});
 
@@ -101,84 +101,83 @@ ${memberUserids.join('\n')}
 		return true;
 	}
 
-	private async _collectMessages(
-		guild: Guild,
-		timestamp: number,
-		memberids: string[],
+	private async _getLatestMessageOfInactiveMembers(
+		members,
+		guild,
+		userToken,
+		timestampXMonthsAgo,
 	) {
-		const channels = await guild.channels.fetch();
-		let messages = new Collection<string, Message>();
+		const users = members.map((m) => m.user);
+		const chunked = users.reduce((resultArray, item, index) => {
+			const chunkIndex = Math.floor(index / 10);
 
-		const textChannels = channels.filter(
-			(c) => c.type === ChannelType.GuildText,
-		);
+			if (!resultArray[chunkIndex]) {
+				resultArray[chunkIndex] = []; // start a new chunk
+			}
 
-		console.log('channels:', textChannels.size);
-		console.log('Member ids:', memberids);
+			resultArray[chunkIndex].push(item);
 
-		const settings = await this._settings.getSettings(guild.id, false);
-		const ignoredParents = settings.purgeIgnoredParentChannelIds;
+			return resultArray;
+		}, []);
 
-		const chunked = [...textChannels.values()]
-			.filter((c) => !ignoredParents.includes(c.parentId))
-			.reduce((resultArray, item, index) => {
-				const chunkIndex = Math.floor(index / 10);
-
-				if (!resultArray[chunkIndex]) {
-					resultArray[chunkIndex] = []; // start a new chunk
-				}
-
-				resultArray[chunkIndex].push(item);
-
-				return resultArray;
-			}, []);
-
+		let messages = [];
 		for (let chunk of chunked) {
-			console.log(
+			this._logger.log(
 				`Starting on ${chunk.length}: ${chunk
-					.map((c) => c.name)
+					.map((c) => c.username)
 					.join(', ')}`,
 			);
 			const promises = await Promise.allSettled(
-				chunk.map((c) =>
-					this._fetchMessagesUntil(c as TextChannel, timestamp),
+				chunk.map((user) =>
+					this._getUserLastMessage(user, guild.id, userToken),
 				),
 			);
 
-			const channelMessages = promises
+			const chunkMessages = promises
 				.filter((p) => p.status === 'fulfilled')
-				.map(
-					(p: PromiseFulfilledResult<Collection<string, Message>>) =>
-						p.value,
-				)
-				.reduce((messages, next) => messages.concat(next));
+				.map((p: PromiseFulfilledResult<any>) => p.value)
+				.filter(
+					(m) =>
+						!!m &&
+						(m.id === 'never' ||
+							(!m.author.bot &&
+								isBefore(
+									new Date(m.timestamp),
+									new Date(timestampXMonthsAgo),
+								))),
+				);
 
-			messages = messages.concat(channelMessages);
+			messages = messages.concat(chunkMessages);
 		}
 
-		console.log(`Returning a total of ${messages.size} messages`);
 		return messages;
 	}
 
-	private async _fetchMessagesUntil(
-		channel: TextChannel,
-		timestamp: number,
-		lastID?: string,
-	): Promise<Collection<string, Message<true>>> {
-		let messages = await channel.messages.fetch({
-			limit: 100,
-			before: lastID,
-		});
+	private async _getUserLastMessage(user, guildId, userToken) {
+		const data = await fetch(
+			`https://discord.com/api/guilds/${guildId}/messages/search?author_id=${user.id}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: userToken,
+				},
+			},
+		).catch(() => null);
 
-		messages = messages.filter((m) => m.createdTimestamp >= timestamp);
-		if (messages.size == 0) return messages;
+		if (!data) {
+			return false;
+		}
 
-		return messages.concat(
-			await this._fetchMessagesUntil(
-				channel,
-				timestamp,
-				messages.last().id,
-			),
-		);
+		const body = await data.json();
+
+		if (!body.messages.length) {
+			return {
+				id: 'never',
+				author: user,
+			};
+		}
+
+		return body.messages.map((m) => m?.[0])?.[0];
 	}
 }

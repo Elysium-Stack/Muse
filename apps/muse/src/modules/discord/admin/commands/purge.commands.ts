@@ -12,12 +12,20 @@ import {
 	NumberOption,
 	Options,
 	SlashCommandContext,
+	StringOption,
 	Subcommand,
 } from 'necord';
 import { AdminCommandDecorator } from '..';
 import { AdminPurgeService } from '../services/purge.service';
 
 class AdminPurgeListOptions {
+	@StringOption({
+		name: 'usertoken',
+		description: 'A required user token to cheat the search system',
+		required: true,
+	})
+	userToken: string;
+
 	@NumberOption({
 		name: 'months',
 		description: 'The threshold for how old members have to be in months.',
@@ -68,7 +76,7 @@ export class AdminPurgeCommands {
 	})
 	public async list(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { months, userIdsOnly }: AdminPurgeListOptions,
+		@Options() { months, userIdsOnly, userToken }: AdminPurgeListOptions,
 	) {
 		if (this._purge.checkGuild(interaction.guildId)) {
 			return interaction.reply({
@@ -89,6 +97,7 @@ export class AdminPurgeCommands {
 			interaction.user,
 			interaction.guild,
 			interaction.channel,
+			userToken,
 			months ?? 6,
 			userIdsOnly ?? false,
 		);
