@@ -5,10 +5,19 @@ import {
 	GuildModeratorGuard,
 	MESSAGE_PREFIX,
 } from '@util';
-import { ChannelType } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ChannelType,
+	ModalActionRowComponentBuilder,
+	ModalBuilder,
+	TextInputBuilder,
+	TextInputStyle,
+} from 'discord.js';
 import {
 	BooleanOption,
 	Context,
+	Modal,
+	ModalContext,
 	NumberOption,
 	Options,
 	SlashCommandContext,
@@ -103,8 +112,91 @@ export class AdminPurgeCommands {
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Getting a list of purgeable members has started. **This can take a while.**\nA response will be sent to this channel with the outcome.`,
+			content: `${MESSAGE_PREFIX} Getting a list of purgeable members has started. **This can take a few minutes.**\nA response will be sent to this channel with the outcome.`,
 			ephemeral: true,
+		});
+	}
+
+	@Subcommand({
+		name: 'yeet',
+		description: "yeet a list of userid's",
+	})
+	public async yeet(@Context() [interaction]: SlashCommandContext) {
+		const modal = new ModalBuilder()
+			.setTitle('Uno yeet momento')
+			.setCustomId(`ADMIN_PURGE_YEET_MODAL`)
+			.setComponents([
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('reason')
+							.setLabel('Reason for kicking members')
+							.setRequired(true)
+							.setMaxLength(120)
+							.setStyle(TextInputStyle.Short),
+					],
+				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('userids')
+							.setLabel("List of user id's. **COMMA SEPERATED**")
+							.setRequired(true)
+							.setStyle(TextInputStyle.Paragraph),
+					],
+				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('message')
+							.setLabel('A kick message')
+							.setPlaceholder(
+								'You can use {username} to address them by their username.',
+							)
+							.setRequired(false)
+							.setStyle(TextInputStyle.Paragraph),
+					],
+				),
+			]);
+
+		return interaction.showModal(modal);
+	}
+
+	@Modal('ADMIN_PURGE_YEET_MODAL')
+	public async onYeetModal(@Context() [interaction]: ModalContext) {
+		const userids = interaction.fields.getTextInputValue('userids');
+		const message = interaction.fields.getTextInputValue('message');
+		const reason = interaction.fields.getTextInputValue('reason');
+
+		await interaction.deferReply({
+			ephemeral: true,
+		});
+
+		const ids = userids.split(',').map((id) => id.trim());
+		if (!ids.length) {
+			return interaction.editReply({
+				content: `${MESSAGE_PREFIX} No id's were supplied. Skipping yeet!`,
+			});
+		}
+
+		const amount = await this._purge.kickMembers(
+			interaction.guild,
+			ids,
+			reason,
+			message,
+		);
+
+		return interaction.editReply({
+			content: `${MESSAGE_PREFIX} yeeted **${amount}** people **${
+				message.length ? 'with' : 'without'
+			}** a message!
+${
+	message
+		? `\`\`\`
+${message}
+\`\`\``
+		: ''
+}`,
 		});
 	}
 }

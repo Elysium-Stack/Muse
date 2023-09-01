@@ -1,7 +1,7 @@
 import { SettingsService } from '@muse/modules/settings';
 import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
-import { MESSAGE_PREFIX, delay } from '@util';
+import { MESSAGE_PREFIX, chunks, delay } from '@util';
 import { isBefore, startOfDay, sub } from 'date-fns';
 import { Client, Guild, TextChannel, User } from 'discord.js';
 
@@ -72,34 +72,101 @@ export class AdminPurgeService {
 			return false;
 		}
 
-		let result =
-			`\n` +
-			inactiveMessages
-				.map(
-					(m, index) =>
-						`${index + 1}. <@${m.author.id}>: ${
-							m.id === 'never'
-								? 'Never sent a message'
-								: `https://discord.com/channels/${guild.id}/${m.channel_id}/${m.id}`
-						}`,
-				)
-				.join('\n');
+		await channel.send({
+			content: `**${MESSAGE_PREFIX} Purge list result (${inactiveMessages.length} total)**
+Below you can find a list of all users that were inactive.`,
+		});
 
 		if (userIdsOnly) {
-			result = `\`\`\`
-${inactiveMessages.map((m) => m.author.id).join('\n')}
-\`\`\``;
+			await channel.send({
+				content: `\`\`\`
+				${inactiveMessages.map((m) => m.author.id).join(',')}
+				\`\`\``,
+			});
+		} else {
+			const chunked = [...chunks(inactiveMessages, 10)];
+			for (let i = 0; i < chunked.length; i++) {
+				const chunk = chunked[i];
+				const baseIndex = i * 10 + 1;
+
+				await channel.send({
+					content: chunk
+						.map(
+							(m, index) =>
+								`${baseIndex + index}. <@${m.author.id}>: ${
+									m.id === 'never'
+										? 'Never sent a message'
+										: `https://discord.com/channels/${guild.id}/${m.channel_id}/${m.id}`
+								}`,
+						)
+						.join('\n'),
+				});
+			}
 		}
 
 		await channel.send({
-			content: `**${MESSAGE_PREFIX} Purge list result**
-Below you can find a list of all users that were inactive.
-${result}
-<@${author.id}>`,
+			content: `<@${author.id}>`,
 		});
 
 		this._purgeListMap.delete(guild.id);
 		return true;
+	}
+
+	async kickMembers(
+		guild: Guild,
+		ids: string[],
+		reason: string,
+		message?: string,
+	) {
+		const promises = await Promise.allSettled(
+			ids.map(async (id) => this._client.users.fetch(id)),
+		);
+		const users = promises
+			.filter((p) => p.status === 'fulfilled')
+			.map((p: PromiseFulfilledResult<User>) => p.value)
+			.filter((u) => !!u);
+
+		let count = 0;
+		for (let user of users) {
+			let response = true;
+			const guildMember = await guild.members.fetch({
+				user,
+			});
+
+			if (!guildMember) {
+				continue;
+			}
+
+			if (message) {
+				const dm = await user.createDM(true);
+				await dm
+					.send({
+						content: message.replace(
+							/{username}/gi,
+							getUsername(user),
+						),
+					})
+					.catch(() => (response = false));
+			}
+
+			if (!response) {
+				this._logger.warn(
+					`Failed to send message for user ${getUsername(user)}`,
+				);
+			}
+
+			const kicked = await guildMember
+				.kick(reason)
+				.catch(() => (response = false));
+
+			if (!kicked) {
+				this._logger.warn(`Failed to kick member ${getUsername(user)}`);
+			}
+
+			count++;
+		}
+
+		return count;
 	}
 
 	private async _getLatestMessageOfInactiveMembers(
@@ -109,17 +176,7 @@ ${result}
 		timestampXMonthsAgo,
 	) {
 		const users = members.map((m) => m.user);
-		const chunked = users.reduce((resultArray, item, index) => {
-			const chunkIndex = Math.floor(index / 10);
-
-			if (!resultArray[chunkIndex]) {
-				resultArray[chunkIndex] = []; // start a new chunk
-			}
-
-			resultArray[chunkIndex].push(item);
-
-			return resultArray;
-		}, []);
+		const chunked = [...chunks(users, 10)];
 
 		let messages = [];
 		for (let chunk of chunked) {
@@ -130,7 +187,7 @@ ${result}
 			);
 			const promises = await Promise.allSettled(
 				chunk.map(async (user, index) => {
-					await delay(500 * index);
+					await delay(1500 * index);
 					const data = await this._getUserLastMessage(
 						user,
 						guild.id,
@@ -156,9 +213,13 @@ ${result}
 
 			messages = messages.concat(chunkMessages);
 
-			await delay(500);
+			this._logger.log(
+				`Found ${chunkMessages.length} in chunk, delaying for 5000ms.`,
+			);
+			await delay(5000);
 		}
 
+		this._logger.log(`Found ${messages.length} messages total`);
 		return messages;
 	}
 
@@ -187,7 +248,17 @@ ${result}
 		});
 
 		if (data.status === 429) {
-			const delayMs = parseInt(data.headers.get('retry-after'), 10) * 10;
+			if (retry === 4) {
+				this._logger.warn(
+					`Skipping ${getUsername(
+						user,
+					)} because of retries & rate limit.`,
+				);
+				return false;
+			}
+
+			const delayMs =
+				parseInt(data.headers.get('retry-after'), 10) * 10 + 1000;
 			this._logger.warn(
 				`Received a rate limit for ${getUsername(
 					user,
