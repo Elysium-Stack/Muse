@@ -1,11 +1,10 @@
+import { SettingsService } from '@muse/modules/settings';
 import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
 import { MESSAGE_PREFIX } from '@util';
 import { startOfDay, sub } from 'date-fns';
 import {
 	ChannelType,
-	Client,
 	Collection,
 	Guild,
 	Message,
@@ -18,7 +17,7 @@ export class AdminPurgeService {
 	private readonly _logger = new Logger(AdminPurgeService.name);
 	private _purgeListMap = new Map<string, string>();
 
-	constructor(private _prisma: PrismaService, private _client: Client) {}
+	constructor(private _settings: SettingsService) {}
 
 	clearMap() {
 		this._purgeListMap.clear();
@@ -117,7 +116,17 @@ ${memberUserids.join('\n')}
 		console.log('channels:', textChannels.size);
 		console.log('Member ids:', memberids);
 
+		const settings = await this._settings.getSettings(guild.id, false);
+		const ignoredParents = settings.purgeIgnoredParentChannelIds;
+
 		for (let channel of textChannels.values()) {
+			if (ignoredParents.includes(channel.parentId)) {
+				console.log(
+					`Ignoring ${channel.name} because it's category is ${channel.parent.name}`,
+				);
+				continue;
+			}
+
 			console.log(`Starting on ${channel.name}`);
 			const channelMessages = await this._fetchMessagesUntil(
 				channel as TextChannel,

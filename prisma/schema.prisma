@@ -92,6 +92,9 @@ model Settings {
   minecraftRconPort                         String?
   minecraftRconPass                         String?
 
+  // purge
+  purgeIgnoredParentChannelIds              String[]    @default([])
+
   // timestamps
   createdAt                                 DateTime    @default(now())
   updatedAt                                 DateTime    @updatedAt

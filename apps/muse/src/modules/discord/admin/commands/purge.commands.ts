@@ -2,7 +2,6 @@ import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	AdminGuard,
 	ForbiddenExceptionFilter,
-	GuildAdminGuard,
 	GuildModeratorGuard,
 	MESSAGE_PREFIX,
 } from '@util';
