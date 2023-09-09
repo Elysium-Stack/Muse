@@ -92,6 +92,14 @@ model Settings {
   minecraftRconPort                         String?
   minecraftRconPass                         String?
 
+  // Star board
+  starboardEnabled                          Boolean     @default(true)
+  starboardChannelId                        String?
+  starboardTreshold                         Int         @default(3)
+  starboardEmoji                            String      @default("⭐")
+  starboardSelf                             Boolean     @default(false)
+  starboardIgnoredChannelIds                String[]    @default([])
+
   // purge
   purgeIgnoredParentChannelIds              String[]    @default([])
 
@@ -105,6 +113,18 @@ model BookwormLog {
   guildId                                   String
 
   index                                     Int?
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
+}
+
+model StarboardLog {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+  channelId                                 String
+  messageId                                 String      @unique
+  originalMessageId                         String      @unique
 
   // timestamps
   createdAt                                 DateTime    @default(now())

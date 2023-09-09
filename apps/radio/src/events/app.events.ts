@@ -52,7 +52,7 @@ export class AppEvents {
 		client.user!.setPresence({
 			activities: [
 				{
-					name: 'to the radio 📻',
+					name: 'the radio 📻',
 					type: ActivityType.Listening,
 				},
 			],

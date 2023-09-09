@@ -31,6 +31,7 @@ import {
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
+import { StarboardModule } from './modules/discord/starboard/starboard.module';
 import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
 
@@ -83,6 +84,7 @@ import { SharedModule } from './shared.module';
 		FeedbackModule,
 		RadioModule,
 		MinecraftModule,
+		StarboardModule,
 	],
 	providers: [
 		{

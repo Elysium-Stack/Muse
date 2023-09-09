@@ -8,6 +8,7 @@ export const MODULES = [
 	'Timezone',
 	'Mod log',
 	'Minecraft',
+	'Starboard',
 ];
 
 export const EMBED_STATUS_COLORS: {
