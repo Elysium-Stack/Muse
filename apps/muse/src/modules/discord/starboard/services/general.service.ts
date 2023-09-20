@@ -61,6 +61,13 @@ export class StarboardGeneralService {
 
 		const embed = this._createEmbed(reaction.message as Message);
 
+		if (!embed) {
+			this._logger.warn(
+				`Couldn't create embed for message ${reaction.message.id} for ${reaction.message.guildId}`,
+			);
+			return;
+		}
+
 		if (log) {
 			return this._updateStarboard(
 				filteredUsers.size,
@@ -165,15 +172,30 @@ export class StarboardGeneralService {
 	}
 
 	private _createEmbed(message: Message) {
-		return new EmbedBuilder()
-			.setDescription(message.content)
+		if (
+			!message.content?.length ||
+			!message.attachments.first()?.url?.length
+		) {
+			return;
+		}
+
+		let embed = new EmbedBuilder()
 			.setAuthor({
 				name: `${getUsername(message.author)}`,
 				iconURL: message.author.displayAvatarURL() || undefined,
 			})
-			.setImage(message.attachments.first()?.url || undefined)
 			.setColor(STARBOARD_EMBED_COLOR)
 			.setTimestamp();
+
+		if (message.content?.length) {
+			embed = embed.setDescription(message.content);
+		}
+
+		if (message.attachments.first()?.url?.length) {
+			embed = embed.setImage(message.attachments.first()?.url);
+		}
+
+		return embed;
 	}
 
 	private _createContentString(
