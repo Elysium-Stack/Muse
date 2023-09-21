@@ -173,7 +173,7 @@ export class StarboardGeneralService {
 
 	private _createEmbed(message: Message) {
 		if (
-			!message.content?.length ||
+			!message.content?.length &&
 			!message.attachments.first()?.url?.length
 		) {
 			return;
