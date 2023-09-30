@@ -227,7 +227,7 @@ export class RadioService {
 		if (page === 1) {
 			embed = embed.addFields({
 				name: 'Current',
-				value: `[${current.title}](${current.uri})`,
+				value: `1. [${current.title}](${current.uri})`,
 				inline: true,
 			});
 		}
