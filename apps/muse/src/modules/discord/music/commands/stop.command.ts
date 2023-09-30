@@ -1,41 +1,27 @@
 import {
-	HasNoPlayerExceptionFilter,
-	MusicHasPlayerGuard,
+	MusicCommandDecorator,
 	MusicInVoiceGuard,
-	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	Button,
-	ButtonContext,
-	Context,
-	SlashCommandContext,
-	Subcommand,
-} from 'necord';
-import { MusicCommandDecorator } from '../music.decorator';
+import { EnabledExceptionFilter } from '@util';
+import { Context, SlashCommandContext, Subcommand } from 'necord';
+import { MusicEnabledGuard } from '../guards/enabled.guard';
+import { MusicService } from '../services';
 
-@UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
-@UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)
+@UseGuards(MusicEnabledGuard, MusicInVoiceGuard)
+@UseFilters(EnabledExceptionFilter, NotInVoiceExceptionFilter)
 @MusicCommandDecorator()
 export class MusicStopCommands {
 	private readonly _logger = new Logger(MusicStopCommands.name);
 
-	constructor(private _player: MusicPlayerService) {}
+	constructor(private _music: MusicService) {}
 
 	@Subcommand({
 		name: 'stop',
-		description: 'Stop the current player',
+		description: 'Stop the radio',
 	})
 	public async stop(@Context() [interaction]: SlashCommandContext) {
-		return this._player.stop(interaction);
-	}
-
-	@Button('MUSIC_STOP')
-	public onButton(
-		@Context()
-		[interaction]: ButtonContext,
-	) {
-		return this._player.stop(interaction);
+		return this._music.stop(interaction);
 	}
 }

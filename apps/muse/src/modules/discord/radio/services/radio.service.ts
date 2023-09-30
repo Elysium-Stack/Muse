@@ -77,11 +77,11 @@ export class RadioService {
 		}
 
 		if (result === 'NO_PLAYLIST') {
-			content = `${MESSAGE_PREFIX} Configured playist is not a playlist!`;
+			content = `${MESSAGE_PREFIX} Configured playlist is not a playlist!`;
 		}
 
 		if (result === 'NO_TRACKS_FOUND') {
-			content = `${MESSAGE_PREFIX} Configured playist did not contain any tracks!`;
+			content = `${MESSAGE_PREFIX} Configured playlist did not contain any tracks!`;
 		}
 
 		if (result === 'PLAYING') {

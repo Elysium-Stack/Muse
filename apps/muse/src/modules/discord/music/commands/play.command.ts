@@ -1,15 +1,11 @@
 import {
+	MusicCommandDecorator,
 	MusicInVoiceGuard,
-	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { PrismaService } from '@prisma';
 import { EnabledExceptionFilter } from '@util';
 import {
-	Button,
-	ButtonContext,
-	ComponentParam,
 	Context,
 	Options,
 	SlashCommandContext,
@@ -17,8 +13,8 @@ import {
 	Subcommand,
 } from 'necord';
 import { MusicEnabledGuard } from '../guards/enabled.guard';
-import { MusicCommandDecorator } from '../music.decorator';
-import { MusicSettingsCommands } from './settings.commands';
+import { MusicService } from '../services';
+
 class MusicPlayOptions {
 	@StringOption({
 		name: 'song',
@@ -32,12 +28,9 @@ class MusicPlayOptions {
 @UseFilters(EnabledExceptionFilter, NotInVoiceExceptionFilter)
 @MusicCommandDecorator()
 export class MusicPlayCommands {
-	private readonly _logger = new Logger(MusicSettingsCommands.name);
+	private readonly _logger = new Logger(MusicPlayCommands.name);
 
-	constructor(
-		private _player: MusicPlayerService,
-		private _prisma: PrismaService,
-	) {}
+	constructor(private _music: MusicService) {}
 
 	@Subcommand({
 		name: 'play',
@@ -47,51 +40,6 @@ export class MusicPlayCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { song }: MusicPlayOptions,
 	) {
-		return this._play(interaction, song);
-	}
-
-	@Button('MUSIC_PLAY/:song')
-	public onButton(
-		@Context()
-		[interaction]: ButtonContext,
-		@ComponentParam('song') song: string,
-	) {
-		return this._play(interaction, song);
-	}
-
-	private async _play(interaction, song) {
-		const data = await this._player.play(interaction, song!);
-
-		if (!data) {
-			return;
-		}
-
-		const { result } = data;
-
-		if (result) {
-			const tracks = [...result.tracks].map((track) => {
-				delete track.kazagumo;
-				return track;
-			});
-
-			await this._prisma.musicLog
-				.create({
-					data: {
-						guildId: interaction.guildId!,
-						userId: interaction.user.id,
-						query: song,
-						result: !tracks.length
-							? undefined
-							: JSON.stringify(
-									result.type === 'PLAYLIST'
-										? tracks
-										: tracks[0],
-							  ),
-					},
-				})
-				.catch(() => null);
-		}
-
-		// return reply;
+		return this._music.play(interaction, song!);
 	}
 }

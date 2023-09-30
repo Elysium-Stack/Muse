@@ -26,11 +26,11 @@ import {
 	MessageTriggerModule,
 	MinecraftModule,
 	ModLogModule,
-	MusicModule,
 	RadioModule,
 	ReactionTriggerModule,
 	SettingsModule,
 } from './modules';
+import { MusicModule } from './modules/discord/music';
 import { StarboardModule } from './modules/discord/starboard/starboard.module';
 import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
@@ -78,6 +78,7 @@ import { SharedModule } from './shared.module';
 		FunModule,
 		SettingsModule,
 		BookwormModule,
+		// MusicModule,
 		MusicModule,
 		ReactionTriggerModule,
 		MessageTriggerModule,

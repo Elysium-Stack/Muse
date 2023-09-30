@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-	displayName: 'music',
+	displayName: 'music-library',
 	preset: '../../jest.preset.js',
 	testEnvironment: 'node',
 	transform: {

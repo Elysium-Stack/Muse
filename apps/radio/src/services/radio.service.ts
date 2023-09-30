@@ -60,11 +60,12 @@ export class RadioService {
 			},
 		});
 
-		const data = await this._player.radio(
+		const data = await this._player.play(
 			guildId,
 			radioPlaylist!,
 			radioVoiceChannelId!,
 			radioTextChannelId,
+			true,
 		);
 		this.playing.labels('None').inc(1);
 
@@ -89,60 +90,20 @@ export class RadioService {
 	}
 
 	async stop(guildId: string) {
-		if (this._player.get(guildId)) {
+		const data = await this._player.stop(guildId);
+
+		if (data.result === 'STOPPED') {
 			this.playing.labels('None').dec(1);
 		}
 
-		await this._player.stop(null, guildId);
-
-		await this._prisma.radioLog.deleteMany({
-			where: {
-				guildId,
-			},
-		});
-
-		return {
-			result: 'STOPPED',
-		};
+		return data;
 	}
 
 	async next(guildId: string) {
-		const player = await this._player.get(guildId);
-
-		if (!player) {
-			return {
-				result: 'NOT_PLAYING',
-			};
-		}
-
-		player.skip();
-
-		return {
-			result: 'NEXT',
-		};
+		return this._player.next(guildId);
 	}
 
 	async previous(guildId: string) {
-		const player = await this._player.get(guildId);
-
-		if (!player) {
-			return {
-				result: 'NOT_PLAYING',
-			};
-		}
-
-		if (!player.queue.previous) {
-			return {
-				result: 'NO_PREVIOUS',
-			};
-		}
-
-		player.play(player.queue.previous, {
-			replaceCurrent: true,
-		});
-
-		return {
-			result: 'PREVIOUS',
-		};
+		return this._player.previous(guildId);
 	}
 }

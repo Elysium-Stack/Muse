@@ -1,8 +1,8 @@
 diff --git a/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js b/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
-index a90534f..a8e4cdd 100644
+index 3e9afde..ddaf6a1 100644
 --- a/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
 +++ b/node_modules/@nestjs/swagger/dist/plugin/utils/plugin-utils.js
-@@ -126,6 +126,13 @@ function replaceImportPath(typeReference, fileName) {
+@@ -134,6 +134,13 @@ function replaceImportPath(typeReference, fileName, options) {
              if (indexPos >= 0) {
                  relativePath = relativePath.slice(0, indexPos);
              }
@@ -15,21 +15,21 @@ index a90534f..a8e4cdd 100644
 +            }
          }
          typeReference = typeReference.replace(importPath, relativePath);
-         return typeReference.replace('import', 'require');
+         if (options.readonly) {
 diff --git a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js b/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
-index f20e479..3d1c548 100644
+index 7016d48..6677e36 100644
 --- a/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
 +++ b/node_modules/@nestjs/swagger/dist/plugin/visitors/controller-class.visitor.js
-@@ -114,9 +114,9 @@ class ControllerClassVisitor extends abstract_visitor_1.AbstractFileVisitor {
-         if (!typeReference) {
+@@ -192,9 +192,9 @@ class ControllerClassVisitor extends abstract_visitor_1.AbstractFileVisitor {
+         if (!typeReferenceDescriptor.typeName) {
              return undefined;
          }
--        if (typeReference.includes('node_modules')) {
+-        if (typeReferenceDescriptor.typeName.includes('node_modules')) {
 -            return undefined;
 -        }
-+        // if (typeReference.includes('node_modules')) {
++        // if (typeReferenceDescriptor.typeName.includes('node_modules')) {
 +        //     return undefined;
 +        // }
-         typeReference = (0, plugin_utils_1.replaceImportPath)(typeReference, hostFilename);
-         return factory.createPropertyAssignment('type', factory.createIdentifier(typeReference));
+         const identifier = (0, type_reference_to_identifier_util_1.typeReferenceToIdentifier)(typeReferenceDescriptor, hostFilename, options, factory, type, this._typeImports);
+         return factory.createPropertyAssignment('type', identifier);
      }

@@ -10,11 +10,12 @@ services:
         env_file: ./.env
         ports:
             - '$EXPOSED_API_PORT:3000'
+            - '$EXPOSED_MUSE_DEBUGGING_PORT:9229'
         volumes:
             - ./:/opt/app
         depends_on:
             - db
-            - redis
+            - rabbitmq
             - lavalink
     radio:
         build:
@@ -24,12 +25,42 @@ services:
         command: yarn radio:docker:start
         env_file: ./.env
         ports:
-            - '$EXPOSED_RADIO_PORT:3000'
+            - '$EXPOSED_RADIO_DEBUGGING_PORT:9229'
         volumes:
             - ./:/opt/app
         depends_on:
             - db
-            - redis
+            - rabbitmq
+            - lavalink
+    music:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn music:docker:start
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=1
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+            - rabbitmq
+            - lavalink
+    music2:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn music:docker:start
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=2
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+            - rabbitmq
             - lavalink
     dashboard:
         build:
@@ -54,10 +85,10 @@ services:
         image: ghcr.io/lavalink-devs/lavalink:latest
         volumes:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
-    redis:
-        image: redis
+    rabbitmq:
+        image: rabbitmq:3-management
         ports:
-            - '6379:6379'
+            - '$EXPOSED_RABBIT_MANAGEMENT_PORT:15672'
     prometheus:
         image: prom/prometheus
         volumes:

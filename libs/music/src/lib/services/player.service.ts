@@ -1,11 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { interactionReply } from '@util';
-import {
-	ChannelType,
-	Client,
-	CommandInteraction,
-	MessageComponentInteraction,
-} from 'discord.js';
+import { ChannelType, Client } from 'discord.js';
 import { MusicLavalinkService } from './lavalink.service';
 @Injectable()
 export class MusicPlayerService {
@@ -21,78 +15,17 @@ export class MusicPlayerService {
 	}
 
 	async play(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		song: string,
-	) {
-		this._logger.verbose(
-			`Playing song for ${interaction.user.tag}: ${song}`,
-		);
-
-		await interaction.deferReply();
-
-		const member = await interaction.guild!.members.fetch(
-			interaction.user.id,
-		);
-		const { channel } = member.voice;
-
-		if (!channel) {
-			return;
-		}
-
-		const result = await this._lavalink.search(song, {
-			requester: interaction.user,
-		});
-
-		if (!result.tracks.length) {
-			return {
-				result,
-				reply: await interactionReply(interaction, {
-					content: `No results found for query \`${song}\`!`,
-				}),
-			};
-		}
-
-		const player = await this._lavalink.createPlayer({
-			guildId: interaction.guild!.id,
-			textId: interaction.channel!.id,
-			voiceId: channel.id,
-			volume: 50,
-			deaf: true,
-		});
-		player.data.set('previousVolume', 50);
-
-		if (result.type === 'PLAYLIST') {
-			for (const track of result.tracks) {
-				player.queue.add(track);
-			}
-		} else {
-			player.queue.add(result.tracks[0]);
-		}
-
-		if (!player.playing && !player.paused) {
-			player.play();
-		}
-
-		const reply = await interactionReply(interaction, {
-			content:
-				result.type === 'PLAYLIST'
-					? `Queued ${result.tracks.length} tracks from \`${result.playlistName}\``
-					: `Queued \`${result.tracks[0].title}\``,
-		});
-
-		return {
-			reply,
-			result,
-		};
-	}
-
-	async radio(
 		guildId: string,
-		playlist: string,
+		songOrPlaylist: string,
 		voiceChannelId: string,
 		textChannelId: string,
+		radio = false,
 	) {
-		this._logger.verbose(`Starting radio for ${guildId}: ${playlist}`);
+		this._logger.verbose(
+			`Playing ${
+				radio ? 'radio' : 'song'
+			} for ${guildId}: ${songOrPlaylist}`,
+		);
 
 		const guild = await this._client.guilds.fetch(guildId);
 
@@ -110,9 +43,9 @@ export class MusicPlayerService {
 			};
 		}
 
-		const result = await this._lavalink.search(playlist);
+		const result = await this._lavalink.search(songOrPlaylist);
 
-		if (result.type !== 'PLAYLIST') {
+		if (result.type !== 'PLAYLIST' && radio) {
 			return {
 				result: 'NO_PLAYLIST',
 			};
@@ -132,7 +65,7 @@ export class MusicPlayerService {
 			deaf: true,
 		});
 		player.data.set('previousVolume', 50);
-		player.data.set('radio', true);
+		player.data.set('radio', radio);
 
 		if (player.queue.size > 0) {
 			player.queue.clear();
@@ -142,120 +75,95 @@ export class MusicPlayerService {
 			player.queue.add(track);
 		}
 
-		player.setLoop('queue');
-		player.queue.shuffle();
-		player.data.set('shuffled', true);
+		if (radio) {
+			player.setLoop('queue');
+			player.queue.shuffle();
+			player.data.set('shuffled', true);
+		}
 
 		if (!player.playing && !player.paused) {
 			player.play();
 		}
 
 		return {
-			data: {
-				tracks: result.tracks,
-				voiceChannelId,
-				playlistName: result.playlistName,
-			},
+			data: result,
 			result: 'PLAYING',
 		};
 	}
 
-	async stop(
-		interaction: MessageComponentInteraction | CommandInteraction | null,
-		guildId?: string,
-	) {
-		this._logger.verbose(
-			`Stopping song for ${interaction?.user.tag ?? guildId}`,
-		);
-
-		if (!guildId && !interaction?.guildId) {
-			return;
-		}
-
-		const player = await this.get(guildId ?? interaction!.guildId!);
+	async stop(guildId: string) {
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
+		this._logger.verbose(`Stopping song for ${guildId}`);
 		player.destroy();
-		return interactionReply(
-			interaction,
-			{
-				content: 'Player has stopped.',
-			},
-			false,
-		);
+		return {
+			result: 'STOPPED',
+		};
 	}
 
-	async next(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(`Starting next song for ${interaction.user.tag}`);
+	async next(guildId: string) {
+		this._logger.verbose(`Starting next song for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		if (!player.queue.size && player.loop === 'none') {
-			return interactionReply(interaction, {
-				content: 'There is no songs left in queue.',
-			});
+			return {
+				result: 'EMPTY_QUEUE',
+			};
 		}
 
 		player.skip();
-
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Playing next song.',
-			});
-		}
+		return {
+			result: 'NEXT',
+		};
 	}
 
-	async previous(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(
-			`Starting previous song for ${interaction.user.tag}`,
-		);
+	async previous(guildId: string) {
+		this._logger.verbose(`Starting previous song for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		if (!player.queue.previous) {
-			return interactionReply(interaction, {
-				content: 'There is no previous song.',
-			});
+			return {
+				result: 'NO_PREVIOUS',
+			};
 		}
 
 		player.play(player.queue.previous, {
 			replaceCurrent: true,
 		});
-
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Playing previous song.',
-			});
-		}
+		return {
+			result: 'PREVIOUS',
+		};
 	}
 
-	async shuffle(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(`Shuffling queue for ${interaction.user.tag}`);
+	async shuffle(guildId: string) {
+		this._logger.verbose(`Shuffling queue for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		player.queue.shuffle();
@@ -263,110 +171,95 @@ export class MusicPlayerService {
 
 		await this._lavalink.createPlayerMessage(player, player.queue.current);
 
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Shuffled the queue.',
-			});
-		}
+		return {
+			result: 'SHUFFLED',
+		};
 	}
 
-	async loop(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(`Looping queue for ${interaction.user.tag}`);
+	async loop(guildId: string) {
+		this._logger.verbose(`Looping queue for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		if (player.loop === 'queue') {
-			return interactionReply(interaction, {
-				content: 'Queue is already looped.',
-			});
+			player.setLoop('none');
+		} else if (player.loop === 'none') {
+			player.setLoop('queue');
 		}
-
-		player.setLoop('queue');
 
 		await this._lavalink.createPlayerMessage(player, player.queue.current);
 
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Looped the queue.',
-			});
-		}
+		return {
+			result: 'LOOPED',
+			type: player.loop,
+		};
 	}
 
-	async pause(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(`Pauzing the player for ${interaction.user.tag}`);
+	async pause(guildId: string) {
+		this._logger.verbose(`Pauzing the player for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		if (player.paused) {
-			return interactionReply(interaction, {
-				content: 'The player is already paused.',
-			});
+			return {
+				result: 'ALREADY_PAUSED',
+			};
 		}
 
 		player.pause(true);
 
 		await this._lavalink.createPlayerMessage(player, player.queue.current);
-
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Paused the player.',
-			});
-		}
+		return {
+			result: 'PAUSED',
+		};
 	}
 
-	async resume(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		sendMessage = true,
-	) {
-		this._logger.verbose(`Resuming the player for ${interaction.user.tag}`);
+	async resume(guildId: string) {
+		this._logger.verbose(`Resuming the player for ${guildId}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
-		if (!player?.paused) {
-			return interactionReply(interaction, {
-				content: 'The player is not paused currently.',
-			});
+		if (!player) {
+			return {
+				result: 'NO_PLAYER',
+			};
+		}
+
+		if (!player.paused) {
+			return {
+				result: 'NOT_PAUSED',
+			};
 		}
 
 		player.pause(false);
 
 		await this._lavalink.createPlayerMessage(player, player.queue.current);
-
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: 'Resumed the player.',
-			});
-		}
+		return {
+			result: 'RESUMED',
+		};
 	}
 
-	async setVolume(
-		interaction: MessageComponentInteraction | CommandInteraction,
-		volume: number,
-		sendMessage = true,
-		isMute = false,
-	) {
-		this._logger.verbose(
-			`Setting player volume ${interaction.user.tag} to ${volume}`,
-		);
+	async setVolume(guildId: string, volume: number, isMute = false) {
+		this._logger.verbose(`Setting player volume ${guildId} to ${volume}`);
 
-		const player = await this.get(interaction.guildId!);
+		const player = await this.get(guildId);
 
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		player.data.set('previousVolume', player.volume * 100);
@@ -379,17 +272,27 @@ export class MusicPlayerService {
 			);
 		}
 
-		if (
-			!sendMessage &&
-			interaction instanceof MessageComponentInteraction
-		) {
-			return interaction.deferUpdate();
+		return {
+			result: 'VOLUME_SET',
+			volume,
+			isMute,
+		};
+	}
+
+	async getVolume(guildId: string) {
+		this._logger.verbose(`Getting player volume for ${guildId}`);
+
+		const player = await this.get(guildId);
+
+		if (!player) {
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
-		if (sendMessage) {
-			return interactionReply(interaction, {
-				content: `Current player volume is ${volume}%.`,
-			});
-		}
+		return {
+			result: 'VOLUME_GET',
+			volume: player.volume,
+		};
 	}
 }

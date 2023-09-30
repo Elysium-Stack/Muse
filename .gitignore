@@ -4,6 +4,7 @@
 dist
 tmp
 /out-tsc
+backup
 
 # dependencies
 node_modules

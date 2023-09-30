@@ -1,16 +1,11 @@
 import {
-	HasNoPlayerExceptionFilter,
-	MusicHasPlayerGuard,
+	MusicCommandDecorator,
 	MusicInVoiceGuard,
-	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { EnabledExceptionFilter } from '@util';
 import {
-	Button,
-	ButtonContext,
-	ComponentParam,
 	Context,
 	NumberOption,
 	Options,
@@ -18,7 +13,8 @@ import {
 	Subcommand,
 } from 'necord';
 import { MusicEnabledGuard } from '../guards/enabled.guard';
-import { MusicCommandDecorator } from '../music.decorator';
+import { MusicService } from '../services';
+
 class MusicVolumeOptions {
 	@NumberOption({
 		name: 'volume',
@@ -30,17 +26,13 @@ class MusicVolumeOptions {
 	volume: number | undefined;
 }
 
-@UseGuards(MusicEnabledGuard, MusicInVoiceGuard, MusicHasPlayerGuard)
-@UseFilters(
-	EnabledExceptionFilter,
-	NotInVoiceExceptionFilter,
-	HasNoPlayerExceptionFilter,
-)
+@UseGuards(MusicEnabledGuard, MusicInVoiceGuard)
+@UseFilters(EnabledExceptionFilter, NotInVoiceExceptionFilter)
 @MusicCommandDecorator()
 export class MusicVolumeCommands {
 	private readonly _logger = new Logger(MusicVolumeCommands.name);
 
-	constructor(private _player: MusicPlayerService) {}
+	constructor(private _music: MusicService) {}
 
 	@Subcommand({
 		name: 'volume',
@@ -50,75 +42,6 @@ export class MusicVolumeCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { volume }: MusicVolumeOptions,
 	) {
-		return this._player.setVolume(interaction, volume!);
-	}
-
-	@Button('MUSIC_VOLUME_SET/:volume/:isMute')
-	public onSetButton(
-		@Context()
-		[interaction]: ButtonContext,
-		@ComponentParam('volume') volume: string | number,
-		@ComponentParam('isMute') isMute: string,
-	) {
-		if (typeof volume === 'string') {
-			volume = parseInt(volume, 10);
-		}
-		return this._player.setVolume(
-			interaction,
-			volume,
-			false,
-			isMute === 'true' ? true : false,
-		);
-	}
-
-	@Button('MUSIC_VOLUME_INCREASE/:amount')
-	public async onIncreaseButton(
-		@Context()
-		[interaction]: ButtonContext,
-		@ComponentParam('amount') amount: string | number,
-	) {
-		if (typeof amount === 'string') {
-			amount = parseInt(amount, 10);
-		}
-		const player = await this._player.get(interaction.guildId!);
-
-		if (!player) {
-			return;
-		}
-
-		const current = player.volume * 100;
-
-		let newVolume = current + amount;
-		if (newVolume > 100) {
-			newVolume = 100;
-		}
-
-		return this._player.setVolume(interaction, newVolume, false);
-	}
-
-	@Button('MUSIC_VOLUME_DECREASE/:amount')
-	public async onDecreaseButton(
-		@Context()
-		[interaction]: ButtonContext,
-		@ComponentParam('amount') amount: string | number,
-	) {
-		if (typeof amount === 'string') {
-			amount = parseInt(amount, 10);
-		}
-
-		const player = await this._player.get(interaction.guildId!);
-
-		if (!player) {
-			return;
-		}
-
-		const current = player.volume * 100;
-
-		let newVolume = current - amount;
-		if (newVolume < 0) {
-			newVolume = 0;
-		}
-
-		return this._player.setVolume(interaction, newVolume, false);
+		return this._music.setVolume(interaction, volume!);
 	}
 }

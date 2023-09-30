@@ -1,4 +1,5 @@
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { MusicCommandDecorator } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	ForbiddenExceptionFilter,
@@ -35,7 +36,6 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
-import { MusicCommandDecorator } from '..';
 import { MusicSettingsService } from '../services/settings.service';
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_SETTINGS_CHOICES } from '../util/constants';

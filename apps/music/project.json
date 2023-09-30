@@ -1,0 +1,65 @@
+{
+	"name": "music",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "apps/music/src",
+	"projectType": "application",
+	"targets": {
+		"build": {
+			"executor": "@nx/webpack:webpack",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"options": {
+				"target": "node",
+				"compiler": "tsc",
+				"outputPath": "dist/apps/music",
+				"main": "apps/music/src/main.ts",
+				"tsConfig": "apps/music/tsconfig.app.json",
+				"assets": [],
+				"isolatedConfig": true,
+				"webpackConfig": "apps/music/webpack.config.js"
+			},
+			"configurations": {
+				"development": {},
+				"production": {}
+			}
+		},
+		"serve": {
+			"executor": "@nx/js:node",
+			"defaultConfiguration": "development",
+			"options": {
+				"buildTarget": "music:build",
+				"host": "0.0.0.0"
+			},
+			"configurations": {
+				"development": {
+					"buildTarget": "music:build:development"
+				},
+				"production": {
+					"buildTarget": "music:build:production"
+				}
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["apps/music/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "apps/music/jest.config.ts",
+				"passWithNoTests": true
+			},
+			"configurations": {
+				"ci": {
+					"ci": true,
+					"codeCoverage": true
+				}
+			}
+		}
+	},
+	"tags": []
+}

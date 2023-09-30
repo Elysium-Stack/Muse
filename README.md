@@ -32,8 +32,14 @@ $ git clone git@github.com:Elysium-Stack/Muse.git
 ### Running the app
 
 ```bash
-$ docker-compose up -d db redis lavalink
+$ docker-compose up -d db rabbitmq lavalink
 $ docker-compose up muse
+```
+
+### Running the music services
+
+```bash
+$ docker-compose up radio music
 ```
 
 ### Running migrations
@@ -50,7 +56,7 @@ $ docker-compose exec -it muse yarn prisma migrate dev
 
 -   [NodeJS 18.x](https://nodejs.org/en/download)
 -   [PostgresDB](https://www.postgresql.org/)
--   [Redis](https://redis.io/)
+-   [RabbitMQ](https://www.rabbitmq.com/)
 -   [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
 
 #### Installing
@@ -69,6 +75,18 @@ $ yarn muse:start
 
 # production mode
 $ yarn muse:start:prod
+```
+
+### Running the music/radio
+
+```bash
+# watch mode (recommended)
+$ yarn music:start
+$ yarn radio:start
+
+# production mode
+$ yarn music:start:prod
+$ yarn radio:start:prod
 ```
 
 ---
