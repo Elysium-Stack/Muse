@@ -45,7 +45,7 @@ export class AppEvents {
 		client.user!.setPresence({
 			activities: [
 				{
-					name: 'music ',
+					name: 'music 🎶',
 					type: ActivityType.Listening,
 				},
 			],
