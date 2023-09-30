@@ -295,4 +295,29 @@ export class MusicPlayerService {
 			volume: player.volume,
 		};
 	}
+
+	async queue(guildId: string, page: number) {
+		this._logger.verbose(`Getting player queue for ${guildId}`);
+
+		const player = await this.get(guildId);
+
+		if (!player) {
+			return {
+				result: 'NO_PLAYER',
+			};
+		}
+
+		const current = player.queue.current;
+
+		if (current) {
+			delete current.kazagumo;
+		}
+
+		return {
+			result: 'QUEUE',
+			queue: [...player.queue].slice((page - 1) * 10, page * 10),
+			current,
+			total: player.queue.totalSize,
+		};
+	}
 }

@@ -19,7 +19,7 @@ export class MusicPreviousCommands {
 
 	@Subcommand({
 		name: 'previous',
-		description: 'Play the previous song in the radio queue',
+		description: 'Play the previous song in the queue',
 	})
 	public async previous(@Context() [interaction]: SlashCommandContext) {
 		return this._music.previous(interaction);

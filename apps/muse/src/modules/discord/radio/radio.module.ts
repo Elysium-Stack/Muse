@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RadioNextCommands } from './commands/next.command';
 import { RadioPreviousCommands } from './commands/previous.command';
+import { RadioQueueCommands } from './commands/queue.command';
 import { RadioStartCommands } from './commands/start.command';
 import { RadioStopCommands } from './commands/stop.command';
 import { RadioService } from './services';
@@ -33,6 +34,7 @@ import { RadioService } from './services';
 		RadioStopCommands,
 		RadioNextCommands,
 		RadioPreviousCommands,
+		RadioQueueCommands,
 	],
 	exports: [],
 })

@@ -1,5 +1,4 @@
 import { SharedModule } from '@muse/shared.module';
-import { MusicModule as MusicLibModule } from '@music';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MusicLoopCommands } from './commands/loop.command';
@@ -7,6 +6,7 @@ import { MusicNextCommands } from './commands/next.command';
 import { MusicPauseCommands } from './commands/pause.command';
 import { MusicPlayCommands } from './commands/play.command';
 import { MusicPreviousCommands } from './commands/previous.command';
+import { MusicQueueCommands } from './commands/queue.command';
 import { MusicResumeCommands } from './commands/resume.command';
 import { MusicSettingsCommands } from './commands/settings.commands';
 import { MusicShuffleCommands } from './commands/shuffle.command';
@@ -34,7 +34,6 @@ import { MusicSettingsService } from './services/settings.service';
 			},
 		]),
 		SharedModule,
-		MusicLibModule,
 	],
 	controllers: [],
 	providers: [
@@ -50,6 +49,7 @@ import { MusicSettingsService } from './services/settings.service';
 		MusicResumeCommands,
 		MusicShuffleCommands,
 		MusicVolumeCommands,
+		MusicQueueCommands,
 	],
 	exports: [],
 })

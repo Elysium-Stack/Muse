@@ -191,4 +191,22 @@ export class MusicController {
 		this._logger.log(`Received getVolume message for ${guildId}`);
 		return this._music.getVolume(ctx, guildId, voiceChannelId);
 	}
+
+	@MessagePattern('MUSIC_QUEUE')
+	getQueue(
+		@Payload()
+		{
+			guildId,
+			voiceChannelId,
+			page,
+		}: {
+			guildId: string;
+			voiceChannelId: string;
+			page: number;
+		},
+		@Ctx() ctx: RmqContext,
+	) {
+		this._logger.log(`Received queue message for ${guildId}`);
+		return this._music.queue(ctx, guildId, voiceChannelId, page);
+	}
 }

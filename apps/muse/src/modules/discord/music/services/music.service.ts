@@ -3,8 +3,15 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PrismaService } from '@prisma';
 import { MESSAGE_PREFIX } from '@util';
-import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
-import { KazagumoSearchResult } from 'kazagumo';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	CommandInteraction,
+	EmbedBuilder,
+	MessageComponentInteraction,
+} from 'discord.js';
+import { KazagumoSearchResult, KazagumoTrack } from 'kazagumo';
 import { firstValueFrom, take } from 'rxjs';
 @Injectable()
 export class MusicService {
@@ -422,6 +429,87 @@ export class MusicService {
 		return volume;
 	}
 
+	async queue(
+		interaction: CommandInteraction | MessageComponentInteraction,
+		page: number,
+	) {
+		const channel = await getVoiceChannelFromInteraction(interaction);
+		if (!channel) {
+			return;
+		}
+
+		const music = await this._send<{
+			queue: KazagumoTrack[];
+			current: KazagumoTrack;
+			total: number;
+		}>(interaction, 'MUSIC_QUEUE', {
+			guildId: interaction.guildId,
+			voiceChannelId: channel.id,
+			page,
+		});
+
+		if (!music) {
+			return;
+		}
+
+		const { queue, total, current } = music;
+
+		const totalPages = Math.ceil(total / 10);
+		let embed = new EmbedBuilder()
+			.setTitle(`🎶 Current queue |  ${total} songs in queue`)
+			.setFooter({
+				text: `Page ${page}/${totalPages}`,
+			});
+
+		if (page === 1) {
+			embed = embed.addFields({
+				name: 'Current',
+				value: `[${current.title}](${current.uri})`,
+				inline: true,
+			});
+		}
+
+		embed = embed.addFields({
+			name: 'Queue',
+			value: !queue?.length
+				? 'No items in the queue'
+				: queue
+						.map(
+							(track, index) =>
+								`${index + 2 + (page - 1) * 10}. [${
+									track.title
+								}](${track.uri})`,
+						)
+						.join('\n'),
+			inline: false,
+		});
+
+		const components = [
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder()
+					.setCustomId(`MUSIC_QUEUE/${page - 1}`)
+					.setLabel('◀️')
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(page == 1),
+				new ButtonBuilder()
+					.setCustomId(`MUSIC_QUEUE/${page + 1}`)
+					.setLabel('▶️')
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(page === totalPages || totalPages === 1),
+			),
+		];
+
+		if (interaction instanceof MessageComponentInteraction) {
+			return interaction.update({ embeds: [embed], components });
+		}
+
+		return interaction.reply({
+			embeds: [embed],
+			components,
+			ephemeral: true,
+		});
+	}
+
 	private async _send<T>(
 		interaction: CommandInteraction | MessageComponentInteraction,
 		command: string,
@@ -441,9 +529,11 @@ export class MusicService {
 				return null;
 			}
 
-			interaction.editReply({
-				content,
-			});
+			interaction.deferred
+				? interaction.editReply({
+						content,
+				  })
+				: interaction.reply({ content });
 			return null;
 		}
 
@@ -457,9 +547,11 @@ export class MusicService {
 				return null;
 			}
 
-			interaction.editReply({
-				content,
-			});
+			interaction.deferred
+				? interaction.editReply({
+						content,
+				  })
+				: interaction.reply({ content });
 			return null;
 		}
 

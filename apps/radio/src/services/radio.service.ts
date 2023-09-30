@@ -106,4 +106,8 @@ export class RadioService {
 	async previous(guildId: string) {
 		return this._player.previous(guildId);
 	}
+
+	async queue(guildId: string, page: number) {
+		return this._player.queue(guildId, page);
+	}
 }

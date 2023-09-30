@@ -68,7 +68,9 @@ export class MusicService {
 	async stop(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		this.playing.labels('None').dec(1);
@@ -78,7 +80,9 @@ export class MusicService {
 	async next(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.next(guildId);
@@ -87,7 +91,9 @@ export class MusicService {
 	async previous(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.previous(guildId);
@@ -96,7 +102,9 @@ export class MusicService {
 	async shuffle(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.shuffle(guildId);
@@ -105,7 +113,9 @@ export class MusicService {
 	async loop(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.loop(guildId);
@@ -114,7 +124,9 @@ export class MusicService {
 	async pause(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.pause(guildId);
@@ -123,7 +135,9 @@ export class MusicService {
 	async resume(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.resume(guildId);
@@ -138,7 +152,9 @@ export class MusicService {
 	) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+			};
 		}
 
 		return this._player.setVolume(guildId, volume, isMute);
@@ -147,10 +163,29 @@ export class MusicService {
 	async getVolume(ctx: RmqContext, guildId: string, voiceChannelId: string) {
 		const player = this._getPlayer(ctx, guildId, voiceChannelId);
 		if (!player) {
-			return;
+			return {
+				result: 'NO_PLAYER',
+				volume: 0,
+			};
 		}
 
 		return this._player.getVolume(guildId);
+	}
+
+	async queue(
+		ctx: RmqContext,
+		guildId: string,
+		voiceChannelId: string,
+		page: number,
+	) {
+		const player = this._getPlayer(ctx, guildId, voiceChannelId);
+		if (!player) {
+			return {
+				result: 'NO_PLAYER',
+			};
+		}
+
+		return this._player.queue(guildId, page);
 	}
 
 	private _getPlayer(

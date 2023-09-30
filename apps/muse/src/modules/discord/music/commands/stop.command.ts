@@ -19,7 +19,7 @@ export class MusicStopCommands {
 
 	@Subcommand({
 		name: 'stop',
-		description: 'Stop the radio',
+		description: 'Stop the music',
 	})
 	public async stop(@Context() [interaction]: SlashCommandContext) {
 		return this._music.stop(interaction);

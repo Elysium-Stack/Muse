@@ -5,14 +5,11 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { NecordExecutionContext } from 'necord';
-import { MusicPlayerService } from '../services';
 import { NotInVoiceException } from '../util';
 
 @Injectable()
 export class MusicInVoiceGuard implements CanActivate {
 	private readonly _logger = new Logger(MusicInVoiceGuard.name);
-
-	constructor(private _player: MusicPlayerService) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const ctx = NecordExecutionContext.create(context);
@@ -29,11 +26,6 @@ export class MusicInVoiceGuard implements CanActivate {
 		);
 		const { channel } = member.voice;
 		if (!channel) {
-			throw new NotInVoiceException();
-		}
-
-		const player = this._player.get(interaction.guild!.id);
-		if (player && player.voiceId !== channel.id) {
 			throw new NotInVoiceException();
 		}
 

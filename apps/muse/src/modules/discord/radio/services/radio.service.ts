@@ -2,7 +2,14 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PrismaService } from '@prisma';
 import { MESSAGE_PREFIX } from '@util';
-import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	CommandInteraction,
+	EmbedBuilder,
+	MessageComponentInteraction,
+} from 'discord.js';
 import { firstValueFrom, take } from 'rxjs';
 @Injectable()
 export class RadioService {
@@ -178,6 +185,90 @@ export class RadioService {
 
 		return interaction.reply({
 			...data,
+			ephemeral: true,
+		});
+	}
+
+	async queue(
+		interaction: CommandInteraction | MessageComponentInteraction,
+		page: number,
+	) {
+		const { result, ...rest } = await firstValueFrom(
+			this._radio
+				.send('RADIO_QUEUE', {
+					guildId: interaction.guildId,
+					page,
+				})
+				.pipe(take(1)),
+		);
+
+		if (result === 'NOT_PLAYING') {
+			if (interaction instanceof MessageComponentInteraction) {
+				return interaction.update({
+					content: `${MESSAGE_PREFIX} Radio is not playing!`,
+				});
+			}
+
+			return interaction.reply({
+				content: `${MESSAGE_PREFIX} Radio is not playing!`,
+				ephemeral: true,
+			});
+		}
+
+		const { queue, total, current } = rest;
+
+		const totalPages = Math.ceil(total / 10);
+		let embed = new EmbedBuilder()
+			.setTitle(`🎶 Radio queue |  ${total} songs in queue`)
+			.setFooter({
+				text: `Page ${page}/${totalPages}`,
+			});
+
+		if (page === 1) {
+			embed = embed.addFields({
+				name: 'Current',
+				value: `[${current.title}](${current.uri})`,
+				inline: true,
+			});
+		}
+
+		embed = embed.addFields({
+			name: 'Queue',
+			value: !queue?.length
+				? 'No items in the queue'
+				: queue
+						.map(
+							(track, index) =>
+								`${index + 2 + (page - 1) * 10}. [${
+									track.title
+								}](${track.uri})`,
+						)
+						.join('\n'),
+			inline: false,
+		});
+
+		const components = [
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder()
+					.setCustomId(`RADIO_QUEUE/${page - 1}`)
+					.setLabel('◀️')
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(page == 1),
+				new ButtonBuilder()
+					.setCustomId(`RADIO_QUEUE/${page + 1}`)
+					.setLabel('▶️')
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(page === totalPages || totalPages === 1),
+			),
+		];
+
+		if (interaction instanceof MessageComponentInteraction) {
+			return interaction.update({ embeds: [embed], components });
+		}
+
+		return interaction.reply({
+			embeds: [embed],
+			components,
 			ephemeral: true,
 		});
 	}

@@ -59,11 +59,16 @@ export class MusicVolumeCommands {
 			return interaction.deferUpdate();
 		}
 
-		const { volume } = await this._music.getVolume(
+		const { result, volume } = await this._music.getVolume(
 			null,
 			interaction.guildId,
 			channel.id,
 		);
+
+		if (result === 'NO_PLAYER') {
+			return interaction.deferUpdate();
+		}
+
 		const current = volume * 100;
 
 		let newVolume = current + amount;
@@ -96,11 +101,16 @@ export class MusicVolumeCommands {
 			return interaction.deferUpdate();
 		}
 
-		const { volume } = await this._music.getVolume(
+		const { result, volume } = await this._music.getVolume(
 			null,
 			interaction.guildId,
 			channel.id,
 		);
+
+		if (result === 'NO_PLAYER') {
+			return interaction.deferUpdate();
+		}
+
 		const current = volume * 100;
 
 		let newVolume = current - amount;
