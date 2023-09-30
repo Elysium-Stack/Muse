@@ -10,7 +10,7 @@ services:
             - '$EXPOSED_API_PORT:3000'
         depends_on:
             - db
-            - redis
+            - rabbitmq
             - lavalink
     radio:
         image: ghcr.io/elysium-stack/radio:main
@@ -21,7 +21,40 @@ services:
             - '$EXPOSED_RADIO_PORT:3000'
         depends_on:
             - db
-            - redis
+            - rabbitmq
+            - lavalink
+    music:
+        image: ghcr.io/elysium-stack/music:main
+        restart: unless-stopped
+        tty: true
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=1
+        depends_on:
+            - db
+            - rabbitmq
+            - lavalink
+    music2:
+        image: ghcr.io/elysium-stack/music:main
+        restart: unless-stopped
+        tty: true
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=2
+        depends_on:
+            - db
+            - rabbitmq
+            - lavalink
+    music3:
+        image: ghcr.io/elysium-stack/music:main
+        restart: unless-stopped
+        tty: true
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=3
+        depends_on:
+            - db
+            - rabbitmq
             - lavalink
     db:
         image: postgres:12.2
@@ -37,8 +70,10 @@ services:
         restart: unless-stopped
         volumes:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
-    redis:
-        image: redis
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - '$EXPOSED_RABBIT_MANAGEMENT_PORT:15672'
     prometheus:
         image: prom/prometheus
         restart: unless-stopped
