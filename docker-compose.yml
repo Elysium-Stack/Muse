@@ -5,7 +5,7 @@ services:
         image: ghcr.io/elysium-stack/muse:main
         restart: unless-stopped
         tty: true
-        env_file: ./.env
+        env_file: stack.env
         ports:
             - '$EXPOSED_API_PORT:3000'
         depends_on:
@@ -16,7 +16,7 @@ services:
         image: ghcr.io/elysium-stack/radio:main
         restart: unless-stopped
         tty: true
-        env_file: ./.env
+        env_file: stack.env
         ports:
             - '$EXPOSED_RADIO_PORT:3000'
         depends_on:
@@ -27,7 +27,7 @@ services:
         image: ghcr.io/elysium-stack/music:main
         restart: unless-stopped
         tty: true
-        env_file: ./.env
+        env_file: stack.env
         environment:
             - INSTANCE_NUMBER=1
         depends_on:
@@ -38,7 +38,7 @@ services:
         image: ghcr.io/elysium-stack/music:main
         restart: unless-stopped
         tty: true
-        env_file: ./.env
+        env_file: stack.env
         environment:
             - INSTANCE_NUMBER=2
         depends_on:
@@ -49,7 +49,7 @@ services:
         image: ghcr.io/elysium-stack/music:main
         restart: unless-stopped
         tty: true
-        env_file: ./.env
+        env_file: stack.env
         environment:
             - INSTANCE_NUMBER=3
         depends_on:
@@ -66,12 +66,12 @@ services:
         ports:
             - '$EXPOSED_DB_PORT:5432'
         volumes:
-            - '$POSTGRES_DATA_LOCATION:/var/lib/postgresql/data'
+            - '$DATA_LOCATION/db:/var/lib/postgresql/data'
     lavalink:
         image: ghcr.io/lavalink-devs/lavalink:latest
         restart: unless-stopped
         volumes:
-            - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
+            - '$DATA_LOCATION/lavalink.yml:/opt/Lavalink/application.yml:ro'
     rabbitmq:
         image: rabbitmq:3-management
         ports:
@@ -80,4 +80,4 @@ services:
         image: prom/prometheus
         restart: unless-stopped
         volumes:
-            - ./.docker/prometheus.prod.yml:/etc/prometheus/prometheus.yml
+            - '$DATA_LOCATION/prometheus.prod.yml:/etc/prometheus/prometheus.yml'
