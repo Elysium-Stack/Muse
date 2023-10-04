@@ -65,6 +65,8 @@ services:
             POSTGRES_DB: muse
         ports:
             - '$EXPOSED_DB_PORT:5432'
+        volumes:
+            - '$POSTGRES_DATA_LOCATION:/var/lib/postgresql/data'
     lavalink:
         image: ghcr.io/lavalink-devs/lavalink:latest
         restart: unless-stopped
