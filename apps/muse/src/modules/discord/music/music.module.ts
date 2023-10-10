@@ -25,10 +25,10 @@ import { MusicSettingsService } from './services/settings.service';
 					urls: [
 						`amqp://${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
 					],
+					noAck: false,
 					queue: 'music_queue',
 					queueOptions: {
 						durable: false,
-						noAck: false,
 					},
 				},
 			},

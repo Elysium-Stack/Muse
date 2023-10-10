@@ -287,7 +287,7 @@ export class MusicLavalinkService extends Kazagumo {
 			clearTimeout(timeout);
 		}
 
-		if (player.data.get('radio')) {
+		if (player.data.get('radio') || player.data.get('no-dc')) {
 			return;
 		}
 

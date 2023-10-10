@@ -195,12 +195,23 @@ export class MusicService {
 	) {
 		const player = this._player.get(guildId);
 
+		let channel, originalMsg;
+
+		if (ctx) {
+			channel = ctx.getChannelRef();
+			originalMsg = ctx.getMessage();
+		}
+
 		if (player && player.voiceId !== voiceChannelId) {
-			if (ctx) {
-				ctx.getChannelRef().reject(ctx.getMessage(), true);
+			if (ctx && channel && originalMsg) {
+				channel.nack(originalMsg, false, true);
 			}
 
 			return;
+		}
+
+		if (ctx && channel && originalMsg) {
+			channel.ack(originalMsg);
 		}
 
 		return player;

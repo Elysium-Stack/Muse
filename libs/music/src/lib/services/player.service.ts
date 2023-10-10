@@ -66,6 +66,7 @@ export class MusicPlayerService {
 		});
 		player.data.set('previousVolume', 50);
 		player.data.set('radio', radio);
+		player.data.set('no-dc', process.env.NODE_ENV === 'development');
 
 		if (player.queue.size > 0) {
 			player.queue.clear();
