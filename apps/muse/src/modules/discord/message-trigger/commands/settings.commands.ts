@@ -15,7 +15,7 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -57,7 +57,6 @@ class MessageTriggerIgnoreOptions {
 	channel: TextChannel | undefined;
 }
 
-@UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @MessageTriggerCommandDecorator({
 	name: 'settings',
@@ -68,6 +67,7 @@ export class MessageTriggerSettingsCommands {
 
 	constructor(private _settings: MessageTriggerSettingsService) {}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'show',
 		description: 'Show message trigger settings',
@@ -80,6 +80,7 @@ export class MessageTriggerSettingsCommands {
 		return this._settings.showSettings(interaction);
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'ignore',
 		description: 'Ignore the current channel',
@@ -108,6 +109,7 @@ export class MessageTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'unignore',
 		description: 'Unignore the current channel',
@@ -136,6 +138,7 @@ export class MessageTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('MESSAGE_TRIGGER_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
@@ -145,6 +148,7 @@ export class MessageTriggerSettingsCommands {
 	}
 
 	// settings change flow
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'change',
 		description: 'Change settings',
@@ -164,6 +168,7 @@ export class MessageTriggerSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('MESSAGE_TRIGGER_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
@@ -172,6 +177,7 @@ export class MessageTriggerSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('MESSAGE_TRIGGER_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
@@ -180,6 +186,7 @@ export class MessageTriggerSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@StringSelect('MESSAGE_TRIGGER_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
@@ -188,6 +195,7 @@ export class MessageTriggerSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('MESSAGE_TRIGGER_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
@@ -205,6 +213,7 @@ export class MessageTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@ChannelSelect('MESSAGE_TRIGGER_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,

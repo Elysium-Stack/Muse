@@ -15,7 +15,7 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -56,7 +56,6 @@ class ReactionTriggerIgnoreOptions {
 	channel: TextChannel | undefined;
 }
 
-@UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @ReactionTriggerCommandDecorator({
 	name: 'settings',
@@ -67,6 +66,7 @@ export class ReactionTriggerSettingsCommands {
 
 	constructor(private _settings: ReactionTriggerSettingsService) {}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'show',
 		description: 'Show reaction trigger settings',
@@ -79,6 +79,7 @@ export class ReactionTriggerSettingsCommands {
 		return this._settings.showSettings(interaction);
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'ignore',
 		description: 'Ignore the current channel',
@@ -107,6 +108,7 @@ export class ReactionTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'unignore',
 		description: 'Unignore the current channel',
@@ -135,6 +137,7 @@ export class ReactionTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('REACTION_TRIGGER_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
@@ -144,6 +147,7 @@ export class ReactionTriggerSettingsCommands {
 	}
 
 	// settings change flow
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'change',
 		description: 'Change settings',
@@ -163,6 +167,7 @@ export class ReactionTriggerSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('REACTION_TRIGGER_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
@@ -171,6 +176,7 @@ export class ReactionTriggerSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('REACTION_TRIGGER_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
@@ -187,6 +193,7 @@ export class ReactionTriggerSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('REACTION_TRIGGER_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
@@ -204,6 +211,7 @@ export class ReactionTriggerSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@ChannelSelect('REACTION_TRIGGER_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,

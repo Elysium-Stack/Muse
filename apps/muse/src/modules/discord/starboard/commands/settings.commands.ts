@@ -16,7 +16,7 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -77,7 +77,6 @@ class StarboardSetTresholdOptions {
 	treshold: string;
 }
 
-@UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @StarboardCommandDecorator({
 	name: 'settings',
@@ -88,6 +87,7 @@ export class StarboardSettingsCommands {
 
 	constructor(private _settings: StarboardSettingsService) {}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'show',
 		description: 'Show starboard settings',
@@ -100,6 +100,7 @@ export class StarboardSettingsCommands {
 		return this._settings.showSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'set-emoji',
 		description: 'Show starboard settings',
@@ -131,6 +132,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'set-treshold',
 		description: 'Show starboard settings',
@@ -157,6 +159,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'ignore',
 		description: 'Ignore the current channel',
@@ -185,6 +188,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'unignore',
 		description: 'Unignore the current channel',
@@ -213,6 +217,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('STARBOARD_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
@@ -222,6 +227,7 @@ export class StarboardSettingsCommands {
 	}
 
 	// settings change flow
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'change',
 		description: 'Change settings',
@@ -239,6 +245,7 @@ export class StarboardSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('STARBOARD_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
@@ -247,6 +254,7 @@ export class StarboardSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('STARBOARD_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
@@ -255,6 +263,7 @@ export class StarboardSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@StringSelect('STARBOARD_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
@@ -263,6 +272,7 @@ export class StarboardSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('STARBOARD_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
@@ -280,6 +290,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('STARBOARD_SETTINGS_CHANGE_SELF/:value')
 	public async onSelfEnabledButton(
 		@Context() [interaction]: ButtonContext,
@@ -297,6 +308,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@ChannelSelect('STARBOARD_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onIgnoredChannelsChange(
 		@Context() [interaction]: ButtonContext,
@@ -319,6 +331,7 @@ export class StarboardSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@ChannelSelect('STARBOARD_SETTINGS_CHANGE_CHANNEL_ID')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
