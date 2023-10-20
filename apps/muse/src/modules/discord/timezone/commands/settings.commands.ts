@@ -15,7 +15,7 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -57,7 +57,6 @@ class TimezoneIgnoreOptions {
 	channel: TextChannel | undefined;
 }
 
-@UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @TimezoneCommandDecorator({
 	name: 'settings',
@@ -68,6 +67,7 @@ export class TimezoneSettingsCommands {
 
 	constructor(private _settings: TimezoneSettingsService) {}
 
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'show',
 		description: 'Show timezone settings',
@@ -80,6 +80,7 @@ export class TimezoneSettingsCommands {
 		return this._settings.showSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('TIMEZONE_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
@@ -88,6 +89,7 @@ export class TimezoneSettingsCommands {
 		return this._settings.showSettings(interaction);
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'ignore',
 		description: 'Ignore the current channel',
@@ -116,6 +118,7 @@ export class TimezoneSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildModeratorGuard)
 	@Subcommand({
 		name: 'unignore',
 		description: 'Unignore the current channel',
@@ -145,6 +148,7 @@ export class TimezoneSettingsCommands {
 	}
 
 	// settings change flow
+	@UseGuards(GuildAdminGuard)
 	@Subcommand({
 		name: 'change',
 		description: 'Change settings',
@@ -162,6 +166,7 @@ export class TimezoneSettingsCommands {
 		return this._askSettingValue(interaction, option);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('TIMEZONE_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
@@ -170,6 +175,7 @@ export class TimezoneSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('TIMEZONE_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
@@ -178,6 +184,7 @@ export class TimezoneSettingsCommands {
 		return this._settings.promptSettings(interaction);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@StringSelect('TIMEZONE_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
@@ -186,6 +193,7 @@ export class TimezoneSettingsCommands {
 		return this._askSettingValue(interaction, selected[0]);
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@Button('TIMEZONE_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
@@ -203,6 +211,7 @@ export class TimezoneSettingsCommands {
 		});
 	}
 
+	@UseGuards(GuildAdminGuard)
 	@ChannelSelect('TIMEZONE_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
