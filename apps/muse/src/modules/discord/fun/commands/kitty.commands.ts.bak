@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MESSAGE_PREFIX } from '@util';
 import { Context, SlashCommand, SlashCommandContext } from 'necord';
 import { FunKittyService } from '../services/kitty.service';
-import { KITTY_BASE_URL } from '../util/constants';
+import { RANDOM_ANIMAL_BASE_URL } from '../util/constants';
 // class FunKittyRandomOptions {
 // 	@StringOption({
 // 		name: 'type',
@@ -40,7 +40,7 @@ export class FunKittyCommands {
 			content: '',
 			files: [
 				{
-					attachment: `${KITTY_BASE_URL}${data.url}`,
+					attachment: `${RANDOM_ANIMAL_BASE_URL}${data.url}`,
 					name: `kitty.${type === 'gif' ? 'gif' : 'png'}`,
 				},
 			],
