@@ -56,7 +56,7 @@ export class StarboardSettingsService extends BaseSettingsService<StarboardSetti
 					inline: true,
 				},
 				{
-					name: 'Channel',
+					name: 'Default channel',
 					value: channelId?.length ? `<#${channelId}>` : '-',
 					inline: true,
 				},

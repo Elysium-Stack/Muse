@@ -1,2 +1,2 @@
-export * from './app.module';
+export * from './muse.module';
 export * from './shared.module';

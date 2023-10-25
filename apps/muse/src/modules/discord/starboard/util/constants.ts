@@ -7,8 +7,8 @@ export const STARBOARD_SETTINGS_CHOICES = [
 		value: 'enabled',
 	},
 	{
-		name: 'Channel',
-		description: 'The channel of the starboard.',
+		name: 'Default channel',
+		description: 'The default channel of the starboard.',
 		value: 'channelId',
 	},
 	{

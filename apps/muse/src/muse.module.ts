@@ -42,7 +42,7 @@ import { SharedModule } from './shared.module';
 				process.env.NODE_ENV !== 'production'
 					? process.env.DEVELOPMENT_SERVER_IDS!.split(',')
 					: false,
-			skipRegistration: process.env.REGISTER_COMMANDS === 'false',
+			skipRegistration: process.env.REGISTER_COMMANDS !== 'false',
 			token: process.env.DISCORD_TOKEN!,
 			intents,
 		}),
@@ -107,7 +107,7 @@ import { SharedModule } from './shared.module';
 		MetricsEvents,
 	],
 })
-export class AppModule {
+export class MuseModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(LoggerMiddleware).forRoutes({
 			path: '*',

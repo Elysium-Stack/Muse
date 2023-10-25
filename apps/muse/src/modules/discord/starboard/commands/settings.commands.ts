@@ -341,7 +341,7 @@ export class StarboardSettingsCommands {
 		await this._settings.set(interaction.guildId!, 'channelId', id);
 
 		return interaction.update({
-			content: `${MESSAGE_PREFIX} Starboard channel has been set to: ${
+			content: `${MESSAGE_PREFIX} Starboard default channel has been set to: ${
 				id.length ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
@@ -401,7 +401,7 @@ export class StarboardSettingsCommands {
 							)
 							.addChannelTypes(ChannelType.GuildText)
 							.setPlaceholder(
-								'Select the channel to use as a starboard',
+								'Select the channel to use as a starboard default',
 							),
 					),
 				];

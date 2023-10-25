@@ -24,8 +24,13 @@ export class StarboardGeneralService {
 	) {}
 
 	async checkReaction(reaction: MessageReaction) {
-		const { enabled, emoji, treshold, self, ignoredChannelIds, channelId } =
-			await this._settings.get(reaction.message.guildId, false);
+		const settings = await this._settings.get(
+			reaction.message.guildId,
+			false,
+		);
+		const { enabled, emoji, treshold, self, ignoredChannelIds } = settings;
+
+		let { channelId } = settings;
 
 		if (!enabled) {
 			return;
@@ -78,6 +83,17 @@ export class StarboardGeneralService {
 			);
 		}
 
+		const configuration =
+			await this._prisma.starboardSpecificChannels.findFirst({
+				where: {
+					guildId: reaction.message.guildId,
+					sourceChannelId: reaction.message.channel.id,
+				},
+			});
+		if (configuration) {
+			channelId = configuration.channelId;
+		}
+
 		return this._createStarboard(
 			filteredUsers.size,
 			embed,
@@ -93,6 +109,63 @@ export class StarboardGeneralService {
 				originalMessageId: id,
 			},
 		});
+	}
+
+	async getSpecificChannels(guildId: string, page = 1) {
+		const where = {
+			guildId,
+		};
+
+		const configurations =
+			await this._prisma.starboardSpecificChannels.findMany({
+				where,
+				skip: (page - 1) * 10,
+				take: 10,
+			});
+		const total = await this._prisma.starboardSpecificChannels.count({
+			where,
+		});
+
+		return {
+			configurations,
+			total,
+		};
+	}
+
+	addSpecificChannel(
+		guildId: string,
+		sourceChannelId: string,
+		channelId: string,
+	) {
+		return this._prisma.starboardSpecificChannels.create({
+			data: {
+				guildId,
+				sourceChannelId,
+				channelId,
+			},
+		});
+	}
+
+	async removeSpecificChannelByID(guildId: string, id: number) {
+		const configuration =
+			await this._prisma.starboardSpecificChannels.findFirst({
+				where: {
+					guildId,
+					id,
+				},
+			});
+
+		if (!configuration) {
+			return null;
+		}
+
+		await this._prisma.starboardSpecificChannels.delete({
+			where: {
+				id: configuration.id,
+			},
+		});
+
+		return configuration;
 	}
 
 	private async _createStarboard(
