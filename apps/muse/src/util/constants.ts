@@ -9,6 +9,7 @@ export const MODULES = [
 	'Mod log',
 	'Minecraft',
 	'Starboard',
+	'Request Role',
 ];
 
 export const EMBED_STATUS_COLORS: {

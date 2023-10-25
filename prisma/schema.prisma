@@ -100,6 +100,10 @@ model Settings {
   starboardSelf                             Boolean     @default(false)
   starboardIgnoredChannelIds                String[]    @default([])
 
+  // Mod log
+  requestRoleEnabled                        Boolean?    @default(true)
+  requestRoleLogChannelId                   String?
+
   // purge
   purgeIgnoredParentChannelIds              String[]    @default([])
 
@@ -212,6 +216,21 @@ model MinecraftMapping {
   uuid                                      String
   username                                  String
   bedrock                                   Boolean     @default(false)
+}
+
+model RequestRoleEntries {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+
+  roleId                                    String
+  tos                                       String
+
+  requiredRoles                             Json @default("[]")
+  blacklistedUsers                          Json @default("[]")
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
 }
 
 // model GoogleAuthTokens {

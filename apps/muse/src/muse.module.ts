@@ -31,6 +31,7 @@ import {
 	SettingsModule,
 } from './modules';
 import { MusicModule } from './modules/discord/music';
+import { RequestRoleModule } from './modules/discord/request-role';
 import { StarboardModule } from './modules/discord/starboard/starboard.module';
 import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
@@ -86,6 +87,7 @@ import { SharedModule } from './shared.module';
 		RadioModule,
 		MinecraftModule,
 		StarboardModule,
+		RequestRoleModule,
 	],
 	providers: [
 		{

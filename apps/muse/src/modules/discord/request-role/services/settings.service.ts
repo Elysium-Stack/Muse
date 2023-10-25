@@ -14,15 +14,15 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
-import { ModLogSettingsInterface } from '../types/settings.interface';
+import { RequestRoleSettingsInterface } from '../types/settings.interface';
 import {
-	MOD_LOG_EMBED_COLOR,
-	MOD_LOG_SETTINGS_CHOICES,
+	REQUEST_ROLE_EMBED_COLOR,
+	REQUEST_ROLE_SETTINGS_CHOICES,
 } from '../util/constants';
 
 @Injectable()
-export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInterface> {
-	protected _base = 'modLog';
+export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleSettingsInterface> {
+	protected _base = 'requestRole';
 
 	constructor(protected _settings: SettingsService) {
 		super(_settings);
@@ -37,18 +37,14 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 			return;
 		}
 
-		const {
-			enabled,
-			deleteChannelId,
-			editChannelId,
-			joinChannelId,
-			leaveChannelId,
-		} = settings;
+		const { enabled, logChannelId } = settings;
 
 		const embed = new EmbedBuilder()
-			.setColor(MOD_LOG_EMBED_COLOR)
-			.setTitle('Mod log settings')
-			.setDescription(`These are the settings for the mod log module`)
+			.setColor(REQUEST_ROLE_EMBED_COLOR)
+			.setTitle('Request role settings')
+			.setDescription(
+				`These are the settings for the request role module`,
+			)
 			.addFields(
 				{
 					name: 'Status',
@@ -56,34 +52,15 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 					inline: true,
 				},
 				{
-					name: 'Message delete',
-					value: deleteChannelId?.length
-						? `<#${deleteChannelId}>`
-						: '-',
-					inline: true,
-				},
-				{
-					name: 'Message edit',
-					value: editChannelId?.length ? `<#${editChannelId}>` : '-',
-					inline: true,
-				},
-				{
-					name: 'Member join',
-					value: joinChannelId?.length ? `<#${joinChannelId}>` : '-',
-					inline: true,
-				},
-				{
-					name: 'Member leave',
-					value: leaveChannelId?.length
-						? `<#${leaveChannelId}>`
-						: '-',
+					name: 'Log channel',
+					value: logChannelId?.length ? `<#${logChannelId}>` : '-',
 					inline: true,
 				},
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`MOD_LOG_SETTINGS_PROMPT`)
+				.setCustomId(`REQUEST_ROLE_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
 			ALL_SETTINGS_BUTTON,
@@ -111,14 +88,15 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 		message?: string,
 	) {
 		const select = new StringSelectMenuBuilder()
-			.setCustomId('MOD_LOG_SETTINGS_CHANGE_SELECT')
+			.setCustomId('REQUEST_ROLE_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				MOD_LOG_SETTINGS_CHOICES.map(({ name, description, value }) =>
-					new StringSelectMenuOptionBuilder()
-						.setLabel(name)
-						.setDescription(description)
-						.setValue(value),
+				REQUEST_ROLE_SETTINGS_CHOICES.map(
+					({ name, description, value }) =>
+						new StringSelectMenuOptionBuilder()
+							.setLabel(name)
+							.setDescription(description)
+							.setValue(value),
 				),
 			);
 
@@ -127,7 +105,7 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId(`MOD_LOG_SETTINGS_SHOW`)
+				.setCustomId(`REQUEST_ROLE_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
 			ALL_SETTINGS_BUTTON,
