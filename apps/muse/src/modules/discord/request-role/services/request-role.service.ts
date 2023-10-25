@@ -1,6 +1,8 @@
+import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
-import { Client } from 'discord.js';
+import { ChannelType, Client, EmbedBuilder } from 'discord.js';
+import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
 import { RequestRoleSettingsService } from './settings.service';
 @Injectable()
 export class RequestRoleGeneralService {
@@ -102,6 +104,7 @@ export class RequestRoleGeneralService {
 
 	public async giveRole(guildId: string, userId: string, entryId: number) {
 		const entry = await this.getEntryById(entryId);
+		const settings = await this._settings.get(guildId);
 		const guild = await this._client.guilds.fetch(guildId);
 		if (!guild) {
 			return;
@@ -123,6 +126,37 @@ export class RequestRoleGeneralService {
 				);
 				return false;
 			});
+
+		if (settings.logChannelId) {
+			const channel = await guild.channels.fetch(settings.logChannelId);
+			if (channel && channel.type === ChannelType.GuildText) {
+				const user = await this._client.users.fetch(userId);
+				const embed = new EmbedBuilder()
+					.setTitle(`Member received role from request`)
+					.addFields(
+						{
+							name: 'User',
+							value: `<@${userId}>`,
+							inline: true,
+						},
+						{
+							name: 'Role',
+							value: `<@&${entry.roleId}>`,
+							inline: true,
+						},
+					)
+					.setAuthor({
+						name: getUsername(user),
+						iconURL: user.displayAvatarURL() || undefined,
+					})
+					.setColor(REQUEST_ROLE_EMBED_COLOR)
+					.setTimestamp();
+
+				channel.send({
+					embeds: [embed],
+				});
+			}
+		}
 
 		return {
 			success,
