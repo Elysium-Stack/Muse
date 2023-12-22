@@ -2,6 +2,7 @@ import { HexColorString } from 'discord.js';
 
 export const MODULES = [
 	'Bookworm',
+	'QotD',
 	'Music',
 	'Reaction Trigger',
 	'Message Trigger',

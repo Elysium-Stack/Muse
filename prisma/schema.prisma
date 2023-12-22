@@ -50,6 +50,14 @@ model Settings {
   bookwormDailyHour                         Int         @default(0)
   bookwormDailyChannelId                    String?
   bookwormPingRoleId                        String?
+  
+  // QotD
+  qotdEnabled                               Boolean?    @default(true)
+  qotdChannelId                             String?
+  qotdDailyEnabled                          Boolean     @default(true)
+  qotdDailyHour                             Int         @default(0)
+  qotdDailyChannelId                        String?
+  qotdPingRoleId                            String?
 
   // Music
   musicEnabled                              Boolean?    @default(true)
@@ -113,6 +121,17 @@ model Settings {
 }
 
 model BookwormLog {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+
+  index                                     Int?
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
+}
+
+model QotDLog {
   id                                        Int         @id @default(autoincrement())
   guildId                                   String
 
@@ -227,6 +246,18 @@ model RequestRoleEntries {
 
   requiredRoles                             Json @default("[]")
   blacklistedUsers                          Json @default("[]")
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
+}
+
+model MusicServiceMap {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+  voiceChannelId                            String
+
+  serviceName                               String
 
   // timestamps
   createdAt                                 DateTime    @default(now())

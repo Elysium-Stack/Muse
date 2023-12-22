@@ -31,6 +31,7 @@ import {
 	SettingsModule,
 } from './modules';
 import { MusicModule } from './modules/discord/music';
+import { QotDModule } from './modules/discord/qotd';
 import { RequestRoleModule } from './modules/discord/request-role';
 import { StarboardModule } from './modules/discord/starboard/starboard.module';
 import { TimezoneModule } from './modules/discord/timezone';
@@ -79,6 +80,7 @@ import { SharedModule } from './shared.module';
 		FunModule,
 		SettingsModule,
 		BookwormModule,
+		QotDModule,
 		// MusicModule,
 		MusicModule,
 		ReactionTriggerModule,
