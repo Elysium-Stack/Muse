@@ -10276,21 +10276,22 @@ karma-source-map-support@1.4.0:
   dependencies:
     source-map-support "^0.5.5"
 
-kazagumo-spotify@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/kazagumo-spotify/-/kazagumo-spotify-1.2.0.tgz#9328442be13d140c81f5483df53be553ce0cd615"
-  integrity sha512-+PBqh3nIhtGpx8/nLoM/Jw944CwSIhnqKm3JlYwKXxrJKCltoj7kS+DVloO2HfBaQwo3TSjjS/o9vqMB8NaOzA==
+kazagumo-spotify@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/kazagumo-spotify/-/kazagumo-spotify-2.0.1.tgz#fa38dc7af8f0b7d9d70e9f4dc15aa5b90bad0910"
+  integrity sha512-HKT38Hq/NZOXJHfAoonHYWlP5QYl29mIX/ZB6ipQyK9xwFcnnkXGFnFk3WkQUn6ND7t0X5mKbM9zwqQtjlb3/g==
   dependencies:
-    kazagumo "^2.1.6"
+    kazagumo "^3.0.0"
+    shoukaku "^4.0.1"
     undici "^5.5.1"
 
-kazagumo@^2.1.6, kazagumo@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/kazagumo/-/kazagumo-2.3.2.tgz#4553315f9618f3a45811b35411602b3b27da34bc"
-  integrity sha512-yC+k+yuwj9jb9/c1Wc57wvrAKe8wvnlyLYzUWC5tYeWAt5xap4JKxjJugrG2Q/2xKCq3UoIzTQw7AdKaxWbOHw==
+kazagumo@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/kazagumo/-/kazagumo-3.0.1.tgz#77918e901f1d5679feee7765dbfae4ade0dd2972"
+  integrity sha512-I4eD7JOScqY+xtAE8O5M5d5/ro18wv4j9GHwNvQKW7yGL5eGlgy/LGgdlWCWg+webEtcagImYOIaH5x1c3poTw==
   dependencies:
     events "^3.3.0"
-    shoukaku "^3.2.2"
+    shoukaku "^4.0.1"
 
 kind-of@^6.0.2:
   version "6.0.3"
@@ -11159,7 +11160,7 @@ node-fetch@2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^2.6.1, node-fetch@^2.6.7, node-fetch@^2.6.9:
+node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.11.tgz#cde7fc71deef3131ef80a738919f999e6edfff25"
   integrity sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==
@@ -13286,13 +13287,12 @@ shelljs@0.8.5:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
-shoukaku@^3.2.2:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-3.4.0.tgz#f76296a05fb18faf03508539b920114b88014847"
-  integrity sha512-IxkicImqMy7fu2QDXsQaqajR66oI2xL4FFEKaxIKLSPZTs/51ZlmsevnvwcZdABm+mfVkWFNQJotP1WcBeZ+Dg==
+shoukaku@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-4.0.1.tgz#b892ffaa8ef14d0cd7419ccd13af2d89d648487b"
+  integrity sha512-+Y94AnUFabCkE8O2Y3MSfnVmiiQ1MMVK/DO962Q23KPTWJkuqs+S/CPRQSOPWqo+ISq7teVxGJsSapwnJOrFgQ==
   dependencies:
-    node-fetch "^2.6.9"
-    ws "^8.13.0"
+    ws "^8.14.2"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -15168,6 +15168,11 @@ ws@^8.11.0, ws@^8.13.0:
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
   integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
+
+ws@^8.14.2:
+  version "8.16.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
+  integrity sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

@@ -66,7 +66,9 @@ export class MusicLavalinkService extends Kazagumo {
 	}
 
 	async getStatus() {
-		const node = this.shoukaku.getNode();
+		const keys = this.shoukaku.nodes.keys();
+
+		const node = this.shoukaku.nodes.get([...keys][0]);
 		return node?.state === State.CONNECTED;
 	}
 
@@ -90,7 +92,7 @@ export class MusicLavalinkService extends Kazagumo {
 				'MusicLavalinkService',
 			);
 		});
-		this.shoukaku.on('disconnect', (name, players, moved) => {
+		this.shoukaku.on('disconnect', (name: any, moved: any) => {
 			this.shoukaku.on('error', async (name, error) => {
 				this._logger.error(`Lavalink ${name}: Error Caught,`, error);
 				await this._developerLog.sendError(
@@ -104,7 +106,10 @@ export class MusicLavalinkService extends Kazagumo {
 				return;
 			}
 
-			players.map((player) => player.connection.disconnect());
+			const players = [...this.players.keys()].map((key: string) =>
+				this.players.get(key),
+			);
+			players.map((player: any) => player.connection.disconnect());
 			this._logger.warn(`Lavalink ${name}: Disconnected`);
 		});
 
@@ -122,7 +127,7 @@ export class MusicLavalinkService extends Kazagumo {
 		this.on('playerClosed', (player, data) =>
 			this._onPlayerClose(player, data),
 		);
-		this.on('playerResolveError', (player, track, message) =>
+		this.on('playerResolveError', (_, __, message) =>
 			this._logger.error(
 				`Player resolve error\n ${JSON.stringify({ message })}`,
 			),
@@ -172,11 +177,11 @@ export class MusicLavalinkService extends Kazagumo {
 			);
 			await new Promise((resolve) =>
 				setTimeout(async () => {
-					await player.setVoiceChannel(player.voiceId as Snowflake);
+					player.setVoiceChannel(player.voiceId as Snowflake);
 					await player.play();
 
 					const channel = await this._client.channels.fetch(
-						player.textId,
+						player.textId!,
 					);
 					if (channel?.type !== ChannelType.GuildText) {
 						return;
@@ -195,7 +200,7 @@ export class MusicLavalinkService extends Kazagumo {
 	private async _onPlayerEmpty(player: KazagumoPlayer) {
 		this._logger.log(`Player empty for ${player.guildId}`);
 
-		const channel = await this._client.channels.fetch(player.textId);
+		const channel = await this._client.channels.fetch(player.textId!);
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}
@@ -218,7 +223,7 @@ export class MusicLavalinkService extends Kazagumo {
 	) {
 		this._logger.error(`Player stuck\n ${JSON.stringify({ data })}`);
 
-		const channel = await this._client.channels.fetch(player.textId);
+		const channel = await this._client.channels.fetch(player.textId!);
 		player.destroy();
 
 		if (channel?.type !== ChannelType.GuildText) {
@@ -242,7 +247,7 @@ export class MusicLavalinkService extends Kazagumo {
 	) {
 		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
 
-		const channel = await this._client.channels.fetch(player.textId);
+		const channel = await this._client.channels.fetch(player.textId!);
 
 		let skipping = true;
 		if (!player.queue.size && player.loop === 'none') {
@@ -304,7 +309,7 @@ export class MusicLavalinkService extends Kazagumo {
 			return;
 		}
 
-		const textChannel = await this._client.channels.fetch(player.textId);
+		const textChannel = await this._client.channels.fetch(player.textId!);
 		player.data.set(
 			'disconnectTimeout',
 			setTimeout(async () => {
@@ -328,7 +333,7 @@ export class MusicLavalinkService extends Kazagumo {
 			?.delete()
 			.catch(() => null);
 
-		const channel = await this._client.channels.fetch(player.textId);
+		const channel = await this._client.channels.fetch(player.textId!);
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}

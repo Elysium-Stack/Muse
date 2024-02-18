@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChannelType, Client } from 'discord.js';
 import { MusicLavalinkService } from './lavalink.service';
+import { KazagumoTrack } from 'kazagumo';
+
 @Injectable()
 export class MusicPlayerService {
 	private readonly _logger = new Logger(MusicPlayerService.name);
@@ -73,7 +75,10 @@ export class MusicPlayerService {
 		}
 
 		for (const track of result.tracks) {
-			player.queue.add(track);
+			// @ts-ignore
+			const newTrack = new KazagumoTrack(track.getRaw(), track.requester);
+			newTrack.thumbnail = track.thumbnail;
+			player.queue.add(newTrack);
 		}
 
 		if (radio) {
@@ -92,8 +97,8 @@ export class MusicPlayerService {
 		};
 	}
 
-	async stop(guildId: string) {
-		const player = await this.get(guildId);
+	stop(guildId: string) {
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -108,10 +113,10 @@ export class MusicPlayerService {
 		};
 	}
 
-	async next(guildId: string) {
+	next(guildId: string) {
 		this._logger.verbose(`Starting next song for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -131,10 +136,10 @@ export class MusicPlayerService {
 		};
 	}
 
-	async previous(guildId: string) {
+	previous(guildId: string) {
 		this._logger.verbose(`Starting previous song for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -148,6 +153,7 @@ export class MusicPlayerService {
 			};
 		}
 
+		// @ts-ignore
 		player.play(player.queue.previous, {
 			replaceCurrent: true,
 		});
@@ -159,7 +165,7 @@ export class MusicPlayerService {
 	async shuffle(guildId: string) {
 		this._logger.verbose(`Shuffling queue for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -180,7 +186,7 @@ export class MusicPlayerService {
 	async loop(guildId: string) {
 		this._logger.verbose(`Looping queue for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -205,7 +211,7 @@ export class MusicPlayerService {
 	async pause(guildId: string) {
 		this._logger.verbose(`Pauzing the player for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -230,7 +236,7 @@ export class MusicPlayerService {
 	async resume(guildId: string) {
 		this._logger.verbose(`Resuming the player for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -255,7 +261,7 @@ export class MusicPlayerService {
 	async setVolume(guildId: string, volume: number, isMute = false) {
 		this._logger.verbose(`Setting player volume ${guildId} to ${volume}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -280,10 +286,10 @@ export class MusicPlayerService {
 		};
 	}
 
-	async getVolume(guildId: string) {
+	getVolume(guildId: string) {
 		this._logger.verbose(`Getting player volume for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
@@ -297,10 +303,10 @@ export class MusicPlayerService {
 		};
 	}
 
-	async queue(guildId: string, page: number) {
+	queue(guildId: string, page: number) {
 		this._logger.verbose(`Getting player queue for ${guildId}`);
 
-		const player = await this.get(guildId);
+		const player = this.get(guildId);
 
 		if (!player) {
 			return {
