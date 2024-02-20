@@ -30,7 +30,7 @@ export class SettingsService {
 
 		if (!settings) {
 			return this._prisma.settings.create({
-				data: { guildId, starboardEmoji: '⭐' },
+				data: { guildId },
 			});
 		}
 

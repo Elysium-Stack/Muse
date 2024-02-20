@@ -9,7 +9,6 @@ export const MODULES = [
 	'Timezone',
 	'Mod log',
 	'Minecraft',
-	'Starboard',
 	'Request Role',
 ];
 
