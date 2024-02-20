@@ -42,7 +42,7 @@ model Settings {
   guildId                                   String      @unique
 
   // Modules
-  
+
   // Bookworm
   bookwormEnabled                           Boolean?    @default(true)
   bookwormChannelId                         String?
@@ -50,7 +50,7 @@ model Settings {
   bookwormDailyHour                         Int         @default(0)
   bookwormDailyChannelId                    String?
   bookwormPingRoleId                        String?
-  
+
   // QotD
   qotdEnabled                               Boolean?    @default(true)
   qotdChannelId                             String?
@@ -100,14 +100,6 @@ model Settings {
   minecraftRconPort                         String?
   minecraftRconPass                         String?
 
-  // Star board
-  starboardEnabled                          Boolean     @default(true)
-  starboardChannelId                        String?
-  starboardTreshold                         Int         @default(3)
-  starboardEmoji                            String      @default("⭐")
-  starboardSelf                             Boolean     @default(false)
-  starboardIgnoredChannelIds                String[]    @default([])
-
   // Mod log
   requestRoleEnabled                        Boolean?    @default(true)
   requestRoleLogChannelId                   String?
@@ -136,29 +128,6 @@ model QotDLog {
   guildId                                   String
 
   index                                     Int?
-
-  // timestamps
-  createdAt                                 DateTime    @default(now())
-  updatedAt                                 DateTime    @updatedAt
-}
-
-model StarboardSpecificChannels { 
-  id                                        Int         @id @default(autoincrement())
-  guildId                                   String
-  sourceChannelId                           String
-  channelId                                 String
-
-  // timestamps
-  createdAt                                 DateTime    @default(now())
-  updatedAt                                 DateTime    @updatedAt
-}
-
-model StarboardLog {
-  id                                        Int         @id @default(autoincrement())
-  guildId                                   String
-  channelId                                 String
-  messageId                                 String      @unique
-  originalMessageId                         String      @unique
 
   // timestamps
   createdAt                                 DateTime    @default(now())

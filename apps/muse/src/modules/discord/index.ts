@@ -8,3 +8,6 @@ export * from './mod-log';
 export * from './music';
 export * from './radio';
 export * from './reaction-trigger';
+export * from './request-role';
+export * from './timezone';
+export * from './qotd';

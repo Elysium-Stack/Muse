@@ -26,15 +26,14 @@ import {
 	MessageTriggerModule,
 	MinecraftModule,
 	ModLogModule,
+	MusicModule,
+	QotDModule,
 	RadioModule,
 	ReactionTriggerModule,
+	RequestRoleModule,
 	SettingsModule,
+	TimezoneModule,
 } from './modules';
-import { MusicModule } from './modules/discord/music';
-import { QotDModule } from './modules/discord/qotd';
-import { RequestRoleModule } from './modules/discord/request-role';
-import { StarboardModule } from './modules/discord/starboard/starboard.module';
-import { TimezoneModule } from './modules/discord/timezone';
 import { SharedModule } from './shared.module';
 
 @Module({
@@ -88,7 +87,6 @@ import { SharedModule } from './shared.module';
 		FeedbackModule,
 		RadioModule,
 		MinecraftModule,
-		StarboardModule,
 		RequestRoleModule,
 	],
 	providers: [
