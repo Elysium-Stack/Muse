@@ -197,7 +197,7 @@ export class MessageTriggerGeneralCommands {
 		await this._general.addMessageTriggerByWord(
 			interaction.guildId!,
 			phrase!,
-			match ?? 'any',
+			match ?? 'word',
 			message,
 		);
 
