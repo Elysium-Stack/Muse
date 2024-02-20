@@ -5,6 +5,7 @@ import {
 	EnabledExceptionFilter,
 	ForbiddenExceptionFilter,
 	MESSAGE_PREFIX,
+	resolveEmoji,
 } from '@util';
 import { GuildModeratorGuard } from '@util/guards';
 import {
@@ -14,6 +15,7 @@ import {
 	ButtonStyle,
 	CommandInteraction,
 	EmbedBuilder,
+	GuildEmoji,
 } from 'discord.js';
 import {
 	Button,
@@ -30,6 +32,7 @@ import { ReactionTriggerEnabledGuard } from '../guards/enabled.guard';
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerGeneralService } from '../services/general.service';
 import { REACTION_TRIGGER_EMBED_COLOR } from '../util/constants';
+
 class ReactionTriggerListOptions {
 	@NumberOption({
 		name: 'page',
@@ -63,12 +66,12 @@ class ReactionTriggerAddOptions {
 		required: false,
 		choices: [
 			{
-				name: 'Any',
-				value: 'any',
-			},
-			{
 				name: 'Word',
 				value: 'word',
+			},
+			{
+				name: 'Any',
+				value: 'any',
 			},
 			{
 				name: 'Message',
@@ -129,14 +132,13 @@ export class ReactionTriggerGeneralCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions,
 	) {
-		const splittedEmoji = emoji!.split(':');
-		const emojiId = splittedEmoji[splittedEmoji.length - 1].replace(
-			/\>/g,
-			'',
-		);
-		const resolvedEmoji = interaction.client.emojis.resolve(emojiId);
+		const {
+			emoji: parsedEmoji,
+			unicode,
+			clientEmoji,
+		} = resolveEmoji(emoji, interaction.client);
 
-		if (!resolvedEmoji) {
+		if (!unicode && !clientEmoji) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} You can only use emojis from guilds that the bot is in.`,
 				ephemeral: true,
@@ -144,18 +146,22 @@ export class ReactionTriggerGeneralCommands {
 		}
 
 		this._logger.verbose(
-			`Adding reaction trigger for ${interaction.guildId} - ${phrase} ${resolvedEmoji.id}`,
+			`Adding reaction trigger for ${interaction.guildId} - ${phrase} ${
+				parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji
+			}`,
 		);
 
 		await this._general.addReactionTriggerByWord(
 			interaction.guildId!,
 			phrase!,
-			match ?? 'any',
-			resolvedEmoji.id,
+			match ?? 'word',
+			parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji,
 		);
 
 		return interaction.reply({
-			content: `${MESSAGE_PREFIX} Added reaction trigger with ${resolvedEmoji} for the phrase "${phrase}"`,
+			content: `${MESSAGE_PREFIX} Added reaction trigger with ${
+				parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji
+			} for the phrase "${phrase}"`,
 			ephemeral: true,
 		});
 	}

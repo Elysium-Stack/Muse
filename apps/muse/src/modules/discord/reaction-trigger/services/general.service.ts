@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { TriggerMatch } from '@prisma/client';
-import { escapeRegExp } from '@util';
+import { escapeRegExp, resolveEmoji } from '@util';
 import { Client, Message } from 'discord.js';
 import { ReactionTriggerSettingsService } from './settings.service';
 @Injectable()
@@ -25,13 +25,14 @@ export class ReactionTriggerGeneralService {
 
 		const resolvedTriggers = triggers
 			.map((trigger) => {
-				const resolvedEmoji = this._client.emojis.resolve(
+				const { emoji: parsedEmoji } = resolveEmoji(
 					trigger.emojiId,
+					this._client,
 				);
 
 				return {
 					...trigger,
-					emoji: resolvedEmoji,
+					emoji: parsedEmoji,
 				};
 			})
 			.filter((trigger) => !!trigger.emoji);
