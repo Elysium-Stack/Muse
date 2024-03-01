@@ -147,7 +147,7 @@ export class ReactionTriggerGeneralCommands {
 
 		this._logger.verbose(
 			`Adding reaction trigger for ${interaction.guildId} - ${phrase} ${
-				parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji
+				clientEmoji ? clientEmoji.id : emoji
 			}`,
 		);
 
@@ -155,12 +155,12 @@ export class ReactionTriggerGeneralCommands {
 			interaction.guildId!,
 			phrase!,
 			match ?? 'word',
-			parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji,
+			clientEmoji ? clientEmoji.id : emoji,
 		);
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Added reaction trigger with ${
-				parsedEmoji instanceof GuildEmoji ? parsedEmoji.id : parsedEmoji
+				clientEmoji ? clientEmoji : emoji
 			} for the phrase "${phrase}"`,
 			ephemeral: true,
 		});

@@ -25,14 +25,14 @@ export class ReactionTriggerGeneralService {
 
 		const resolvedTriggers = triggers
 			.map((trigger) => {
-				const { emoji: parsedEmoji } = resolveEmoji(
+				const { clientEmoji } = resolveEmoji(
 					trigger.emojiId,
 					this._client,
 				);
 
 				return {
 					...trigger,
-					emoji: parsedEmoji,
+					emoji: clientEmoji ? clientEmoji : trigger.emojiId,
 				};
 			})
 			.filter((trigger) => !!trigger.emoji);
