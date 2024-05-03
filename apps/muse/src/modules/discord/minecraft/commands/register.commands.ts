@@ -94,12 +94,12 @@ export class MinecraftRegisterCommands {
 			userData.name,
 			bedrock,
 		);
-		if (response === null) {
-			return interaction.reply({
-				content: `${MESSAGE_PREFIX} Something wen't wrong registering you to our server, please try again later`,
-				ephemeral: true,
-			});
-		}
+		// if (response === null) {
+		// 	return interaction.reply({
+		// 		content: `${MESSAGE_PREFIX} Something wen't wrong registering you to our server, please try again later`,
+		// 		ephemeral: true,
+		// 	});
+		// }
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Welcome ${
