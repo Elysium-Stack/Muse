@@ -37,9 +37,7 @@ export class MinecraftGeneralService {
 	async register(guildId, userId, uuid, username, bedrock = false) {
 		const response = await this._sendRcon(
 			guildId,
-			`whitelist ${bedrock ? 'x-' : ''}add ${
-				bedrock ? username.replace(/ /g, '') : uuid
-			}`,
+			`vlist add ${username.replace(/ /g, '')}`,
 		);
 		await this._saveInDB(guildId, userId, uuid, username, bedrock);
 		return response;
@@ -60,9 +58,7 @@ export class MinecraftGeneralService {
 		for (const item of items) {
 			await this._sendRcon(
 				guildId,
-				`whitelist ${item.bedrock ? 'x-' : ''}remove ${
-					item.bedrock ? item.username.replace(/ /g, '') : item.uuid
-				}`,
+				`vlist remove ${item.username.replace(/ /g, '')}`,
 			);
 			await this._prisma.minecraftMapping.delete({
 				where: {
