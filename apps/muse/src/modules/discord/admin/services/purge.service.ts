@@ -78,11 +78,15 @@ Below you can find a list of all users that were inactive.`,
 		});
 
 		if (userIdsOnly) {
-			await channel.send({
-				content: `\`\`\`
-				${inactiveMessages.map((m) => m.author.id).join(',')}
+			const chunked = [...chunks(inactiveMessages, 100)];
+			for (let i = 0; i < chunked.length; i++) {
+				const chunk = chunked[i];
+				await channel.send({
+					content: `\`\`\`
+				${chunk.map((m) => m.author.id).join(',')}
 				\`\`\``,
-			});
+				});
+			}
 		} else {
 			const chunked = [...chunks(inactiveMessages, 10)];
 			for (let i = 0; i < chunked.length; i++) {
