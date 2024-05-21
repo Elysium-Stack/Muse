@@ -37,7 +37,7 @@ export class MinecraftGeneralService {
 	async register(guildId, userId, uuid, username, bedrock = false) {
 		const response = await this._sendRcon(
 			guildId,
-			`vlist add ${username.replace(/ /g, '')}`,
+			`vcl add ${username.replace(/ /g, '')}`,
 		);
 		await this._saveInDB(guildId, userId, uuid, username, bedrock);
 		return response;
@@ -58,7 +58,7 @@ export class MinecraftGeneralService {
 		for (const item of items) {
 			await this._sendRcon(
 				guildId,
-				`vlist remove ${item.username.replace(/ /g, '')}`,
+				`vcl remove ${item.username.replace(/ /g, '')}`,
 			);
 			await this._prisma.minecraftMapping.delete({
 				where: {
