@@ -87,7 +87,10 @@ export class MinecraftRegisterCommands {
 			});
 		}
 
-		const response = await this._general.register(
+		await interaction.deferReply({
+			ephemeral: true,
+		});
+		await this._general.register(
 			interaction.guildId,
 			interaction.user.id,
 			userData.uuid,
@@ -101,7 +104,7 @@ export class MinecraftRegisterCommands {
 		// 	});
 		// }
 
-		return interaction.reply({
+		return interaction.followUp({
 			content: `${MESSAGE_PREFIX} Welcome ${
 				userData.name
 			}, You've been whitelisted on our server.${
@@ -111,7 +114,6 @@ export class MinecraftRegisterCommands {
 					  }`
 					: ''
 			}`,
-			ephemeral: true,
 		});
 	}
 }

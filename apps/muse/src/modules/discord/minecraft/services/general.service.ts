@@ -173,7 +173,7 @@ export class MinecraftGeneralService {
 			host: rconHost,
 			port: parseInt(rconPort, 10),
 			password: rconPass,
-			timeout: 1000,
+			timeout: 2000,
 		});
 
 		try {
