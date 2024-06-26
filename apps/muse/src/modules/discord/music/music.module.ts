@@ -12,31 +12,29 @@ import { MusicSettingsCommands } from './commands/settings.commands';
 import { MusicShuffleCommands } from './commands/shuffle.command';
 import { MusicStopCommands } from './commands/stop.command';
 import { MusicVolumeCommands } from './commands/volume.command';
+import { MusicController } from './controllers/music.controller';
 import { MusicService } from './services';
+import { MusicInstancesService } from './services/instances.service';
 import { MusicSettingsService } from './services/settings.service';
 
+const musicBotHosts = process.env.MUSIC_BOT_HOSTS.split(',');
 @Module({
 	imports: [
-		ClientsModule.register([
-			{
-				name: 'MUSIC_SERVICE',
-				transport: Transport.RMQ,
+		ClientsModule.register(
+			musicBotHosts.map((host, i) => ({
+				name: `MUSIC_SERVICE_${i + 1}`,
+				transport: Transport.TCP,
 				options: {
-					urls: [
-						`amqp://${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
-					],
-					noAck: false,
-					queue: 'music_queue',
-					queueOptions: {
-						durable: false,
-					},
+					host,
+					port: 1337,
 				},
-			},
-		]),
+			})),
+		),
 		SharedModule,
 	],
-	controllers: [],
+	controllers: [MusicController],
 	providers: [
+		MusicInstancesService,
 		MusicService,
 		MusicSettingsService,
 		MusicSettingsCommands,

@@ -1,5 +1,7 @@
 import { MusicModule } from '@music';
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from '@prisma';
 import { intents } from '@util';
@@ -15,8 +17,8 @@ import { MusicStopCommands } from './commands/stop.command';
 import { MusicVolumeCommands } from './commands/volume.command';
 import { MusicController } from './controllers/music.controller';
 import { AppEvents } from './events/app.events';
+import { MusicEvents } from './events/music.events';
 import { botMetrics } from './metrics/bot.metrics';
-import { MusicService } from './services/music.service';
 
 @Module({
 	imports: [
@@ -31,16 +33,28 @@ import { MusicService } from './services/music.service';
 			]!,
 			intents,
 		}),
+		EventEmitterModule.forRoot(),
 		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
+
+		ClientsModule.register([
+			{
+				name: `MUSE_SERVICE`,
+				transport: Transport.TCP,
+				options: {
+					host: 'muse',
+					port: 1337,
+				},
+			},
+		]),
 
 		PrismaModule,
 		MusicModule,
 	],
 	controllers: [MusicController],
 	providers: [
-		MusicService,
 		AppEvents,
+		MusicEvents,
 
 		// commands
 		MusicStopCommands,

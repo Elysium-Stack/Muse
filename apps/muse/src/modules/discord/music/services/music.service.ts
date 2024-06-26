@@ -1,7 +1,5 @@
 import { getVoiceChannelFromInteraction } from '@music';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { PrismaService } from '@prisma';
+import { Injectable, Logger } from '@nestjs/common';
 import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
@@ -12,15 +10,13 @@ import {
 	MessageComponentInteraction,
 } from 'discord.js';
 import { KazagumoSearchResult, KazagumoTrack } from 'kazagumo';
-import { firstValueFrom, take } from 'rxjs';
+import { MusicInstancesService } from './instances.service';
+
 @Injectable()
 export class MusicService {
 	private readonly _logger = new Logger(MusicService.name);
 
-	constructor(
-		private _prisma: PrismaService,
-		@Inject('MUSIC_SERVICE') private _music: ClientProxy,
-	) {}
+	constructor(private _instances: MusicInstancesService) {}
 
 	async play(
 		interaction: CommandInteraction | MessageComponentInteraction,
@@ -515,9 +511,35 @@ export class MusicService {
 		command: string,
 		data: any,
 	) {
-		const music = await (firstValueFrom(
-			this._music.send(command, data).pipe(take(1)),
-		) as Promise<T & { result: string }>);
+		const voiceChannel = await getVoiceChannelFromInteraction(interaction);
+		const instance = await this._instances.getAvailableOrExisting(
+			interaction.guildId,
+			voiceChannel.id,
+		);
+
+		if (!instance) {
+			const content = `${MESSAGE_PREFIX} Sorry, there is no music instance available!`;
+
+			if (interaction instanceof MessageComponentInteraction) {
+				interaction.update({
+					content,
+				});
+				return null;
+			}
+
+			interaction.deferred
+				? interaction.editReply({
+						content,
+				  })
+				: interaction.reply({ content });
+			return null;
+		}
+
+		const music = await this._instances.sendCommand(
+			instance,
+			command,
+			data,
+		);
 
 		if (!music) {
 			const content = `${MESSAGE_PREFIX} Something wen't wrong, try again later!`;

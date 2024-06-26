@@ -72,7 +72,6 @@ export class RadioController {
 	) {
 		this._logger.log(`Received queue message for ${guildId}`);
 		const data = await this._radio.queue(guildId, page);
-		console.log(data);
 		return data;
 	}
 }

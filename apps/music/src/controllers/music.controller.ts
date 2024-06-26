@@ -1,19 +1,39 @@
+import { MusicPlayerService } from '@music';
 import { Controller, Logger } from '@nestjs/common';
-import {
-	Ctx,
-	MessagePattern,
-	Payload,
-	RmqContext,
-} from '@nestjs/microservices';
-import { MusicService } from '../services/music.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Gauge } from 'prom-client';
 
 @Controller()
 export class MusicController {
 	private readonly _logger = new Logger(MusicController.name);
-	constructor(private _music: MusicService) {}
+	constructor(
+		private _player: MusicPlayerService,
+		@InjectMetric('discord_playing')
+		public playing: Gauge<string>,
+	) {}
+
+	@MessagePattern('MUSIC_STATUS')
+	status(
+		@Payload()
+		{ guildId }: { guildId: string },
+	) {
+		this._logger.log(`Received status message for ${guildId}`);
+		const player = this._player.get(guildId);
+
+		if (!player) {
+			return {
+				state: -1,
+			};
+		}
+
+		return {
+			state: player.state,
+		};
+	}
 
 	@MessagePattern('MUSIC_PLAY')
-	start(
+	async start(
 		@Payload()
 		{
 			guildId,
@@ -26,128 +46,110 @@ export class MusicController {
 			voiceChannelId: string;
 			textChannelId: string;
 		},
-		@Ctx() ctx: RmqContext,
 	) {
 		this._logger.log(`Received start message for ${guildId}`);
-		return this._music.play(
-			ctx,
+		const player = this._player.get(guildId);
+
+		if (player) {
+			this.playing.labels('None').dec(1);
+			player.destroy();
+		}
+
+		// await this._prisma.musicLog.deleteMany({
+		// 	where: {
+		// 		guildId,
+		// 	},
+		// });
+
+		const data = await this._player.play(
 			guildId,
-			song,
-			voiceChannelId,
+			song!,
+			voiceChannelId!,
 			textChannelId,
 		);
+		this.playing.labels('None').inc(1);
+
+		if (!data?.result || data.result !== 'PLAYING') {
+			return data;
+		}
+
+		// await this._prisma.musicLog.create({
+		// 	data: {
+		// 		guildId,
+		// 	},
+		// });
+
+		if (data.data?.tracks) {
+			data.data.tracks = [...data.data?.tracks].map((track) => {
+				delete track.kazagumo;
+				return track;
+			});
+		}
+
+		return data;
 	}
 
 	@MessagePattern('MUSIC_STOP')
 	stop(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received stop message for ${guildId}`);
-		return this._music.stop(ctx, guildId, voiceChannelId);
+		return this._player.stop(guildId);
 	}
 
 	@MessagePattern('MUSIC_NEXT')
 	next(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received next message for ${guildId}`);
-		return this._music.next(ctx, guildId, voiceChannelId);
+		return this._player.next(guildId);
 	}
 
 	@MessagePattern('MUSIC_PREVIOUS')
 	previous(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received previous message for ${guildId}`);
-		return this._music.previous(ctx, guildId, voiceChannelId);
+		return this._player.previous(guildId);
 	}
 
 	@MessagePattern('MUSIC_SHUFFLE')
 	shuffle(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received shuffle message for ${guildId}`);
-		return this._music.shuffle(ctx, guildId, voiceChannelId);
+		return this._player.shuffle(guildId);
 	}
 
 	@MessagePattern('MUSIC_LOOP')
 	loop(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received loop message for ${guildId}`);
-		return this._music.loop(ctx, guildId, voiceChannelId);
+		return this._player.loop(guildId);
 	}
 
 	@MessagePattern('MUSIC_PAUSE')
 	pause(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received pause message for ${guildId}`);
-		return this._music.pause(ctx, guildId, voiceChannelId);
+		return this._player.pause(guildId);
 	}
 
 	@MessagePattern('MUSIC_RESUME')
 	resume(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received resume message for ${guildId}`);
-		return this._music.resume(ctx, guildId, voiceChannelId);
+		return this._player.resume(guildId);
 	}
 
 	@MessagePattern('MUSIC_SET_VOLUME')
@@ -155,58 +157,33 @@ export class MusicController {
 		@Payload()
 		{
 			guildId,
-			voiceChannelId,
 			volume,
 			isMute,
 		}: {
 			guildId: string;
-			voiceChannelId: string;
 			volume: number;
 			isMute?: boolean;
 		},
-		@Ctx() ctx: RmqContext,
 	) {
 		this._logger.log(`Received setVolume message for ${guildId}`);
-		return this._music.setVolume(
-			ctx,
-			guildId,
-			voiceChannelId,
-			volume,
-			isMute ?? false,
-		);
+		return this._player.setVolume(guildId, volume, isMute ?? false);
 	}
 
 	@MessagePattern('MUSIC_GET_VOLUME')
 	getVolume(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId }: { guildId: string },
 	) {
 		this._logger.log(`Received getVolume message for ${guildId}`);
-		return this._music.getVolume(ctx, guildId, voiceChannelId);
+		return this._player.getVolume(guildId);
 	}
 
 	@MessagePattern('MUSIC_QUEUE')
 	getQueue(
 		@Payload()
-		{
-			guildId,
-			voiceChannelId,
-			page,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-			page: number;
-		},
-		@Ctx() ctx: RmqContext,
+		{ guildId, page }: { guildId: string; page: number },
 	) {
 		this._logger.log(`Received queue message for ${guildId}`);
-		return this._music.queue(ctx, guildId, voiceChannelId, page);
+		return this._player.queue(guildId, page);
 	}
 }

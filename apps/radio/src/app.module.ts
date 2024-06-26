@@ -1,5 +1,6 @@
 import { MusicModule } from '@music';
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from '@prisma';
 import { intents } from '@util';
@@ -9,6 +10,7 @@ import { RadioController } from './controllers/radio.controller';
 import { AppEvents } from './events/app.events';
 import { botMetrics } from './metrics/bot.metrics';
 import { RadioService } from './services/radio.service';
+
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -20,6 +22,7 @@ import { RadioService } from './services/radio.service';
 			token: process.env.RADIO_DISCORD_TOKEN!,
 			intents,
 		}),
+		EventEmitterModule.forRoot(),
 		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
 

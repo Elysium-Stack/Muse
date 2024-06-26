@@ -3,12 +3,11 @@ import {
 	MusicCommandDecorator,
 	MusicHasPlayerGuard,
 	MusicInVoiceGuard,
+	MusicPlayerService,
 	NotInVoiceExceptionFilter,
-	getVoiceChannelFromInteraction,
 } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { Button, ButtonContext, Context } from 'necord';
-import { MusicService } from '../services';
 
 @UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
 @UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)
@@ -16,19 +15,14 @@ import { MusicService } from '../services';
 export class MusicNextCommands {
 	private readonly _logger = new Logger(MusicNextCommands.name);
 
-	constructor(private _music: MusicService) {}
+	constructor(private _player: MusicPlayerService) {}
 
 	@Button('MUSIC_NEXT')
 	public async onButton(
 		@Context()
 		[interaction]: ButtonContext,
 	) {
-		const channel = await getVoiceChannelFromInteraction(interaction);
-		if (!channel) {
-			return interaction.deferUpdate();
-		}
-
-		await this._music.next(null, interaction.guildId, channel.id);
+		await this._player.next(interaction.guildId);
 		return interaction.deferUpdate();
 	}
 }

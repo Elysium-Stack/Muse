@@ -6,7 +6,7 @@
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"rules": {
-				"@nx/enforce-module-boundaries": false
+				"@nx/enforce-module-boundaries": 0
 			}
 		},
 		{

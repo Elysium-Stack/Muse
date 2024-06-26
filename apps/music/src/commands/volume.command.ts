@@ -3,12 +3,11 @@ import {
 	MusicCommandDecorator,
 	MusicHasPlayerGuard,
 	MusicInVoiceGuard,
+	MusicPlayerService,
 	NotInVoiceExceptionFilter,
-	getVoiceChannelFromInteraction,
 } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { Button, ButtonContext, ComponentParam, Context } from 'necord';
-import { MusicService } from '../services';
 
 @UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
 @UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)
@@ -16,7 +15,7 @@ import { MusicService } from '../services';
 export class MusicVolumeCommands {
 	private readonly _logger = new Logger(MusicVolumeCommands.name);
 
-	constructor(private _music: MusicService) {}
+	constructor(private _player: MusicPlayerService) {}
 
 	@Button('MUSIC_VOLUME_SET/:volume/:isMute')
 	public async onSetButton(
@@ -29,15 +28,8 @@ export class MusicVolumeCommands {
 			volume = parseInt(volume, 10);
 		}
 
-		const channel = await getVoiceChannelFromInteraction(interaction);
-		if (!channel) {
-			return interaction.deferUpdate();
-		}
-
-		await this._music.setVolume(
-			null,
+		await this._player.setVolume(
 			interaction.guildId,
-			channel.id,
 			volume,
 			isMute === 'true' ? true : false,
 		);
@@ -54,15 +46,8 @@ export class MusicVolumeCommands {
 			amount = parseInt(amount, 10);
 		}
 
-		const channel = await getVoiceChannelFromInteraction(interaction);
-		if (!channel) {
-			return interaction.deferUpdate();
-		}
-
-		const { result, volume } = await this._music.getVolume(
-			null,
+		const { result, volume } = await this._player.getVolume(
 			interaction.guildId,
-			channel.id,
 		);
 
 		if (result === 'NO_PLAYER') {
@@ -76,13 +61,7 @@ export class MusicVolumeCommands {
 			newVolume = 100;
 		}
 
-		await this._music.setVolume(
-			null,
-			interaction.guildId,
-			channel.id,
-			newVolume,
-			false,
-		);
+		await this._player.setVolume(interaction.guildId, newVolume, false);
 		return interaction.deferUpdate();
 	}
 
@@ -96,15 +75,8 @@ export class MusicVolumeCommands {
 			amount = parseInt(amount, 10);
 		}
 
-		const channel = await getVoiceChannelFromInteraction(interaction);
-		if (!channel) {
-			return interaction.deferUpdate();
-		}
-
-		const { result, volume } = await this._music.getVolume(
-			null,
+		const { result, volume } = await this._player.getVolume(
 			interaction.guildId,
-			channel.id,
 		);
 
 		if (result === 'NO_PLAYER') {
@@ -118,13 +90,7 @@ export class MusicVolumeCommands {
 			newVolume = 0;
 		}
 
-		await this._music.setVolume(
-			null,
-			interaction.guildId,
-			channel.id,
-			newVolume,
-			false,
-		);
+		await this._player.setVolume(interaction.guildId, newVolume, false);
 		return interaction.deferUpdate();
 	}
 }

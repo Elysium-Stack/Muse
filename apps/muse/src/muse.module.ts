@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { intents } from '@util';
@@ -61,6 +62,7 @@ import { SharedModule } from './shared.module';
 				timeout: 5000,
 			},
 		}),
+		EventEmitterModule.forRoot(),
 		PrometheusModule.register(),
 		ScheduleModule.forRoot(),
 

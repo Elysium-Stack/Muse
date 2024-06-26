@@ -13,15 +13,10 @@ import { RadioService } from './services';
 		ClientsModule.register([
 			{
 				name: 'RADIO_SERVICE',
-				transport: Transport.RMQ,
+				transport: Transport.TCP,
 				options: {
-					urls: [
-						`amqp://${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
-					],
-					queue: 'radio_queue',
-					queueOptions: {
-						durable: false,
-					},
+					host: process.env.RADIO_BOT_HOST,
+					port: 1337,
 				},
 			},
 		]),

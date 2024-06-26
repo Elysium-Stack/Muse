@@ -16,7 +16,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - rabbitmq
             - lavalink
     radio:
         build:
@@ -31,7 +30,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - rabbitmq
             - lavalink
     music:
         build:
@@ -46,7 +44,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - rabbitmq
             - lavalink
     music2:
         build:
@@ -61,7 +58,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - rabbitmq
             - lavalink
     dashboard:
         build:
@@ -86,10 +82,6 @@ services:
         image: ghcr.io/lavalink-devs/lavalink:latest
         volumes:
             - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
-    rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-            - '$EXPOSED_RABBIT_MANAGEMENT_PORT:15672'
     prometheus:
         image: prom/prometheus
         volumes:

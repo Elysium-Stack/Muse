@@ -226,7 +226,8 @@ model MusicServiceMap {
   guildId                                   String
   voiceChannelId                            String
 
-  serviceName                               String
+  instance                                  Int
+  state                                     Int
 
   // timestamps
   createdAt                                 DateTime    @default(now())
