@@ -36,6 +36,7 @@ export class MusicService {
 			song,
 			voiceChannelId: channel.id,
 			textChannelId: interaction.channelId,
+			author: interaction.user,
 		});
 
 		if (!music) {

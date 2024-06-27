@@ -2,6 +2,7 @@ import { MusicPlayerService } from '@music';
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { User } from 'discord.js';
 import { Gauge } from 'prom-client';
 
 @Controller()
@@ -40,11 +41,13 @@ export class MusicController {
 			song,
 			voiceChannelId,
 			textChannelId,
+			author,
 		}: {
 			guildId: string;
 			song: string;
 			voiceChannelId: string;
 			textChannelId: string;
+			author: User;
 		},
 	) {
 		this._logger.log(`Received start message for ${guildId}`);
@@ -66,6 +69,8 @@ export class MusicController {
 			song!,
 			voiceChannelId!,
 			textChannelId,
+			false,
+			author,
 		);
 		this.playing.labels('None').inc(1);
 

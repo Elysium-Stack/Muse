@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChannelType, Client } from 'discord.js';
+import { ChannelType, Client, User } from 'discord.js';
 import { KazagumoTrack } from 'kazagumo';
 import { MusicLavalinkService } from './lavalink.service';
 
@@ -22,6 +22,7 @@ export class MusicPlayerService {
 		voiceChannelId: string,
 		textChannelId: string,
 		radio = false,
+		requester?: User,
 	) {
 		this._logger.verbose(
 			`Playing ${
@@ -45,7 +46,9 @@ export class MusicPlayerService {
 			};
 		}
 
-		const result = await this._lavalink.search(songOrPlaylist);
+		const result = await this._lavalink.search(songOrPlaylist, {
+			requester,
+		});
 
 		if (result.type !== 'PLAYLIST' && radio) {
 			return {
@@ -329,8 +332,12 @@ export class MusicPlayerService {
 	}
 
 	private _transformTrack(track: KazagumoTrack) {
+		console.log(track.author, track.requester);
 		// @ts-ignore
-		const newTrack = new KazagumoTrack(track.getRaw(), track.requester);
+		const newTrack = new KazagumoTrack(
+			track.getRaw()._raw,
+			track.requester,
+		);
 		newTrack.thumbnail = track.thumbnail;
 
 		return newTrack;
