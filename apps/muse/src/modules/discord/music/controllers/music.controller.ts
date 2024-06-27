@@ -1,4 +1,3 @@
-import { LavalinkMusicEvent } from '@music';
 import { Controller, Logger } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { PlayerState } from 'kazagumo';
@@ -43,7 +42,11 @@ export class MusicController {
 			instance,
 			guildId,
 			voiceChannelId,
-		}: { instance: number } & LavalinkMusicEvent,
+		}: {
+			instance: number;
+			guildId: string;
+			voiceChannelId: string;
+		},
 	) {
 		this._logger.log(`Received music connected message for ${instance}`);
 		this._instances.connect(instance, guildId, voiceChannelId);
@@ -52,7 +55,7 @@ export class MusicController {
 	@EventPattern('MUSIC_DISCONNECTED')
 	disconnected(
 		@Payload()
-		{ instance, guildId }: { instance: number } & LavalinkMusicEvent,
+		{ instance, guildId }: { instance: number; guildId: string },
 	) {
 		this._logger.log(`Received music disconnected message for ${instance}`);
 		this._instances.disconnect(instance, guildId);

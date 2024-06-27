@@ -10,7 +10,8 @@ import {
 	EmbedBuilder,
 	MessageComponentInteraction,
 } from 'discord.js';
-import { firstValueFrom, take } from 'rxjs';
+import { KazagumoTrack } from 'kazagumo';
+import { firstValueFrom, take, timeout } from 'rxjs';
 @Injectable()
 export class RadioService {
 	private readonly _logger = new Logger(RadioService.name);
@@ -35,7 +36,7 @@ export class RadioService {
 				!settings.radioVoiceChannelId) &&
 			interaction
 		) {
-			const content = `${MESSAGE_PREFIX} Radio settings we're not congigured correctly.`;
+			const content = `${MESSAGE_PREFIX} Radio settings we're not configured correctly.`;
 
 			if (interaction instanceof MessageComponentInteraction) {
 				return interaction.update({
@@ -51,16 +52,12 @@ export class RadioService {
 		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } =
 			settings;
 
-		const radio = await (firstValueFrom(
-			this._radio
-				.send('RADIO_START', {
-					guildId: interaction.guildId,
-					radioPlaylist,
-					radioVoiceChannelId,
-					radioTextChannelId,
-				})
-				.pipe(take(1)),
-		) as Promise<{ result: string; data: any }>);
+		const radio = await this._sendCommand('RADIO_START', {
+			guildId: interaction.guildId,
+			radioPlaylist,
+			radioVoiceChannelId,
+			radioTextChannelId,
+		});
 
 		if (!radio) {
 			const content = `${MESSAGE_PREFIX} Something wen't wrong, try again later!`;
@@ -107,13 +104,9 @@ export class RadioService {
 	}
 
 	async stop(interaction: CommandInteraction | MessageComponentInteraction) {
-		await firstValueFrom(
-			this._radio
-				.send('RADIO_STOP', {
-					guildId: interaction.guildId,
-				})
-				.pipe(take(1)),
-		);
+		await this._sendCommand('RADIO_STOP', {
+			guildId: interaction.guildId,
+		});
 
 		const data = {
 			content: `${MESSAGE_PREFIX} Stopped radio!`,
@@ -130,13 +123,9 @@ export class RadioService {
 	}
 
 	async next(interaction: CommandInteraction | MessageComponentInteraction) {
-		const { result } = await firstValueFrom(
-			this._radio
-				.send('RADIO_NEXT', {
-					guildId: interaction.guildId,
-				})
-				.pipe(take(1)),
-		);
+		const { result } = await this._sendCommand('RADIO_NEXT', {
+			guildId: interaction.guildId,
+		});
 
 		const data = {
 			content: `${MESSAGE_PREFIX} Starting the next song!`,
@@ -159,13 +148,9 @@ export class RadioService {
 	async previous(
 		interaction: CommandInteraction | MessageComponentInteraction,
 	) {
-		const { result } = await firstValueFrom(
-			this._radio
-				.send('RADIO_PREVIOUS', {
-					guildId: interaction.guildId,
-				})
-				.pipe(take(1)),
-		);
+		const { result } = await this._sendCommand('RADIO_PREVIOUS', {
+			guildId: interaction.guildId,
+		});
 
 		const data = {
 			content: `${MESSAGE_PREFIX} Starting the next song!`,
@@ -193,14 +178,14 @@ export class RadioService {
 		interaction: CommandInteraction | MessageComponentInteraction,
 		page: number,
 	) {
-		const { result, ...rest } = await firstValueFrom(
-			this._radio
-				.send('RADIO_QUEUE', {
-					guildId: interaction.guildId,
-					page,
-				})
-				.pipe(take(1)),
-		);
+		const { result, ...rest } = await this._sendCommand<{
+			queue: KazagumoTrack[];
+			total: number;
+			current: KazagumoTrack;
+		}>('RADIO_QUEUE', {
+			guildId: interaction.guildId,
+			page,
+		});
 
 		if (result === 'NOT_PLAYING') {
 			if (interaction instanceof MessageComponentInteraction) {
@@ -271,5 +256,18 @@ export class RadioService {
 			components,
 			ephemeral: true,
 		});
+	}
+
+	private async _sendCommand<T = { data: any }>(command: string, data: any) {
+		try {
+			const result = await (firstValueFrom(
+				this._radio.send(command, data).pipe(take(1), timeout(5000)),
+			) as Promise<T & { result: string }>);
+
+			return result;
+		} catch (e) {
+			this._logger.error(e);
+			return null;
+		}
 	}
 }

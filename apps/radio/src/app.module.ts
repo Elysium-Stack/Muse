@@ -8,6 +8,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
 import { RadioController } from './controllers/radio.controller';
 import { AppEvents } from './events/app.events';
+import { MusicEvents } from './events/music.events';
 import { botMetrics } from './metrics/bot.metrics';
 import { RadioService } from './services/radio.service';
 
@@ -33,6 +34,7 @@ import { RadioService } from './services/radio.service';
 	providers: [
 		RadioService,
 		AppEvents,
+		MusicEvents,
 
 		// prometheus
 		...botMetrics,

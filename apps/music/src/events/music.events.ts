@@ -16,32 +16,32 @@ export class MusicEvents implements OnModuleInit {
 	}
 
 	@OnEvent('music.connected')
-	async handleMusicConnected(data: LavalinkMusicEvent) {
+	async handleMusicConnected({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we connected');
 		this._muse.emit('MUSIC_CONNECTED', {
 			instance: parseInt(process.env.INSTANCE_NUMBER),
-			guildId: data.guildId,
-			voiceChannelId: data.voiceChannelId,
+			guildId: player.guildId,
+			voiceChannelId: player.voiceId,
 		});
 	}
 
 	@OnEvent('music.state')
-	async handleMusicStateChange(data: LavalinkMusicEvent) {
+	async handleMusicStateChange({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we changed state');
 		this._muse.emit('MUSIC_STATE_CHANGED', {
 			instance: parseInt(process.env.INSTANCE_NUMBER),
-			guildId: data.guildId,
-			state: data.state,
+			guildId: player.guildId,
+			state: player.state,
 		});
 	}
 
 	@OnEvent('music.disconnected')
-	handleMusicDisconnected(data: LavalinkMusicEvent) {
+	handleMusicDisconnected({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we disconnected');
 		this._muse.emit('MUSIC_DISCONNECTED', {
 			instance: parseInt(process.env.INSTANCE_NUMBER),
-			guildId: data.guildId,
-			voiceChannelId: data.voiceChannelId,
+			guildId: player.guildId,
+			voiceChannelId: player.voiceId,
 		});
 	}
 }

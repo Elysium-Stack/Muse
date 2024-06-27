@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron } from '@nestjs/schedule';
 import { DeveloperLogService, MESSAGE_PREFIX } from '@util';
-import { ChannelType, Client, Events, Snowflake, VoiceState } from 'discord.js';
+import { ChannelType, Client, Events, VoiceState } from 'discord.js';
 import {
 	Kazagumo,
 	KazagumoPlayer,
@@ -84,11 +84,7 @@ export class MusicLavalinkService extends Kazagumo {
 				this._states[player.guildId] = player.state;
 				this._eventEmitter.emit(
 					'music.state',
-					new LavalinkMusicEvent(
-						player.guildId,
-						player.voiceId,
-						player.state,
-					),
+					new LavalinkMusicEvent(player, 'checkStates'),
 				);
 			}
 		}
@@ -180,7 +176,7 @@ export class MusicLavalinkService extends Kazagumo {
 		this.createPlayerMessage(player, track);
 		this._eventEmitter.emit(
 			'music.connected',
-			new LavalinkMusicEvent(player.guildId, player.voiceId),
+			new LavalinkMusicEvent(player, 'playerStart', { track }),
 		);
 	}
 
@@ -194,9 +190,10 @@ export class MusicLavalinkService extends Kazagumo {
 
 	private async _onPlayerDestroy(player: KazagumoPlayer) {
 		this._logger.log(`Player destroyed for ${player.guildId}`);
+
 		this._eventEmitter.emit(
 			'music.disconnected',
-			new LavalinkMusicEvent(player.guildId, player.voiceId),
+			new LavalinkMusicEvent(player, 'playerDestroy'),
 		);
 		player.data
 			.get('message')
@@ -214,36 +211,9 @@ export class MusicLavalinkService extends Kazagumo {
 			} ${JSON.stringify(data)}`,
 		);
 
-		if (data.byRemote && player.data.get('radio')) {
-			this._logger.warn(
-				"Resuming the closed player because it's the radio",
-			);
-			await new Promise((resolve) =>
-				setTimeout(async () => {
-					player.setVoiceChannel(player.voiceId as Snowflake);
-					await player.play();
-
-					const channel = await this._client.channels.fetch(
-						player.textId!,
-					);
-					if (channel?.type !== ChannelType.GuildText) {
-						return;
-					}
-
-					await channel.send({
-						content: `${MESSAGE_PREFIX} Radio reconnected. If this was a mistake, please stop the radio manually.`,
-					});
-
-					resolve(player);
-				}, 1000),
-			);
-
-			return;
-		}
-
 		this._eventEmitter.emit(
 			'music.disconnected',
-			new LavalinkMusicEvent(player.guildId, player.voiceId),
+			new LavalinkMusicEvent(player, 'playerClosed', data),
 		);
 	}
 
@@ -274,30 +244,6 @@ export class MusicLavalinkService extends Kazagumo {
 		this._logger.error(`Player stuck\n ${JSON.stringify({ data })}`);
 
 		const channel = await this._client.channels.fetch(player.textId!);
-		player.destroy();
-
-		if (channel?.type !== ChannelType.GuildText) {
-			return;
-		}
-
-		await this._developerLog.sendError(
-			data,
-			`Player got stuck, please try again.`,
-			'MusicLavalinkService',
-			player.guildId,
-		);
-		await channel.send({
-			content: `${MESSAGE_PREFIX} Player got stuck, please try again.`,
-		});
-	}
-
-	private async _onPlayerException(
-		player: KazagumoPlayer,
-		data: TrackExceptionEvent,
-	) {
-		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
-
-		const channel = await this._client.channels.fetch(player.textId!);
 
 		let skipping = true;
 		if (!player.queue.size && player.loop === 'none') {
@@ -312,8 +258,42 @@ export class MusicLavalinkService extends Kazagumo {
 			player.destroy();
 		}
 
+		await this._developerLog.sendError(
+			data,
+			`Player got stuck, ${
+				skipping ? 'Skipping song.' : 'please try again.'
+			}`,
+			'MusicLavalinkService',
+			player.guildId,
+		);
+
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
+		}
+		await channel.send({
+			content: `${MESSAGE_PREFIX} Player got stuck, ${
+				skipping ? 'Skipping song.' : 'please try again.'
+			}`,
+		});
+	}
+
+	private async _onPlayerException(
+		player: KazagumoPlayer,
+		data: TrackExceptionEvent,
+	) {
+		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
+
+		let skipping = true;
+		if (!player.queue.size && player.loop === 'none') {
+			skipping = false;
+		}
+
+		if (skipping) {
+			player.skip();
+		}
+
+		if (!skipping) {
+			player.destroy();
 		}
 
 		await this._developerLog.sendError(

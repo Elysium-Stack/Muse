@@ -1,9 +1,9 @@
-import { PlayerState } from 'kazagumo';
+import { KazagumoPlayer } from 'kazagumo';
 
 export class LavalinkMusicEvent {
 	constructor(
-		public guildId: string,
-		public voiceChannelId: string | null,
-		public state?: PlayerState,
+		public player: KazagumoPlayer,
+		public source: string,
+		public data?: any,
 	) {}
 }

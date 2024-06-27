@@ -139,11 +139,16 @@ export class MusicInstancesService implements OnModuleInit {
 			return null;
 		}
 
-		const result = await (firstValueFrom(
-			_instance.send(command, data).pipe(take(1), timeout(5000)),
-		) as Promise<T & { result: string }>);
+		try {
+			const result = await (firstValueFrom(
+				_instance.send(command, data).pipe(take(1), timeout(5000)),
+			) as Promise<T & { result: string }>);
 
-		return result;
+			return result;
+		} catch (e) {
+			this._logger.error(e);
+			return null;
+		}
 	}
 
 	async updateState(instance: number, guildId: string, state: PlayerState) {

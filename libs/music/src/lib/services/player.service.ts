@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChannelType, Client } from 'discord.js';
-import { MusicLavalinkService } from './lavalink.service';
 import { KazagumoTrack } from 'kazagumo';
+import { MusicLavalinkService } from './lavalink.service';
 
 @Injectable()
 export class MusicPlayerService {
@@ -68,6 +68,7 @@ export class MusicPlayerService {
 		});
 		player.data.set('previousVolume', 50);
 		player.data.set('radio', radio);
+		player.data.set('auto-restart', radio);
 		player.data.set('no-dc', process.env.NODE_ENV === 'development');
 
 		if (player.queue.size > 0) {
@@ -75,9 +76,7 @@ export class MusicPlayerService {
 		}
 
 		for (const track of result.tracks) {
-			// @ts-ignore
-			const newTrack = new KazagumoTrack(track.getRaw(), track.requester);
-			newTrack.thumbnail = track.thumbnail;
+			const newTrack = this._transformTrack(track);
 			player.queue.add(newTrack);
 		}
 
@@ -107,6 +106,7 @@ export class MusicPlayerService {
 		}
 
 		this._logger.verbose(`Stopping song for ${guildId}`);
+		player.data.set('auto-restart', false);
 		player.destroy();
 		return {
 			result: 'STOPPED',
@@ -326,5 +326,13 @@ export class MusicPlayerService {
 			current,
 			total: player.queue.totalSize,
 		};
+	}
+
+	private _transformTrack(track: KazagumoTrack) {
+		// @ts-ignore
+		const newTrack = new KazagumoTrack(track.getRaw(), track.requester);
+		newTrack.thumbnail = track.thumbnail;
+
+		return newTrack;
 	}
 }
