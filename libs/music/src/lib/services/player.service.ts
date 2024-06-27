@@ -332,7 +332,6 @@ export class MusicPlayerService {
 	}
 
 	private _transformTrack(track: KazagumoTrack) {
-		console.log(track.author, track.requester);
 		// @ts-ignore
 		const newTrack = new KazagumoTrack(
 			track.getRaw()._raw,
