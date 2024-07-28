@@ -16,7 +16,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - lavalink
     radio:
         build:
             context: .
@@ -30,7 +29,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - lavalink
     music:
         build:
             context: .
@@ -44,7 +42,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - lavalink
     music2:
         build:
             context: .
@@ -58,7 +55,6 @@ services:
             - ./:/opt/app
         depends_on:
             - db
-            - lavalink
     dashboard:
         build:
             context: .
