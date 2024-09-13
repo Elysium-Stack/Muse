@@ -68,14 +68,31 @@ export class FunAnimalCommands {
 		return this._runType(interaction, 'bird', 'birb');
 	}
 
+	@SlashCommand({
+		name: 'froag',
+		description: 'Send a random froag',
+	})
+	public async froag(@Context() [interaction]: SlashCommandContext) {
+		return this._runType(interaction, 'frog', 'froag');
+	}
+
 	private async _runType(
 		interaction: ChatInputCommandInteraction,
-		type: AnimelType,
+		type: AnimelType | 'frog',
 		friendlyName: string,
 	) {
 		this._logger.debug(`Sending a random ${type} image`);
 		await interaction.deferReply();
-		const image = await this._animal.getRandom(type);
+
+		let image: string;
+
+		if (type !== 'frog') {
+			image = await this._animal.getRandom(type);
+		}
+
+		if (type === 'frog') {
+			image = await this._animal.getRandomFrog();
+		}
 
 		if (!image) {
 			return interaction.editReply({
