@@ -24,6 +24,7 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
+
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
@@ -112,7 +113,7 @@ export class FeedbackModeratorCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('page') page: string,
 	) {
-		const pageInt = parseInt(page, 10);
+		const pageInt = Number.parseInt(page, 10);
 		return this._listTopics(interaction, pageInt);
 	}
 
@@ -296,7 +297,7 @@ export class FeedbackModeratorCommands {
 			);
 		}
 
-		if (buttons.length) {
+		if (buttons.length > 0) {
 			components.push(
 				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
 			);

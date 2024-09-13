@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { MessageTriggerSettingsInterface } from '../types/settings.interface';
 import {
 	MESSAGE_TRIGGER_EMBED_COLOR,
@@ -133,7 +134,7 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 	async ignoreChannel(
 		guildId: string,
 		channelId: string,
-		value: boolean = true,
+		value = true,
 	) {
 		const settings = await this.get(guildId);
 
@@ -144,17 +145,13 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 		const { ignoredChannelIds } = settings;
 		const index = ignoredChannelIds.indexOf(channelId);
 
-		if (!value) {
-			if (index >= 0) {
+		if (!value && index >= 0) {
 				ignoredChannelIds.splice(index, 1);
 			}
-		}
 
-		if (value) {
-			if (index === -1) {
+		if (value && index === -1) {
 				ignoredChannelIds.push(channelId);
 			}
-		}
 
 		return this.set(guildId, 'ignoredChannelIds', ignoredChannelIds);
 	}

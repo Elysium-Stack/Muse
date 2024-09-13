@@ -1,5 +1,6 @@
 import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
+
 import { MessageTriggerGeneralCommands } from './commands/general.commands';
 import { MessageTriggerSettingsCommands } from './commands/settings.commands';
 import { MessageTriggerMessageEvents } from './events/message.events';

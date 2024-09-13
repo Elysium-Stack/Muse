@@ -1,10 +1,11 @@
+import { ShutdownSignal } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { createLogger } from '@util';
+
 import { MuseModule } from './muse.module';
 
-import { ShutdownSignal } from '@nestjs/common';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
 	const app = await NestFactory.create(MuseModule, {

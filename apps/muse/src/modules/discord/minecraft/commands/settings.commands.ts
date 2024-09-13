@@ -42,6 +42,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { MinecraftCommandDecorator } from '../minecraft.decorator';
 import { MinecraftSettingsService } from '../services/settings.service';
 import { MinecraftSettingsInterface } from '../types/settings.interface';
@@ -186,7 +187,7 @@ export class MinecraftSettingsCommands {
 	) {
 		const connectUrl = interaction.fields.getTextInputValue('connectUrl');
 		const bedrockPort = interaction.fields.getTextInputValue('bedrockPort');
-		if (bedrockPort.length && isNaN(parseInt(bedrockPort, 10))) {
+		if (bedrockPort.length > 0 && isNaN(Number.parseInt(bedrockPort, 10))) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Bedrock port must be a number.`,
 				components: [this._getBackButtonRow()],
@@ -209,7 +210,7 @@ export class MinecraftSettingsCommands {
 		@Ctx() [interaction]: ModalContext,
 	) {
 		const rconPort = interaction.fields.getTextInputValue('rconPort');
-		if (isNaN(parseInt(rconPort, 10))) {
+		if (isNaN(Number.parseInt(rconPort, 10))) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Port must be a number.`,
 				components: [this._getBackButtonRow()],
@@ -241,7 +242,7 @@ export class MinecraftSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Minecraft Chat Channel changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -258,7 +259,7 @@ export class MinecraftSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -284,7 +285,8 @@ export class MinecraftSettingsCommands {
 					),
 				];
 				break;
-			case 'bedrockEnabled':
+			}
+			case 'bedrockEnabled': {
 				readableOption = 'Bedrock enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -310,7 +312,8 @@ export class MinecraftSettingsCommands {
 					),
 				];
 				break;
-			case 'requiredRoleId':
+			}
+			case 'requiredRoleId': {
 				readableOption = 'Required role';
 				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
@@ -327,7 +330,8 @@ export class MinecraftSettingsCommands {
 					),
 				];
 				break;
-			case 'chatChannelId':
+			}
+			case 'chatChannelId': {
 				readableOption = 'Chat Channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -347,7 +351,8 @@ export class MinecraftSettingsCommands {
 					),
 				];
 				break;
-			case 'connectionInformation':
+			}
+			case 'connectionInformation': {
 				readableOption = 'Connection Information';
 				currentValue = settings?.[option] ?? 'none';
 				const modal = new ModalBuilder()
@@ -379,7 +384,8 @@ export class MinecraftSettingsCommands {
 						),
 					]);
 				return interaction.showModal(modal);
-			case 'rconConnection':
+			}
+			case 'rconConnection': {
 				readableOption = 'RCON Connection';
 				currentValue = settings?.[option] ?? 'none';
 				const rconModal = new ModalBuilder()
@@ -419,6 +425,7 @@ export class MinecraftSettingsCommands {
 						),
 					]);
 				return interaction.showModal(rconModal);
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

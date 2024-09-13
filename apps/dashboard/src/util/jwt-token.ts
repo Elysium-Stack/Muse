@@ -16,4 +16,4 @@ export const decodeToken = (token: string) =>
 	JSON.parse(atob(token.split('.')[1]));
 
 export const calculateExpired = (exp: number) =>
-	Math.floor(new Date().getTime() / 1000) >= exp;
+	Math.floor(Date.now() / 1000) >= exp;

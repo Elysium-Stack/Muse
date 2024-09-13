@@ -3,6 +3,7 @@ import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PrismaService, UsersEntity } from '@prisma';
 import { Client, OAuth2Guild, PermissionsBitField } from 'discord.js';
+
 import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { DiscordApiService } from '../services/api.service';
 import { BotOAuth2GuildDTO } from '../types/guild.type';

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChannelType, Client, User } from 'discord.js';
 import { KazagumoTrack } from 'kazagumo';
+
 import { MusicLavalinkService } from './lavalink.service';
 
 @Injectable()
@@ -56,7 +57,7 @@ export class MusicPlayerService {
 			};
 		}
 
-		if (!result.tracks.length) {
+		if (result.tracks.length === 0) {
 			return {
 				result: 'NO_TRACKS_FOUND',
 			};
@@ -127,7 +128,7 @@ export class MusicPlayerService {
 			};
 		}
 
-		if (!player.queue.size && player.loop === 'none') {
+		if (player.queue.size === 0 && player.loop === 'none') {
 			return {
 				result: 'EMPTY_QUEUE',
 			};

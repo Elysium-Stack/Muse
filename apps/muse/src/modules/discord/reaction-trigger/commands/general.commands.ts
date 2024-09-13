@@ -28,6 +28,7 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
+
 import { ReactionTriggerEnabledGuard } from '../guards/enabled.guard';
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerGeneralService } from '../services/general.service';
@@ -120,7 +121,7 @@ export class ReactionTriggerGeneralCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('page') page: string,
 	) {
-		const pageInt = parseInt(page, 10);
+		const pageInt = Number.parseInt(page, 10);
 		return this._listTriggers(interaction, pageInt);
 	}
 
@@ -257,7 +258,7 @@ export class ReactionTriggerGeneralCommands {
 					value: triggers
 						.map(
 							(t) =>
-								`${t.match !== 'any' ? `[${t.match}] ` : ''}${
+								`${t.match === 'any' ? '' : `[${t.match}] `}${
 									t.phrase
 								}`,
 						)
@@ -293,7 +294,7 @@ export class ReactionTriggerGeneralCommands {
 			);
 		}
 
-		if (buttons.length) {
+		if (buttons.length > 0) {
 			components.push(
 				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
 			);

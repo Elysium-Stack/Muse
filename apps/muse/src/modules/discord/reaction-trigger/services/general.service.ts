@@ -3,6 +3,7 @@ import { PrismaService } from '@prisma';
 import { TriggerMatch } from '@prisma/client';
 import { escapeRegExp, resolveEmoji } from '@util';
 import { Client, Message } from 'discord.js';
+
 import { ReactionTriggerSettingsService } from './settings.service';
 @Injectable()
 export class ReactionTriggerGeneralService {
@@ -95,7 +96,7 @@ export class ReactionTriggerGeneralService {
 		}
 
 		const { ignoredChannelIds } = settings;
-		if (ignoredChannelIds.indexOf(message.channelId) >= 0) {
+		if (ignoredChannelIds.includes(message.channelId)) {
 			return;
 		}
 
@@ -120,20 +121,23 @@ export class ReactionTriggerGeneralService {
 			let test = false;
 
 			switch (match) {
-				case 'word':
+				case 'word': {
 					regexInstance = new RegExp(
 						`\\b${escapeRegExp(phrase)}\\b`,
 						'gim',
 					);
 					test = regexInstance.test(message.cleanContent);
 					break;
-				case 'message':
+				}
+				case 'message': {
 					test = phrase === message.cleanContent;
 					break;
-				default:
+				}
+				default: {
 					regexInstance = new RegExp(escapeRegExp(phrase), 'gim');
 					test = regexInstance.test(message.cleanContent);
 					break;
+				}
 			}
 
 			if (!test) {
@@ -143,14 +147,14 @@ export class ReactionTriggerGeneralService {
 			this._logger.debug(
 				`Got a match for ${regexInstance} on ${message.guildId}, adding emote with id ${emojiId}`,
 			);
-			await message.react(emojiId).catch((err) => {
-				if (err.message === 'Unknown Emoji') {
+			await message.react(emojiId).catch((error) => {
+				if (error.message === 'Unknown Emoji') {
 					return this._logger.warn(
 						`Found a stray reaction trigger with id "${id}" for emoji ${emojiId}`,
 					);
 				}
 
-				throw err;
+				throw error;
 			});
 		}
 	}

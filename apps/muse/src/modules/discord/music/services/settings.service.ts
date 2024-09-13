@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_EMBED_COLOR, MUSIC_SETTINGS_CHOICES } from '../util/constants';
 @Injectable()

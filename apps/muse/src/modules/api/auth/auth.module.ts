@@ -2,6 +2,7 @@ import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+
 import { AuthSharedModule } from './auth.shared.module';
 import { AuthController } from './controllers/auth.controller';
 import { AccessTokenStrategy } from './services/access-token.strategy';

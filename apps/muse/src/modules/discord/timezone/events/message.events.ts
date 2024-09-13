@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
 import { TimezoneSettingsService } from '../services';
 import { TimezoneGeneralService } from '../services/general.service';
 
@@ -27,14 +28,14 @@ export class TimezoneMessageEvents {
 		}
 
 		const { ignoredChannelIds } = settings;
-		if (ignoredChannelIds.indexOf(message.channelId) >= 0) {
+		if (ignoredChannelIds.includes(message.channelId)) {
 			return;
 		}
 
 		const hourRegex =
-			/(?:\W|^)(\d{1,2})(?:\s*(A\.M\.|P\.M\.|AM|PM))(?:\W|$)/gim;
+			/(?:\W|^)(\d{1,2})\s*(a\.m\.|p\.m\.|am|pm)(?:\W|$)/gim;
 		const hourMinuteRegex =
-			/(?:\W|^)((?:[0-1]{0,1}[0-9])|(?:2[0-3]))(?:\:|\：|\.)((?:[0-5][0-9]))(?:\s*(A\.M\.|P\.M\.|AM|PM))?(?:\W|$)/gim;
+			/(?:\W|^)((?:[01]{0,1}\d)|(?:2[0-3]))[.:：]((?:[0-5]\d))(?:\s*(a\.m\.|p\.m\.|am|pm))?(?:\W|$)/gim;
 
 		const hourMinuteMatch = hourMinuteRegex.exec(message.cleanContent);
 
@@ -45,15 +46,15 @@ export class TimezoneMessageEvents {
 		if (hourMinuteMatch?.length) {
 			const [_, matchedHour, matchedMinutes, matchedTimeindication] =
 				hourMinuteMatch;
-			hour = parseInt(matchedHour);
-			minutes = parseInt(matchedMinutes);
+			hour = Number.parseInt(matchedHour);
+			minutes = Number.parseInt(matchedMinutes);
 			timeIndication = matchedTimeindication?.toLowerCase();
 		}
 
 		const hourMatch = hourRegex.exec(message.cleanContent);
 		if (!hourMinuteMatch?.length && hourMatch?.length) {
 			const [_, matchedHour, matchedTimeindication] = hourMatch;
-			hour = parseInt(matchedHour);
+			hour = Number.parseInt(matchedHour);
 			timeIndication = matchedTimeindication?.toLowerCase();
 		}
 

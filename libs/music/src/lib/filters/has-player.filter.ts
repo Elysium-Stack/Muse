@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { interactionReply } from '@util';
 import { SlashCommandContext } from 'necord';
+
 import { HasNoPlayerException } from '../util/errors';
 @Catch(HasNoPlayerException)
 export class HasNoPlayerExceptionFilter implements ExceptionFilter {

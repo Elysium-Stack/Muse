@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ModuleNotEnabledException } from '@util/errors';
 import { NecordExecutionContext } from 'necord';
+
 import { BookwormSettingsService } from '../services/settings.service';
 
 @Injectable()

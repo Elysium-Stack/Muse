@@ -31,6 +31,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleSettingsService } from '../services/settings.service';
 import { RequestRoleSettingsInterface } from '../types/settings.interface';
@@ -146,7 +147,7 @@ export class RequestRoleSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Request role log channel has been changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -164,7 +165,7 @@ export class RequestRoleSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -190,7 +191,8 @@ export class RequestRoleSettingsCommands {
 					),
 				];
 				break;
-			case 'logChannelId':
+			}
+			case 'logChannelId': {
 				readableOption = 'Message delete log channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -208,6 +210,7 @@ export class RequestRoleSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

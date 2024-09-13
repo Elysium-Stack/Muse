@@ -1,4 +1,5 @@
 import { Logger, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { EnabledExceptionFilter, MESSAGE_PREFIX } from '@util';
 import {
 	Context,
 	Options,
@@ -6,12 +7,11 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
-import { TimezoneCommandDecorator } from '../timezone.decorator';
 
-import { EnabledExceptionFilter, MESSAGE_PREFIX } from '@util';
 import { TimezoneEnabledGuard } from '../guards/enabled.guard';
 import { TimezoneAutocompleteInterceptor } from '../interceptors/timezone.interceptor';
 import { TimezoneGeneralService } from '../services/general.service';
+import { TimezoneCommandDecorator } from '../timezone.decorator';
 import { TIMEZONE_DATA } from '../util/constants';
 
 class TimezoneSetOptions {
@@ -48,7 +48,7 @@ export class TimezoneSetCommands {
 			});
 		}
 
-		if (TIMEZONE_DATA.indexOf(timezone) === -1) {
+		if (!TIMEZONE_DATA.includes(timezone)) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} This is not a known timezone, try again later`,
 				ephemeral: true,

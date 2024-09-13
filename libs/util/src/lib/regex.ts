@@ -1,2 +1,2 @@
 export const escapeRegExp = (str: string) =>
-	str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // $& means the whole matched string
+	str.replaceAll(/[$()*+./?[\\\]^{|}-]/g, String.raw`\$&`); // $& means the whole matched string

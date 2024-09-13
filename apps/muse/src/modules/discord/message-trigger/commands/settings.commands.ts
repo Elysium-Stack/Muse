@@ -33,6 +33,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { MessageTriggerCommandDecorator } from '../message-trigger.decorator';
 import { MessageTriggerSettingsService } from '../services/settings.service';
 import { MessageTriggerSettingsInterface } from '../types/settings.interface';
@@ -228,7 +229,7 @@ export class MessageTriggerSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Message trigger ignored channels has been changed to:${
-				ids.length
+				ids.length > 0
 					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
 					: ' None'
 			}`,
@@ -248,7 +249,7 @@ export class MessageTriggerSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -274,7 +275,8 @@ export class MessageTriggerSettingsCommands {
 					),
 				];
 				break;
-			case 'ignoredChannelIds':
+			}
+			case 'ignoredChannelIds': {
 				readableOption = 'Ignored channels';
 				currentValue = settings?.[option]?.length
 					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
@@ -296,6 +298,7 @@ export class MessageTriggerSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

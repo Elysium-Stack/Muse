@@ -1,6 +1,7 @@
 import { Controller, Logger } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { PlayerState } from 'kazagumo';
+
 import { MusicInstancesService } from '../services/instances.service';
 
 @Controller()

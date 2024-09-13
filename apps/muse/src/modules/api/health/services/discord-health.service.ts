@@ -23,14 +23,14 @@ export class DiscordHealthService extends HealthIndicator {
 
 			return {
 				ping: {
-					status: ping !== -1 ? 'up' : 'down',
+					status: ping === -1 ? 'down' : 'up',
 				},
 				status: {
 					status: status ? 'up' : 'down',
 				},
 			};
-		} catch (e) {
-			throw new HealthCheckError('Discord Health check failed', e);
+		} catch (error) {
+			throw new HealthCheckError('Discord Health check failed', error);
 		}
 	}
 }

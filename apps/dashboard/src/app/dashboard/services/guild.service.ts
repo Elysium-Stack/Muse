@@ -34,7 +34,7 @@ export class DashboardGuildService {
 	);
 
 	constructor() {
-		if (!this.guilds$().length) {
+		if (this.guilds$().length === 0) {
 			this.loadGuilds();
 		}
 

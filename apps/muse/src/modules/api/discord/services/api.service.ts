@@ -3,6 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
+
 import { DISCORD_API_URL } from '../utils/constants';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class DiscordApiService {
 	): Promise<T> {
 		const { accessToken, refreshToken } = await this._getTokens(userId);
 
-		let url: string = '';
+		let url = '';
 		let config: AxiosRequestConfig = {};
 
 		if (typeof request === 'string') {
@@ -33,16 +34,16 @@ export class DiscordApiService {
 
 		const { status, data } = await firstValueFrom(
 			this._http.request({
-				...(config ?? {}),
+				...config,
 				url: `${DISCORD_API_URL}${url}`,
 				responseType: 'json',
 				headers: {
-					...(config.headers ?? {}),
+					...config.headers,
 					Authorization: `Bearer ${accessToken}`,
 					Accept: 'application/json',
 				},
 			}),
-		).catch((e) => this._handleFourOhOne(e));
+		).catch((error) => this._handleFourOhOne(error));
 
 		if (status === 401) {
 			await this._refreshTokens(userId, refreshToken);
@@ -87,7 +88,7 @@ export class DiscordApiService {
 				headers: { 'Content-Type': 'multipart/form-data' },
 				data: formData,
 			}),
-		).catch((e) => this._handleFourOhOne(e));
+		).catch((error) => this._handleFourOhOne(error));
 
 		if (status === 401) {
 			throw new ForbiddenException('Access Denied');

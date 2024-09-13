@@ -36,6 +36,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
+
 import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleGeneralService } from '../services';
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
@@ -101,7 +102,7 @@ export class RequestRoleModeratorCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('page') page: string,
 	) {
-		const pageInt = parseInt(page, 10);
+		const pageInt = Number.parseInt(page, 10);
 		return this._listEntries(interaction, pageInt);
 	}
 
@@ -223,7 +224,7 @@ export class RequestRoleModeratorCommands {
 		const parsedIds = ids.filter((i) => typeof i === 'string') as string[];
 
 		if (parsedIds?.length) {
-			const parsedId = parseInt(id, 10);
+			const parsedId = Number.parseInt(id, 10);
 			await this._requestRole.setRolesById(parsedId, parsedIds);
 		}
 
@@ -344,7 +345,7 @@ export class RequestRoleModeratorCommands {
 			);
 		}
 
-		if (buttons.length) {
+		if (buttons.length > 0) {
 			components.push(
 				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
 			);

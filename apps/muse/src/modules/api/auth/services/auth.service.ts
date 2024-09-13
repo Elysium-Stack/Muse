@@ -4,6 +4,7 @@ import { HealthIndicator } from '@nestjs/terminus';
 import { PrismaService } from '@prisma';
 import * as argon2 from 'argon2';
 import { User } from 'discord.js';
+
 import { DiscordApiService } from '../../discord/services';
 import { avatarIdToString } from '../../discord/utils/avatar-id-to-string';
 import { DiscordPayload } from '../types/discord-payload.type';

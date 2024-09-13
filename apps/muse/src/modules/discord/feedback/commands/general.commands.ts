@@ -23,6 +23,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
 @FeedbackCommandDecorator()
@@ -75,7 +76,7 @@ export class FeedbackGeneralCommands {
 
 		const topic = await this._feedback.getTopicById(
 			interaction.guildId!,
-			parseInt(topicId, 10),
+			Number.parseInt(topicId, 10),
 		);
 
 		if (!topic) {

@@ -38,6 +38,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { BookwormCommandDecorator } from '../bookworm.decorator';
 import { BookwormSettingsService } from '../services/settings.service';
 import { BookwormSettingsInterface } from '../types/settings.interface';
@@ -207,7 +208,7 @@ export class BookwormSettingsCommands {
 		@Context() [interaction]: StringSelectContext,
 		@SelectedStrings() [selected]: string[],
 	) {
-		const parsed = parseInt(selected, 10);
+		const parsed = Number.parseInt(selected, 10);
 
 		if (isNaN(parsed)) {
 			return interaction.update({
@@ -218,9 +219,9 @@ export class BookwormSettingsCommands {
 
 		await this._settings.set(interaction.guildId!, 'dailyHour', parsed);
 
-		const time = !isNaN(parsed)
-			? HOUR_OPTIONS.find((h) => h.value === parsed)?.name ?? 'none'
-			: 'none';
+		const time = isNaN(parsed)
+			? 'none'
+			: HOUR_OPTIONS.find((h) => h.value === parsed)?.name ?? 'none';
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm daily hour has been changed to \`${time}\``,
@@ -240,7 +241,7 @@ export class BookwormSettingsCommands {
 
 		switch (option) {
 			case 'enabled':
-			case 'dailyEnabled':
+			case 'dailyEnabled': {
 				readableOption =
 					option === 'enabled' ? 'Enabled' : 'Daily enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
@@ -267,8 +268,9 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
+			}
 			case 'channelId':
-			case 'dailyChannelId':
+			case 'dailyChannelId': {
 				readableOption =
 					option === 'channelId' ? 'Channel' : 'Daily channel';
 				currentValue = settings?.[option]
@@ -287,7 +289,8 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
-			case 'pingRoleId':
+			}
+			case 'pingRoleId': {
 				readableOption = 'Ping role';
 				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
@@ -304,15 +307,16 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
-			case 'dailyHour':
+			}
+			case 'dailyHour': {
 				readableOption = 'Daily hour';
-				currentValue = !isNaN(settings![option])
-					? `\`${
+				currentValue = isNaN(settings![option])
+					? 'none'
+					: `\`${
 							HOUR_OPTIONS.find(
 								(h) => h.value === settings?.[option],
 							)?.name ?? '-'
-					  }\``
-					: 'none';
+					  }\``;
 				components = [
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 						createHoursSelect(
@@ -321,6 +325,7 @@ export class BookwormSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

@@ -7,6 +7,7 @@ import { PrismaModule } from '@prisma';
 import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
+
 import { MusicLoopCommands } from './commands/loop.command';
 import { MusicNextCommands } from './commands/next.command';
 import { MusicPauseCommands } from './commands/pause.command';
@@ -24,9 +25,9 @@ import { botMetrics } from './metrics/bot.metrics';
 	imports: [
 		NecordModule.forRoot({
 			development:
-				process.env.NODE_ENV !== 'production'
-					? process.env.DEVELOPMENT_SERVER_IDS!.split(',')
-					: false,
+				process.env.NODE_ENV === 'production'
+					? false
+					: process.env.DEVELOPMENT_SERVER_IDS!.split(','),
 			skipRegistration: true,
 			token: process.env[
 				`MUSIC_${process.env.INSTANCE_NUMBER}_DISCORD_TOKEN`

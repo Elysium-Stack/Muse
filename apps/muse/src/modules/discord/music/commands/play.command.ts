@@ -12,6 +12,7 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
+
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
 

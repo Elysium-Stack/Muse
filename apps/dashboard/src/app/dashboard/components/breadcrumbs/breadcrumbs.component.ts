@@ -11,6 +11,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { cssChevronRight } from '@ng-icons/css.gg';
 import { UserService } from 'apps/dashboard/src/services/user.service';
 import { filter, map } from 'rxjs';
+
 import { DashboardPageTitleComponent } from '../page-title/page-title.component';
 
 @Component({
@@ -65,7 +66,7 @@ export class DashboardBreadcrumbsComponent {
 		const splitted = url.split('/');
 		splitted.splice(0, 3);
 
-		if (!splitted.length) {
+		if (splitted.length === 0) {
 			this.segments$.set([]);
 		}
 
@@ -74,7 +75,7 @@ export class DashboardBreadcrumbsComponent {
 				segment === 'music' && splitted.length > 1
 					? './music'
 					: undefined,
-			label: segment.replace(/-/g, ' '),
+			label: segment.replaceAll('-', ' '),
 		}));
 
 		this.segments$.set(segments);

@@ -1,10 +1,10 @@
 export const stringToUuid = (i: string) =>
-	i.substring(0, 8) +
+	i.slice(0, 8) +
 	'-' +
-	i.substring(8, 12) +
+	i.slice(8, 12) +
 	'-' +
-	i.substring(12, 16) +
+	i.slice(12, 16) +
 	'-' +
-	i.substring(16, 20) +
+	i.slice(16, 20) +
 	'-' +
-	i.substring(20);
+	i.slice(20);

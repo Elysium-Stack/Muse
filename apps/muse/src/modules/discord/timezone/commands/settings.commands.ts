@@ -33,6 +33,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { TimezoneSettingsService } from '../services/settings.service';
 import { TimezoneCommandDecorator } from '../timezone.decorator';
 import { TimezoneSettingsInterface } from '../types/settings.interface';
@@ -226,7 +227,7 @@ export class TimezoneSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Timezone ignored channels has been changed to:${
-				ids.length
+				ids.length > 0
 					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
 					: ' None'
 			}`,
@@ -246,7 +247,7 @@ export class TimezoneSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -272,7 +273,8 @@ export class TimezoneSettingsCommands {
 					),
 				];
 				break;
-			case 'ignoredChannelIds':
+			}
+			case 'ignoredChannelIds': {
 				readableOption = 'Ignored channels';
 				currentValue = settings?.[option]?.length
 					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
@@ -294,6 +296,7 @@ export class TimezoneSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

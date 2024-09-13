@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { Message } from 'discord.js';
 import Rcon from 'rcon-ts';
+
 import { stringToUuid } from '../util/string-to-uuid';
+
 import { MinecraftSettingsService } from './settings.service';
 
 @Injectable()
@@ -37,7 +39,7 @@ export class MinecraftGeneralService {
 	async register(guildId, userId, uuid, username, bedrock = false) {
 		const response = await this._sendRcon(
 			guildId,
-			`vcl add ${username.replace(/ /g, '')}`,
+			`vcl add ${username.replaceAll(' ', '')}`,
 		);
 		await this._saveInDB(guildId, userId, uuid, username, bedrock);
 		return response;
@@ -58,7 +60,7 @@ export class MinecraftGeneralService {
 		for (const item of items) {
 			await this._sendRcon(
 				guildId,
-				`vcl remove ${item.username.replace(/ /g, '')}`,
+				`vcl remove ${item.username.replaceAll(' ', '')}`,
 			);
 			await this._prisma.minecraftMapping.delete({
 				where: {
@@ -119,7 +121,7 @@ export class MinecraftGeneralService {
 
 	private _getBedrockData(username: string) {
 		return fetch(
-			this._xuidUrl.replace('{username}', username.replace(/ /g, '')),
+			this._xuidUrl.replace('{username}', username.replaceAll(' ', '')),
 		)
 			.then((res) => res.text())
 			.then((res) => ({
@@ -171,7 +173,7 @@ export class MinecraftGeneralService {
 
 		const client = new Rcon({
 			host: rconHost,
-			port: parseInt(rconPort, 10),
+			port: Number.parseInt(rconPort, 10),
 			password: rconPass,
 			timeout: 2000,
 		});
@@ -180,8 +182,8 @@ export class MinecraftGeneralService {
 			this._logger.log(`Sending rcon command "${command}"`);
 			const response = await client.session((c) => c.send(command));
 			return response;
-		} catch (e) {
-			this._logger.error(e);
+		} catch (error) {
+			this._logger.error(error);
 			return null;
 		}
 	}

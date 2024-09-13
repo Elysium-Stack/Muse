@@ -1,22 +1,28 @@
+import colors = require('colors/safe');
 import { WinstonModule } from 'nest-winston';
 import { format, transports, createLogger as wCreateLogger } from 'winston';
 import LokiTransport from 'winston-loki';
-import colors = require('colors/safe');
 
 const getColor = (level: string) => {
 	switch (level) {
-		case 'error':
+		case 'error': {
 			return colors.red;
-		case 'warn':
+		}
+		case 'warn': {
 			return colors.yellow;
-		case 'info':
+		}
+		case 'info': {
 			return colors.green;
-		case 'debug':
+		}
+		case 'debug': {
 			return colors.magenta;
-		case 'log':
+		}
+		case 'log': {
 			return colors.cyan;
-		default:
+		}
+		default: {
 			return colors.white;
+		}
 	}
 };
 
@@ -29,7 +35,7 @@ export const createLogger = (name: string) => {
 							host: process.env.LOKI_URL,
 							interval: 5,
 							labels: {
-								app: `${name.toLowerCase().replace(/ /g, '-')}${
+								app: `${name.toLowerCase().replaceAll(' ', '-')}${
 									process.env.NODE_ENV === 'production'
 										? ''
 										: '-development'

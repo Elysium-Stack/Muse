@@ -6,6 +6,7 @@ import { PrismaModule } from '@prisma';
 import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
+
 import { RadioController } from './controllers/radio.controller';
 import { AppEvents } from './events/app.events';
 import { MusicEvents } from './events/music.events';
@@ -16,9 +17,9 @@ import { RadioService } from './services/radio.service';
 	imports: [
 		NecordModule.forRoot({
 			development:
-				process.env.NODE_ENV !== 'production'
-					? process.env.DEVELOPMENT_SERVER_IDS!.split(',')
-					: false,
+				process.env.NODE_ENV === 'production'
+					? false
+					: process.env.DEVELOPMENT_SERVER_IDS!.split(','),
 			skipRegistration: true,
 			token: process.env.RADIO_DISCORD_TOKEN!,
 			intents,

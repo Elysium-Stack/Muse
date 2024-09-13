@@ -45,7 +45,7 @@ export class AdminPurgeService {
 			(m) => !m.user.bot && m.joinedTimestamp < timestampXMonthsAgo,
 		);
 
-		if (!members.size) {
+		if (members.size === 0) {
 			this._purgeListMap.delete(guild.id);
 			await channel.send({
 				content: `**${MESSAGE_PREFIX} Purge list result**\nNo inactive members found that joined earlier than ${
@@ -62,7 +62,7 @@ export class AdminPurgeService {
 			timestampXMonthsAgo,
 		);
 
-		if (!inactiveMessages.length) {
+		if (inactiveMessages.length === 0) {
 			this._purgeListMap.delete(guild.id);
 			await channel.send({
 				content: `**${MESSAGE_PREFIX} Purge list result**\nNo inactive members found in given timeframe of ${
@@ -82,8 +82,7 @@ Below you can find a list of all users that were inactive.`,
 				inactiveMessages.map((m) => m.author.id).join(','),
 			);
 			const chunked = [...chunks(inactiveMessages, 100)];
-			for (let i = 0; i < chunked.length; i++) {
-				const chunk = chunked[i];
+			for (const chunk of chunked) {
 				await channel.send({
 					content: `\`\`\`
 ${chunk.map((m) => m.author.id).join(',')}
@@ -92,8 +91,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 			}
 		} else {
 			const chunked = [...chunks(inactiveMessages, 10)];
-			for (let i = 0; i < chunked.length; i++) {
-				const chunk = chunked[i];
+			for (const [i, chunk] of chunked.entries()) {
 				const baseIndex = i * 10 + 1;
 
 				await channel.send({
@@ -134,7 +132,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 			.filter((u) => !!u);
 
 		let count = 0;
-		for (let user of users) {
+		for (const user of users) {
 			let response = true;
 			const guildMember = await guild.members.fetch({
 				user,
@@ -148,7 +146,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 				const dm = await user.createDM(true);
 				await dm
 					.send({
-						content: message.replace(
+						content: message.replaceAll(
 							/{username}/gi,
 							getUsername(user),
 						),
@@ -186,7 +184,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 		const chunked = [...chunks(users, 10)];
 
 		let messages = [];
-		for (let chunk of chunked) {
+		for (const chunk of chunked) {
 			this._logger.log(
 				`Starting on ${chunk.length}: ${chunk
 					.map((c) => c.username)
@@ -240,9 +238,9 @@ ${chunk.map((m) => m.author.id).join(',')}
 					Authorization: userToken,
 				},
 			},
-		).catch(async (err) => {
+		).catch(async (error) => {
 			if (retry === 4) {
-				throw err;
+				throw error;
 			}
 
 			await delay(1000);
@@ -265,7 +263,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 			}
 
 			const delayMs =
-				parseInt(data.headers.get('retry-after'), 10) * 10 + 1000;
+				Number.parseInt(data.headers.get('retry-after'), 10) * 10 + 1000;
 			this._logger.warn(
 				`Received a rate limit for ${getUsername(
 					user,
@@ -286,7 +284,7 @@ ${chunk.map((m) => m.author.id).join(',')}
 
 		const body = await data.json();
 
-		if (!body.messages.length) {
+		if (body.messages.length === 0) {
 			return {
 				id: 'never',
 				author: user,

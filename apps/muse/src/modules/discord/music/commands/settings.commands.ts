@@ -36,6 +36,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { MusicSettingsService } from '../services/settings.service';
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
@@ -176,7 +177,7 @@ export class MusicSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -202,7 +203,8 @@ export class MusicSettingsCommands {
 					),
 				];
 				break;
-			case 'channelId':
+			}
+			case 'channelId': {
 				readableOption = 'Channel';
 				currentValue = settings?.[option]
 					? `<#${settings[option]}>`
@@ -220,7 +222,8 @@ export class MusicSettingsCommands {
 					),
 				];
 				break;
-			case 'djRoleId':
+			}
+			case 'djRoleId': {
 				readableOption = 'DJ role';
 				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
@@ -237,6 +240,7 @@ export class MusicSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

@@ -33,6 +33,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerSettingsService } from '../services/settings.service';
 import { ReactionTriggerSettingsInterface } from '../types/settings.interface';
@@ -226,7 +227,7 @@ export class ReactionTriggerSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
-				ids.length
+				ids.length > 0
 					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
 					: ' None'
 			}`,
@@ -246,7 +247,7 @@ export class ReactionTriggerSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -272,7 +273,8 @@ export class ReactionTriggerSettingsCommands {
 					),
 				];
 				break;
-			case 'ignoredChannelIds':
+			}
+			case 'ignoredChannelIds': {
 				readableOption = 'Ignored channels';
 				currentValue = settings?.[option]?.length
 					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
@@ -294,6 +296,7 @@ export class ReactionTriggerSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

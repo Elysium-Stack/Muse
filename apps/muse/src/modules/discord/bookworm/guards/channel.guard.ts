@@ -7,6 +7,7 @@ import {
 import { IncorrectChannelException } from '@util/errors';
 import { Client, PermissionsBitField } from 'discord.js';
 import { NecordExecutionContext } from 'necord';
+
 import { BookwormSettingsService } from '../services/settings.service';
 
 @Injectable()

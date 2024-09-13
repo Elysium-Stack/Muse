@@ -1,4 +1,5 @@
 import { Client, GuildEmoji } from 'discord.js';
+
 import { emojiIsUnicode } from './emoji-is-unicode';
 
 export const resolveEmoji = (
@@ -21,9 +22,9 @@ export const resolveEmoji = (
 
 	let emojiId = emoji;
 
-	if (emojiId.indexOf(':') >= 0) {
+	if (emojiId.includes(':')) {
 		const splittedEmoji = emoji!.split(':');
-		emojiId = splittedEmoji[splittedEmoji.length - 1].replace(/\>/g, '');
+		emojiId = splittedEmoji.at(-1).replaceAll('>', '');
 	}
 
 	const clientEmoji = _client.emojis.resolve(emojiId);

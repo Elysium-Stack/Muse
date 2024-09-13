@@ -1,6 +1,7 @@
 import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
 import {
 	ParsedTokenResponseDTO,
 	TokensResponseDTO,

@@ -24,8 +24,8 @@ export class LavalinkHealthService extends HealthIndicator {
 					status: status ? 'up' : 'down',
 				},
 			};
-		} catch (e) {
-			throw new HealthCheckError('Lavalink Health check failed', e);
+		} catch (error) {
+			throw new HealthCheckError('Lavalink Health check failed', error);
 		}
 	}
 }

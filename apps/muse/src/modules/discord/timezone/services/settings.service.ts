@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { TimezoneSettingsInterface } from '../types/settings.interface';
 import {
 	TIMEZONE_EMBED_COLOR,
@@ -131,7 +132,7 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 	async ignoreChannel(
 		guildId: string,
 		channelId: string,
-		value: boolean = true,
+		value = true,
 	) {
 		const settings = await this.get(guildId);
 
@@ -142,17 +143,13 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 		const { ignoredChannelIds } = settings;
 		const index = ignoredChannelIds.indexOf(channelId);
 
-		if (!value) {
-			if (index >= 0) {
+		if (!value && index >= 0) {
 				ignoredChannelIds.splice(index, 1);
 			}
-		}
 
-		if (value) {
-			if (index === -1) {
+		if (value && index === -1) {
 				ignoredChannelIds.push(channelId);
 			}
-		}
 
 		return this.set(guildId, 'ignoredChannelIds', ignoredChannelIds);
 	}

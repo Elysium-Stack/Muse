@@ -219,16 +219,16 @@ export class RadioService {
 
 		embed = embed.addFields({
 			name: 'Queue',
-			value: !queue?.length
-				? 'No items in the queue'
-				: queue
+			value: queue?.length
+				? queue
 						.map(
 							(track, index) =>
 								`${index + 2 + (page - 1) * 10}. [${
 									track.title
 								}](${track.uri})`,
 						)
-						.join('\n'),
+						.join('\n')
+				: 'No items in the queue',
 			inline: false,
 		});
 
@@ -265,8 +265,8 @@ export class RadioService {
 			) as Promise<T & { result: string }>);
 
 			return result;
-		} catch (e) {
-			this._logger.error(e);
+		} catch (error) {
+			this._logger.error(error);
 			return null;
 		}
 	}

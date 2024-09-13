@@ -48,7 +48,7 @@ export class DeveloperLogService {
 		}
 
 		if (!(channel instanceof TextChannel)) {
-			throw new Error('Development log channel is not a text channel');
+			throw new TypeError('Development log channel is not a text channel');
 		}
 
 		await channel.send({ embeds: [embed, errorEmbed] });

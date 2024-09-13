@@ -2,7 +2,7 @@ import { SettingsService } from '@muse/settings';
 import { Settings } from '@prisma/client';
 
 export abstract class BaseSettingsService<T> {
-	protected _base: string = '';
+	protected _base = '';
 
 	constructor(protected _settings: SettingsService) {}
 

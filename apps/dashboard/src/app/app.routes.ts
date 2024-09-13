@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { Route } from '@angular/router';
+
 import { AuthenticatedGuard } from '../guards';
 
 export const appRoutes: Route[] = [

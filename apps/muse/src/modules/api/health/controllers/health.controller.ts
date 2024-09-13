@@ -7,6 +7,7 @@ import {
 	HttpHealthIndicator,
 	MemoryHealthIndicator,
 } from '@nestjs/terminus';
+
 import { DiscordHealthService } from '../services/discord-health.service';
 import { LavalinkHealthService } from '../services/lavalink-health.service';
 import { PrismaHealthService } from '../services/prisma-health.service';

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { cssMenuLeft } from '@ng-icons/css.gg';
 import { UserButtonComponent } from 'apps/dashboard/src/components/user-button/user-button.component';
+
 import { DashboardSidebarService } from '../../services/sidebar.service';
 import { DashboardBreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 

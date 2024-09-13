@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-
 import { RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { cssMenuRight } from '@ng-icons/css.gg';
+
 import { environment } from '../../environment/environment';
 import { UserService } from '../../services/user.service';
 import { UserButtonComponent } from '../user-button/user-button.component';

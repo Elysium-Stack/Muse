@@ -64,7 +64,7 @@ export class FunSayCommands {
 	public async onFeedbackModalResponse(@Ctx() [interaction]: ModalContext) {
 		const message = interaction.fields.getTextInputValue('message');
 		let channelId = interaction.fields.getTextInputValue('channelId');
-		let replyId = interaction.fields.getTextInputValue('replyId');
+		const replyId = interaction.fields.getTextInputValue('replyId');
 
 		if (!message?.length) {
 			return interaction.reply({
@@ -79,7 +79,7 @@ export class FunSayCommands {
 
 		const channel = await interaction.guild.channels
 			.fetch(channelId)
-			.catch((err) => null);
+			.catch((error) => null);
 
 		if (!channel) {
 			return interaction.reply({
@@ -107,7 +107,7 @@ export class FunSayCommands {
 
 		const replyMessage = await channel.messages
 			.fetch(replyId)
-			.catch((err) => null);
+			.catch((error) => null);
 
 		if (!replyMessage) {
 			return interaction.reply({

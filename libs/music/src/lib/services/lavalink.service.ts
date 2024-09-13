@@ -19,6 +19,7 @@ import {
 	TrackStuckEvent,
 	WebSocketClosedEvent,
 } from 'shoukaku';
+
 import {
 	createPlayingComponents,
 	createPlayingEmbed,
@@ -246,7 +247,7 @@ export class MusicLavalinkService extends Kazagumo {
 		const channel = await this._client.channels.fetch(player.textId!);
 
 		let skipping = true;
-		if (!player.queue.size && player.loop === 'none') {
+		if (player.queue.size === 0 && player.loop === 'none') {
 			skipping = false;
 		}
 
@@ -284,7 +285,7 @@ export class MusicLavalinkService extends Kazagumo {
 		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
 
 		let skipping = true;
-		if (!player.queue.size && player.loop === 'none') {
+		if (player.queue.size === 0 && player.loop === 'none') {
 			skipping = false;
 		}
 

@@ -15,6 +15,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { BookwormSettingsInterface } from '../types/settings.interface';
 import {
 	BOOKWORM_EMBED_COLOR,

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Events, Message } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
 import {
 	TABLE_FLIP_RECOGNIZERS,
 	TABLE_FLIP_RESPONSES,
@@ -19,7 +20,7 @@ export class FunMessageEvents {
 
 	private _checkTableFlip(message: Message) {
 		for (const check of TABLE_FLIP_RECOGNIZERS) {
-			if (message.content.indexOf(check) >= 0) {
+			if (message.content.includes(check)) {
 				this._logger.log(
 					`Table flip recognized in message ${message.id}, using "${check}".`,
 				);

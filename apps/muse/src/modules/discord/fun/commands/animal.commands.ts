@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MESSAGE_PREFIX } from '@util';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Context, SlashCommand, SlashCommandContext } from 'necord';
+
 import { FunAnimalService } from '../services/animal.service';
 import { AnimelType } from '../types/animal-type';
 // class FunKittyRandomOptions {

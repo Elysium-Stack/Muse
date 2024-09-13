@@ -7,6 +7,7 @@ import {
 import { RequiredRoleException } from '@util/errors';
 import { Client, PermissionsBitField } from 'discord.js';
 import { NecordExecutionContext } from 'necord';
+
 import { MinecraftSettingsService } from '../services/settings.service';
 
 @Injectable()

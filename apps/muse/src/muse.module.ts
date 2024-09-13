@@ -6,6 +6,7 @@ import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
+
 import { AppEvents } from './events/app.events';
 import { GuildEvents } from './events/guild.events';
 import { InteractionEvents } from './events/interaction.events';
@@ -41,9 +42,9 @@ import { SharedModule } from './shared.module';
 	imports: [
 		NecordModule.forRoot({
 			development:
-				process.env.NODE_ENV !== 'production'
-					? process.env.DEVELOPMENT_SERVER_IDS!.split(',')
-					: false,
+				process.env.NODE_ENV === 'production'
+					? false
+					: process.env.DEVELOPMENT_SERVER_IDS!.split(','),
 			skipRegistration: process.env.REGISTER_COMMANDS === 'false',
 			token: process.env.DISCORD_TOKEN!,
 			intents,

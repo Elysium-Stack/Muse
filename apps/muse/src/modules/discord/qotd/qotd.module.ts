@@ -1,5 +1,6 @@
 import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
+
 import { QotDGeneralCommands } from './commands/general.commands';
 import { QotDSettingsCommands } from './commands/settings.commands';
 import { QotDQuestionService } from './services/question.service';

@@ -7,6 +7,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
+
 import { RadioCommandDecorator } from '../radio.decorator';
 import { RadioService } from '../services';
 

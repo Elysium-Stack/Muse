@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ParticlesHeaderComponent } from 'apps/dashboard/src/components/particles-header/particles-header.component';
+
 import { DashboardHeaderComponent } from '../header/header.component';
 import { DashboardSidebarComponent } from '../sidebar/sidebar.component';
 

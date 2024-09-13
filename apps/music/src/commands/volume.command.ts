@@ -25,7 +25,7 @@ export class MusicVolumeCommands {
 		@ComponentParam('isMute') isMute: string,
 	) {
 		if (typeof volume === 'string') {
-			volume = parseInt(volume, 10);
+			volume = Number.parseInt(volume, 10);
 		}
 
 		await this._player.setVolume(
@@ -43,7 +43,7 @@ export class MusicVolumeCommands {
 		@ComponentParam('amount') amount: string | number,
 	) {
 		if (typeof amount === 'string') {
-			amount = parseInt(amount, 10);
+			amount = Number.parseInt(amount, 10);
 		}
 
 		const { result, volume } = await this._player.getVolume(
@@ -72,7 +72,7 @@ export class MusicVolumeCommands {
 		@ComponentParam('amount') amount: string | number,
 	) {
 		if (typeof amount === 'string') {
-			amount = parseInt(amount, 10);
+			amount = Number.parseInt(amount, 10);
 		}
 
 		const { result, volume } = await this._player.getVolume(

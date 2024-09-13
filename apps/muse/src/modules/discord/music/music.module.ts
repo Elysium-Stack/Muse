@@ -1,6 +1,7 @@
 import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { MusicLoopCommands } from './commands/loop.command';
 import { MusicNextCommands } from './commands/next.command';
 import { MusicPauseCommands } from './commands/pause.command';

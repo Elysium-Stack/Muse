@@ -44,7 +44,7 @@ export class SettingsCommands {
 							.setCustomId(
 								`${module
 									.toUpperCase()
-									.replace(/ /g, '_')}_SETTINGS_SHOW`,
+									.replaceAll(' ', '_')}_SETTINGS_SHOW`,
 							)
 							.setLabel(module)
 							.setStyle(ButtonStyle.Primary),

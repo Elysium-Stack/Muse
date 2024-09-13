@@ -3,6 +3,7 @@ import { PrismaService } from '@prisma';
 import { TriggerMatch } from '@prisma/client';
 import { escapeRegExp } from '@util';
 import { Message } from 'discord.js';
+
 import { MessageTriggerSettingsService } from './settings.service';
 @Injectable()
 export class MessageTriggerGeneralService {
@@ -85,7 +86,7 @@ export class MessageTriggerGeneralService {
 		}
 
 		const { ignoredChannelIds } = settings;
-		if (ignoredChannelIds.indexOf(message.channelId) >= 0) {
+		if (ignoredChannelIds.includes(message.channelId)) {
 			return;
 		}
 
@@ -110,20 +111,23 @@ export class MessageTriggerGeneralService {
 			let test = false;
 
 			switch (match) {
-				case 'word':
+				case 'word': {
 					regexInstance = new RegExp(
 						`\\b${escapeRegExp(phrase)}\\b`,
 						'gim',
 					);
 					test = regexInstance.test(message.cleanContent);
 					break;
-				case 'message':
+				}
+				case 'message': {
 					test = phrase === message.cleanContent;
 					break;
-				default:
+				}
+				default: {
 					regexInstance = new RegExp(escapeRegExp(phrase), 'gim');
 					test = regexInstance.test(message.cleanContent);
 					break;
+				}
 			}
 
 			if (!test) {

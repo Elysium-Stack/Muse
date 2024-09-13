@@ -12,6 +12,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
+
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
 

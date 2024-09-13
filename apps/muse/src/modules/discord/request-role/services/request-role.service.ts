@@ -2,7 +2,9 @@ import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { ChannelType, Client, EmbedBuilder } from 'discord.js';
+
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
+
 import { RequestRoleSettingsService } from './settings.service';
 @Injectable()
 export class RequestRoleGeneralService {
@@ -120,7 +122,7 @@ export class RequestRoleGeneralService {
 		const success = await member.roles
 			.add(role)
 			.then(() => true)
-			.catch((e) => {
+			.catch((error) => {
 				this._logger.warn(
 					`Could not set role ${entry.roleId} on ${userId} in ${guildId}`,
 				);

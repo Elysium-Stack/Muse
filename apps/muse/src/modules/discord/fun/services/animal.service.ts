@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import { AnimelType } from '../types/animal-type';
 import {
 	FROAG_GITHUB_DATASET_URL,
@@ -25,8 +26,8 @@ export class FunAnimalService {
 
 				return d?.json();
 			})
-			.catch((err) => {
-				this._logger.error(err);
+			.catch((error) => {
+				this._logger.error(error);
 				return null;
 			});
 
@@ -47,8 +48,8 @@ export class FunAnimalService {
 
 				return d?.json();
 			})
-			.catch((err) => {
-				this._logger.error(err);
+			.catch((error) => {
+				this._logger.error(error);
 				return null;
 			});
 

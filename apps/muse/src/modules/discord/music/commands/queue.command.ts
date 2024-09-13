@@ -15,6 +15,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
+
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
 
@@ -54,7 +55,7 @@ export class MusicQueueCommands {
 		@ComponentParam('page') page: string | number,
 	) {
 		if (typeof page === 'string') {
-			page = parseInt(page, 10);
+			page = Number.parseInt(page, 10);
 		}
 
 		return this._music.queue(interaction, page ?? 1);

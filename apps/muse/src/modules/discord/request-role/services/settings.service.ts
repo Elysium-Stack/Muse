@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { RequestRoleSettingsInterface } from '../types/settings.interface';
 import {
 	REQUEST_ROLE_EMBED_COLOR,

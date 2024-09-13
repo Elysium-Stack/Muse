@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AutocompleteInteraction } from 'discord.js';
 import { AutocompleteInterceptor } from 'necord';
+
 import { TIMEZONE_DATA } from '../util/constants';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class TimezoneAutocompleteInterceptor extends AutocompleteInterceptor {
 				(choice) =>
 					choice
 						.toLowerCase()
-						.indexOf(focused.value.toString().toLowerCase()) !== -1,
+						.includes(focused.value.toString().toLowerCase()),
 			)
 				.splice(0, 25)
 				.map((tz) => ({ name: tz, value: tz })),

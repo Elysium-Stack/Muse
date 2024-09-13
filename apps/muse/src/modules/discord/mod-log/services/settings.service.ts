@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { ModLogSettingsInterface } from '../types/settings.interface';
 import {
 	MOD_LOG_EMBED_COLOR,

@@ -23,6 +23,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleGeneralService } from '../services';
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
@@ -95,7 +96,7 @@ export class RequestRoleGeneralCommands {
 			`User ${interaction.user.id} requested role for entry ${entryId}`,
 		);
 
-		const parsedEntryId = parseInt(entryId, 10);
+		const parsedEntryId = Number.parseInt(entryId, 10);
 		const entry = await this._requestRole.getEntryById(parsedEntryId);
 
 		if (
@@ -110,7 +111,7 @@ export class RequestRoleGeneralCommands {
 		}
 
 		const requiredRoles = entry.requiredRoles as Prisma.JsonArray;
-		if (requiredRoles.length) {
+		if (requiredRoles.length > 0) {
 			const member = await interaction.guild.members.fetch(
 				interaction.user.id,
 			);
@@ -165,7 +166,7 @@ export class RequestRoleGeneralCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('entryId') entryId: string,
 	) {
-		const parsedEntryId = parseInt(entryId, 10);
+		const parsedEntryId = Number.parseInt(entryId, 10);
 
 		return this._setRole(interaction, parsedEntryId);
 	}

@@ -23,6 +23,7 @@ import {
 import { GuildIconComponent } from 'apps/dashboard/src/components/guild-icon/guild-icon.component';
 import { environment } from 'apps/dashboard/src/environment/environment';
 import { filter } from 'rxjs';
+
 import { DashboardGuildService } from '../../services/guild.service';
 import { DashboardSidebarService } from '../../services/sidebar.service';
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { filter, map, switchMap, take } from 'rxjs';
+
 import { UserService } from '../services/user.service';
 
 @Component({

@@ -9,6 +9,7 @@ import {
 	SlashCommandContext,
 	Subcommand,
 } from 'necord';
+
 import { RadioCommandDecorator } from '../radio.decorator';
 import { RadioService } from '../services';
 
@@ -46,7 +47,7 @@ export class RadioQueueCommands {
 		@ComponentParam('page') page: string | number,
 	) {
 		if (typeof page === 'string') {
-			page = parseInt(page, 10);
+			page = Number.parseInt(page, 10);
 		}
 
 		return this._radio.queue(interaction, page ?? 1);

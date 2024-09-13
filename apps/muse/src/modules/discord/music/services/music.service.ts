@@ -10,6 +10,7 @@ import {
 	MessageComponentInteraction,
 } from 'discord.js';
 import { KazagumoSearchResult, KazagumoTrack } from 'kazagumo';
+
 import { MusicInstancesService } from './instances.service';
 
 @Injectable()
@@ -468,16 +469,16 @@ export class MusicService {
 
 		embed = embed.addFields({
 			name: 'Queue',
-			value: !queue?.length
-				? 'No items in the queue'
-				: queue
+			value: queue?.length
+				? queue
 						.map(
 							(track, index) =>
 								`${index + 2 + (page - 1) * 10}. [${
 									track.title
 								}](${track.uri})`,
 						)
-						.join('\n'),
+						.join('\n')
+				: 'No items in the queue',
 			inline: false,
 		});
 

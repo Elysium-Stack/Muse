@@ -3,6 +3,7 @@ import { MusicModule as MusicLibModule } from '@music';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
+
 import { HealthController } from './controllers/health.controller';
 import { LavalinkHealthService } from './services';
 import { DiscordHealthService } from './services/discord-health.service';

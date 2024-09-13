@@ -23,9 +23,7 @@ export class MusicInstancesService implements OnModuleInit {
 		@Optional() @Inject('MUSIC_SERVICE_2') private _music2: ClientProxy,
 		@Optional() @Inject('MUSIC_SERVICE_3') private _music3: ClientProxy,
 	) {
-		this._instances.push(this._music);
-		this._instances.push(this._music2);
-		this._instances.push(this._music3);
+		this._instances.push(this._music, this._music2, this._music3);
 	}
 
 	onModuleInit() {
@@ -56,7 +54,7 @@ export class MusicInstancesService implements OnModuleInit {
 			available.splice(index, 1);
 		}
 
-		if (!available.length) {
+		if (available.length === 0) {
 			return null;
 		}
 
@@ -145,8 +143,8 @@ export class MusicInstancesService implements OnModuleInit {
 			) as Promise<T & { result: string }>);
 
 			return result;
-		} catch (e) {
-			this._logger.error(e);
+		} catch (error) {
+			this._logger.error(error);
 			return null;
 		}
 	}
@@ -195,7 +193,7 @@ export class MusicInstancesService implements OnModuleInit {
 					PlayerState.DESTROYING,
 					PlayerState.DESTROYED,
 					-1,
-				].indexOf(result.state) >= 0
+				].includes(result.state)
 			) {
 				this.disconnect(entry.instance, entry.guildId);
 			}

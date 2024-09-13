@@ -6,6 +6,7 @@ import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { ActivityType, Client, Events } from 'discord.js';
 import { Context, ContextOf, On, Once } from 'necord';
 import { Gauge } from 'prom-client';
+
 import { RadioService } from '../services/radio.service';
 
 @Injectable()
@@ -64,7 +65,7 @@ export class AppEvents {
 
 		const logs = await this._prisma.radioLog.findMany();
 
-		if (!logs.length) {
+		if (logs.length === 0) {
 			return;
 		}
 

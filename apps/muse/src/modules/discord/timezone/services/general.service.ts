@@ -1,9 +1,8 @@
 import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@prisma';
-import { isValid } from 'date-fns';
+import enUS, { isValid } from 'date-fns';
 import { formatInTimeZone, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
-import enUS from 'date-fns/locale/en-US';
 import { EmbedBuilder, Message } from 'discord.js';
 
 @Injectable()

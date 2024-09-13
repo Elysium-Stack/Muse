@@ -6,6 +6,7 @@ import {
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { EnabledExceptionFilter } from '@util';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
+
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
 

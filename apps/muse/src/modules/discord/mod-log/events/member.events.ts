@@ -3,6 +3,7 @@ import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client, EmbedBuilder, Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
 import { ModLogSettingsService } from '../services';
 
 @Injectable()
@@ -112,10 +113,10 @@ export class ModLogMemberEvents {
 				},
 				{
 					name: 'Roles',
-					value: roles.length
+					value: roles.length > 0
 						? roles.map((id) => `<@&${id}>`).join(', ')
 						: 'None',
-					inline: !roles.length,
+					inline: roles.length === 0,
 				},
 			)
 			.setAuthor({

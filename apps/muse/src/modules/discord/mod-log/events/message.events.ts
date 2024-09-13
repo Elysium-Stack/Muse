@@ -3,6 +3,7 @@ import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { EmbedBuilder, Events, TextChannel } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
 import { ModLogSettingsService } from '../services';
 
 @Injectable()
@@ -37,7 +38,7 @@ export class ModLogMessageEvents {
 		}
 
 		try {
-			const content = message.content.match(/(.|[\r\n]){1,1024}/g);
+			const content = message.content.match(/(.|[\n\r]){1,1024}/g);
 
 			const embed = new EmbedBuilder()
 				.setTitle(`Message delete in ${channel.name}`)
@@ -51,7 +52,7 @@ export class ModLogMessageEvents {
 								value: part,
 						  }))
 						: []),
-					...(message.attachments.size
+					...(message.attachments.size > 0
 						? [
 								{
 									name: 'Attachments',
@@ -83,9 +84,9 @@ export class ModLogMessageEvents {
 			await deleteChannel.send({
 				embeds: [embed],
 			});
-		} catch (err) {
-			console.log(err);
-			this._logger.error(err);
+		} catch (error) {
+			console.log(error);
+			this._logger.error(error);
 		}
 	}
 
@@ -120,8 +121,8 @@ export class ModLogMessageEvents {
 
 		try {
 			const originalContent =
-				original.content.match(/(.|[\r\n]){1,1024}/g);
-			const updatedContent = updated.content.match(/(.|[\r\n]){1,1024}/g);
+				original.content.match(/(.|[\n\r]){1,1024}/g);
+			const updatedContent = updated.content.match(/(.|[\n\r]){1,1024}/g);
 
 			const embeds = [];
 
@@ -149,7 +150,7 @@ export class ModLogMessageEvents {
 								},
 						  ]
 						: []),
-					...(original.attachments.size
+					...(original.attachments.size > 0
 						? [
 								{
 									name: 'Original attachments',
@@ -159,7 +160,7 @@ export class ModLogMessageEvents {
 								},
 						  ]
 						: []),
-					...(updated.attachments.size
+					...(updated.attachments.size > 0
 						? [
 								{
 									name: 'Edited attachments',
@@ -246,12 +247,12 @@ export class ModLogMessageEvents {
 				return;
 			}
 
-			for (let embed of embeds) {
+			for (const embed of embeds) {
 				await editChannel.send({ embeds: [embed] });
 			}
-		} catch (err) {
-			console.log(err);
-			this._logger.error(err);
+		} catch (error) {
+			console.log(error);
+			this._logger.error(error);
 		}
 	}
 }

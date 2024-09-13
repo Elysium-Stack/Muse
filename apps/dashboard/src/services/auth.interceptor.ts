@@ -6,9 +6,9 @@ import {
 	HttpRequest,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
+
 import { UserService } from './user.service';
 
 @Injectable()

@@ -14,6 +14,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { MinecraftSettingsInterface } from '../types/settings.interface';
 import {
 	MINECRAFT_EMBED_COLOR,

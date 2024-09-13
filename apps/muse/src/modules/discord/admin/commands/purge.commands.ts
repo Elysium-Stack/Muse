@@ -24,6 +24,7 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
+
 import { AdminCommandDecorator } from '..';
 import { AdminPurgeService } from '../services/purge.service';
 
@@ -173,7 +174,7 @@ export class AdminPurgeCommands {
 		});
 
 		const ids = userids.split(',').map((id) => id.trim());
-		if (!ids.length) {
+		if (ids.length === 0) {
 			return interaction.editReply({
 				content: `${MESSAGE_PREFIX} No id's were supplied. Skipping yeet!`,
 			});
@@ -188,7 +189,7 @@ export class AdminPurgeCommands {
 
 		return interaction.editReply({
 			content: `${MESSAGE_PREFIX} yeeted **${amount}** people **${
-				message.length ? 'with' : 'without'
+				message.length > 0 ? 'with' : 'without'
 			}** a message!
 ${
 	message

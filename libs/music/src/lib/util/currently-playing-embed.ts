@@ -93,9 +93,9 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 			.setCustomId(`MUSIC_LOOP`)
 			.setLabel('🔁')
 			.setStyle(
-				player.loop !== 'none'
-					? ButtonStyle.Success
-					: ButtonStyle.Secondary,
+				player.loop === 'none'
+					? ButtonStyle.Secondary
+					: ButtonStyle.Success,
 			),
 	),
 ];

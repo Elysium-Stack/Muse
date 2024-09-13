@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, inject, signal } from '@angular/core';
 import { AuthService } from '@sdk';
 import { take, tap } from 'rxjs';
+
 import { TokenStorageService } from './token-storage.service';
 
 @Injectable({ providedIn: 'root' })

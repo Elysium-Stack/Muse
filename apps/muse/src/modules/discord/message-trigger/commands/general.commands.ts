@@ -26,6 +26,7 @@ import {
 	StringOption,
 	Subcommand,
 } from 'necord';
+
 import { MessageTriggerEnabledGuard } from '../guards/enabled.guard';
 import { MessageTriggerCommandDecorator } from '../message-trigger.decorator';
 import { MessageTriggerGeneralService } from '../services/general.service';
@@ -130,7 +131,7 @@ export class MessageTriggerGeneralCommands {
 			});
 		}
 
-		let embed = new EmbedBuilder()
+		const embed = new EmbedBuilder()
 			.setTitle(`${MESSAGE_PREFIX} Message trigger #${trigger.id}`)
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.addFields([
@@ -178,7 +179,7 @@ export class MessageTriggerGeneralCommands {
 		[interaction]: ButtonContext,
 		@ComponentParam('page') page: string,
 	) {
-		const pageInt = parseInt(page, 10);
+		const pageInt = Number.parseInt(page, 10);
 		return this._listTriggers(interaction, pageInt);
 	}
 
@@ -293,7 +294,7 @@ export class MessageTriggerGeneralCommands {
 					value: triggers
 						.map(
 							(t) =>
-								`${t.match !== 'any' ? `[${t.match}] ` : ''}${
+								`${t.match === 'any' ? '' : `[${t.match}] `}${
 									t.phrase
 								}`,
 						)
@@ -329,7 +330,7 @@ export class MessageTriggerGeneralCommands {
 			);
 		}
 
-		if (buttons.length) {
+		if (buttons.length > 0) {
 			components.push(
 				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
 			);

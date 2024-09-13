@@ -31,6 +31,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { ModLogCommandDecorator } from '../mod-log.decorator';
 import { ModLogSettingsService } from '../services/settings.service';
 import { ModLogSettingsInterface } from '../types/settings.interface';
@@ -146,7 +147,7 @@ export class ModLogSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log message delete channel has been changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -162,7 +163,7 @@ export class ModLogSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log message edit channel has been changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -178,7 +179,7 @@ export class ModLogSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log member join channel has been changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -194,7 +195,7 @@ export class ModLogSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log member leave channel has been changed to:${
-				id.length ? `\n<#${id}>` : ' None'
+				id.length > 0 ? `\n<#${id}>` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -212,7 +213,7 @@ export class ModLogSettingsCommands {
 		let readableOption: string = option;
 
 		switch (option) {
-			case 'enabled':
+			case 'enabled': {
 				readableOption = 'Enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
@@ -238,7 +239,8 @@ export class ModLogSettingsCommands {
 					),
 				];
 				break;
-			case 'deleteChannelId':
+			}
+			case 'deleteChannelId': {
 				readableOption = 'Message delete log channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -256,7 +258,8 @@ export class ModLogSettingsCommands {
 					),
 				];
 				break;
-			case 'editChannelId':
+			}
+			case 'editChannelId': {
 				readableOption = 'Message edit log channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -274,7 +277,8 @@ export class ModLogSettingsCommands {
 					),
 				];
 				break;
-			case 'joinChannelId':
+			}
+			case 'joinChannelId': {
 				readableOption = 'Member join log channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -292,7 +296,8 @@ export class ModLogSettingsCommands {
 					),
 				];
 				break;
-			case 'leaveChannelId':
+			}
+			case 'leaveChannelId': {
 				readableOption = 'Member leave log channel';
 				currentValue = settings?.[option]?.length
 					? `<#${settings?.[option]}>`
@@ -310,6 +315,7 @@ export class ModLogSettingsCommands {
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

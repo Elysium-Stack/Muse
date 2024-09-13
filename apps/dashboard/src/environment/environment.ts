@@ -1,3 +1,5 @@
-import { baseEnvironment } from './environment.base';
 
-export const environment = baseEnvironment;
+
+
+
+export {baseEnvironment as environment} from './environment.base';

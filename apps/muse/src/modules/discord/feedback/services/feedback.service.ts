@@ -3,6 +3,7 @@ import { PrismaService } from '@prisma';
 import { FeedbackTopics, FeedbackTopicsType } from '@prisma/client';
 import { MESSAGE_PREFIX } from '@util';
 import { Client, EmbedBuilder, User } from 'discord.js';
+
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
 @Injectable()
 export class FeedbackService {
@@ -91,7 +92,7 @@ export class FeedbackService {
 		user: User,
 		content: string,
 	) {
-		const topic = await this.getTopicById(guildId, parseInt(topicId, 10));
+		const topic = await this.getTopicById(guildId, Number.parseInt(topicId, 10));
 
 		if (!topic) {
 			return;

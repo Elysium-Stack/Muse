@@ -38,6 +38,7 @@ import {
 	StringSelectContext,
 	Subcommand,
 } from 'necord';
+
 import { QotDCommandDecorator } from '../qotd.decorator';
 import { QotDSettingsService } from '../services/settings.service';
 import { QotDSettingsInterface } from '../types/settings.interface';
@@ -205,7 +206,7 @@ export class QotDSettingsCommands {
 		@Context() [interaction]: StringSelectContext,
 		@SelectedStrings() [selected]: string[],
 	) {
-		const parsed = parseInt(selected, 10);
+		const parsed = Number.parseInt(selected, 10);
 
 		if (isNaN(parsed)) {
 			return interaction.update({
@@ -216,9 +217,9 @@ export class QotDSettingsCommands {
 
 		await this._settings.set(interaction.guildId!, 'dailyHour', parsed);
 
-		const time = !isNaN(parsed)
-			? HOUR_OPTIONS.find((h) => h.value === parsed)?.name ?? 'none'
-			: 'none';
+		const time = isNaN(parsed)
+			? 'none'
+			: HOUR_OPTIONS.find((h) => h.value === parsed)?.name ?? 'none';
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD daily hour has been changed to \`${time}\``,
@@ -238,7 +239,7 @@ export class QotDSettingsCommands {
 
 		switch (option) {
 			case 'enabled':
-			case 'dailyEnabled':
+			case 'dailyEnabled': {
 				readableOption =
 					option === 'enabled' ? 'Enabled' : 'Daily enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
@@ -265,8 +266,9 @@ export class QotDSettingsCommands {
 					),
 				];
 				break;
+			}
 			case 'channelId':
-			case 'dailyChannelId':
+			case 'dailyChannelId': {
 				readableOption =
 					option === 'channelId' ? 'Channel' : 'Daily channel';
 				currentValue = settings?.[option]
@@ -285,7 +287,8 @@ export class QotDSettingsCommands {
 					),
 				];
 				break;
-			case 'pingRoleId':
+			}
+			case 'pingRoleId': {
 				readableOption = 'Ping role';
 				currentValue = settings?.[option]
 					? `<@&${settings[option]}>`
@@ -302,21 +305,23 @@ export class QotDSettingsCommands {
 					),
 				];
 				break;
-			case 'dailyHour':
+			}
+			case 'dailyHour': {
 				readableOption = 'Daily hour';
-				currentValue = !isNaN(settings![option])
-					? `\`${
+				currentValue = isNaN(settings![option])
+					? 'none'
+					: `\`${
 							HOUR_OPTIONS.find(
 								(h) => h.value === settings?.[option],
 							)?.name ?? '-'
-					  }\``
-					: 'none';
+					  }\``;
 				components = [
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 						createHoursSelect('QOTD_SETTINGS_CHANGE_DAILY_HOUR'),
 					),
 				];
 				break;
+			}
 		}
 
 		components.push(this._getBackButtonRow(true));

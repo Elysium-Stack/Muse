@@ -15,6 +15,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
+
 import { QotDSettingsInterface } from '../types/settings.interface';
 import { QOTD_EMBED_COLOR, QOTD_SETTINGS_CHOICES } from '../util/constants';
 @Injectable()
