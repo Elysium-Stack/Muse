@@ -4,11 +4,12 @@ import {
 	Injectable,
 	Logger,
 } from '@nestjs/common';
-import { IncorrectChannelException } from '@util/errors';
 import { Client, PermissionsBitField } from 'discord.js';
 import { NecordExecutionContext } from 'necord';
 
 import { BookwormSettingsService } from '../services/settings.service';
+
+import { IncorrectChannelException } from '@util/errors';
 
 @Injectable()
 export class BookwormChannelGuard implements CanActivate {
@@ -24,12 +25,12 @@ export class BookwormChannelGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS!.split(',');
+		const admins = process.env['OWNER_IDS'].split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
-		const guild = await this._client.guilds.fetch(interaction.guildId!);
+		const guild = await this._client.guilds.fetch(interaction.guildId);
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
@@ -39,7 +40,7 @@ export class BookwormChannelGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._bookwormSettings.get(interaction.guildId!);
+		const settings = await this._bookwormSettings.get(interaction.guildId);
 
 		if (!settings?.channelId) {
 			return true;

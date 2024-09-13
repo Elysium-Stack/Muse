@@ -1,7 +1,8 @@
-import { SettingsService } from '@muse/modules/settings';
 import { Injectable, Logger } from '@nestjs/common';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
+import { SettingsService } from '@muse/modules/settings';
 
 @Injectable()
 export class GuildEvents {

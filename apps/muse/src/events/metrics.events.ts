@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { getInteractionCommandName } from '@util';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Client, Events } from 'discord.js';
 import { CommandsService, Context, ContextOf, On, Once } from 'necord';
 import { Counter, Gauge } from 'prom-client';
+
+import { getInteractionCommandName } from '@util';
 @Injectable()
 export class MetricsEvents {
 	private readonly _logger = new Logger(MetricsEvents.name);
@@ -119,7 +120,7 @@ export class MetricsEvents {
 
 		for (const command of commands) {
 			totalCommands += 1;
-			totalCommands += (command as any).subcommands?.size ?? 0;
+			totalCommands += command['subcommands']?.size ?? 0;
 		}
 
 		return totalCommands;
@@ -129,6 +130,7 @@ export class MetricsEvents {
 		this.totalGuilds.set(client.guilds.cache.size);
 		this.totalChannels.set(client.channels.cache.size);
 
+		// eslint-disable-next-line unicorn/no-array-reduce
 		const totalUsers = await client.guilds.cache.reduce(
 			async (total, guild) => {
 				const members = guild.members.cache;

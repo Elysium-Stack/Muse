@@ -1,8 +1,9 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
-import { interactionReply } from '@util';
 import { SlashCommandContext } from 'necord';
 
 import { HasNoPlayerException } from '../util/errors';
+
+import { interactionReply } from '@util';
 @Catch(HasNoPlayerException)
 export class HasNoPlayerExceptionFilter implements ExceptionFilter {
 	private readonly _logger = new Logger(HasNoPlayerExceptionFilter.name);

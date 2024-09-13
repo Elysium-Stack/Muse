@@ -1,5 +1,6 @@
-import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
+
+import { SharedModule } from '@muse/shared.module';
 
 import { FeedbackGeneralCommands } from './commands/general.commands';
 import { FeedbackModeratorCommands } from './commands/moderator.commands';

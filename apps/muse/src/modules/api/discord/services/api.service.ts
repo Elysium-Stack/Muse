@@ -1,10 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from '@prisma';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
 
 import { DISCORD_API_URL } from '../utils/constants';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class DiscordApiService {
@@ -72,8 +73,8 @@ export class DiscordApiService {
 
 	private async _refreshTokens(userId: number, refreshToken: string) {
 		const formData = new FormData();
-		formData.append('client_id', process.env.DISCORD_OAUTH_CLIENT_ID!);
-		formData.append('client_secret', process.env.DISCORD_OAUTH_CLIENT_SECRET!);
+		formData.append('client_id', process.env['DISCORD_OAUTH_CLIENT_ID']);
+		formData.append('client_secret', process.env['DISCORD_OAUTH_CLIENT_SECRET']);
 		formData.append('refresh_token', refreshToken);
 		formData.append('grant_type', 'refresh_token');
 
@@ -102,7 +103,7 @@ export class DiscordApiService {
 		});
 	}
 
-	private _handleFourOhOne(e: any) {
+	private _handleFourOhOne(e) {
 		if (e.response.status === 401) {
 			return {
 				status: 401,

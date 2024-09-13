@@ -1,9 +1,18 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { isBefore, startOfDay, sub } from 'date-fns';
+import {
+	Client,
+	Collection,
+	Guild,
+	GuildMember,
+	TextChannel,
+	User,
+} from 'discord.js';
+
 import { SettingsService } from '@muse/modules/settings';
 import { getUsername } from '@muse/util/get-username';
-import { Injectable, Logger } from '@nestjs/common';
+
 import { MESSAGE_PREFIX, chunks, delay } from '@util';
-import { isBefore, startOfDay, sub } from 'date-fns';
-import { Client, Guild, TextChannel, User } from 'discord.js';
 
 @Injectable()
 export class AdminPurgeService {
@@ -147,7 +156,10 @@ ${chunk.map(m => m.author.id).join(',')}
 				const dm = await user.createDM(true);
 				await dm
 					.send({
-						content: message.replaceAll(/{username}/gi, getUsername(user)),
+						content: message.replaceAll(
+							/{username}/gi,
+							getUsername(user)
+						),
 					})
 					.catch(() => (response = false));
 			}
@@ -173,10 +185,10 @@ ${chunk.map(m => m.author.id).join(',')}
 	}
 
 	private async _getLatestMessageOfInactiveMembers(
-		members,
-		guild,
-		userToken,
-		timestampXMonthsAgo
+		members: Collection<string, GuildMember>,
+		guild: Guild,
+		userToken: string,
+		timestampXMonthsAgo: number
 	) {
 		const users = members.map(m => m.user);
 		const chunked = [...chunks(users, 10)];
@@ -200,16 +212,27 @@ ${chunk.map(m => m.author.id).join(',')}
 
 			const chunkMessages = promises
 				.filter(p => p.status === 'fulfilled')
-				.map((p: PromiseFulfilledResult<any>) => p.value)
+				.map(
+					(
+						p: PromiseFulfilledResult<void | {
+							author: User;
+							timestamp: number;
+							id: string;
+						}>
+					) => p.value
+				)
 				.filter(
 					m =>
 						!!m &&
 						(m.id === 'never' ||
 							(!m.author.bot &&
-								isBefore(new Date(m.timestamp), new Date(timestampXMonthsAgo))))
+								isBefore(
+									new Date(m.timestamp),
+									new Date(timestampXMonthsAgo)
+								)))
 				);
 
-			messages = messages.concat(chunkMessages);
+			messages = [...messages, ...chunkMessages];
 
 			this._logger.log(
 				`Found ${chunkMessages.length} in chunk, delaying for 5000ms.`
@@ -221,8 +244,13 @@ ${chunk.map(m => m.author.id).join(',')}
 		return messages;
 	}
 
-	private async _getUserLastMessage(user, guildId, userToken, retry = 0) {
-		const data = await fetch(
+	private async _getUserLastMessage(
+		user: User,
+		guildId: string,
+		userToken: string,
+		retry = 0
+	): Promise<{ id: string; author: User; timestamp: number } | void> {
+		const data = await (fetch(
 			`https://discord.com/api/guilds/${guildId}/messages/search?author_id=${user.id}`,
 			{
 				method: 'GET',
@@ -237,30 +265,41 @@ ${chunk.map(m => m.author.id).join(',')}
 			}
 
 			await delay(1000);
-			return this._getUserLastMessage(user, guildId, userToken, retry + 1);
-		});
+			return this._getUserLastMessage(
+				user,
+				guildId,
+				userToken,
+				retry + 1
+			);
+		}) as Promise<{ id: string; author: User } & Response>);
 
 		if (data.status === 429) {
 			if (retry === 4) {
 				this._logger.warn(
 					`Skipping ${getUsername(user)} because of retries & rate limit.`
 				);
-				return false;
+				return;
 			}
 
 			const delayMs =
-				Number.parseInt(data.headers.get('retry-after'), 10) * 10 + 1000;
+				Number.parseInt(data.headers.get('retry-after'), 10) * 10 +
+				1000;
 			this._logger.warn(
 				`Received a rate limit for ${getUsername(
 					user
 				)}, retrying after ${delayMs}ms`
 			);
 			await delay(delayMs);
-			return this._getUserLastMessage(user, guildId, userToken, retry + 1);
+			return this._getUserLastMessage(
+				user,
+				guildId,
+				userToken,
+				retry + 1
+			);
 		}
 
 		if (!data) {
-			return false;
+			return;
 		}
 
 		const body = await data.json();
@@ -269,6 +308,7 @@ ${chunk.map(m => m.author.id).join(',')}
 			return {
 				id: 'never',
 				author: user,
+				timestamp: Date.now(),
 			};
 		}
 

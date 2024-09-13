@@ -1,38 +1,41 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { TriggerMatch } from '@prisma/client';
 import {
-	EnabledExceptionFilter,
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	resolveEmoji,
-} from '@util';
-import { GuildModeratorGuard } from '@util/guards';
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonInteraction,
-	ButtonStyle,
-	CommandInteraction,
-	EmbedBuilder,
-	GuildEmoji,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    CommandInteraction,
+    EmbedBuilder
 } from 'discord.js';
 import {
-	Button,
-	ButtonContext,
-	ComponentParam,
-	Context,
-	NumberOption,
-	Options,
-	SlashCommandContext,
-	StringOption,
-	Subcommand,
+    Button,
+    ButtonContext,
+    ComponentParam,
+    Context,
+    NumberOption,
+    Options,
+    SlashCommandContext,
+    StringOption,
+    Subcommand,
 } from 'necord';
 
 import { ReactionTriggerEnabledGuard } from '../guards/enabled.guard';
 import { ReactionTriggerCommandDecorator } from '../reaction-trigger.decorator';
 import { ReactionTriggerGeneralService } from '../services/general.service';
 import { REACTION_TRIGGER_EMBED_COLOR } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import { TriggerMatch } from '@prisma/client';
+
+import {
+    EnabledExceptionFilter,
+    ForbiddenExceptionFilter,
+    MESSAGE_PREFIX,
+    resolveEmoji,
+} from '@util';
+
+import { GuildModeratorGuard } from '@util/guards';
 
 class ReactionTriggerListOptions {
 	@NumberOption({
@@ -134,7 +137,6 @@ export class ReactionTriggerGeneralCommands {
 		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions
 	) {
 		const {
-			emoji: parsedEmoji,
 			unicode,
 			clientEmoji,
 		} = resolveEmoji(emoji, interaction.client);
@@ -153,15 +155,15 @@ export class ReactionTriggerGeneralCommands {
 		);
 
 		await this._general.addReactionTriggerByWord(
-			interaction.guildId!,
-			phrase!,
+			interaction.guildId,
+			phrase,
 			match ?? 'word',
 			clientEmoji ? clientEmoji.id : emoji
 		);
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} Added reaction trigger with ${
-				clientEmoji ? clientEmoji : emoji
+				clientEmoji ?? emoji
 			} for the phrase "${phrase}"`,
 			ephemeral: true,
 		});
@@ -180,8 +182,8 @@ export class ReactionTriggerGeneralCommands {
 		);
 
 		const reactionTrigger = await this._general.removeReactionTriggerByID(
-			interaction.guildId!,
-			id!
+			interaction.guildId,
+			id
 		);
 
 		return interaction.reply({
@@ -197,7 +199,7 @@ export class ReactionTriggerGeneralCommands {
 		page = page ?? 1;
 
 		const { triggers, total } = await this._general.getReactionTriggers(
-			interaction.guildId!,
+			interaction.guildId,
 			page
 		);
 
@@ -238,7 +240,7 @@ export class ReactionTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`)
+			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`)
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{

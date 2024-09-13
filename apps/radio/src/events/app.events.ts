@@ -1,13 +1,15 @@
-import { MusicLavalinkService } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '@prisma';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { ActivityType, Client, Events } from 'discord.js';
 import { Context, ContextOf, On, Once } from 'necord';
 import { Gauge } from 'prom-client';
 
 import { RadioService } from '../services/radio.service';
+
+import { MusicLavalinkService } from '@music';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class AppEvents {
@@ -50,7 +52,7 @@ export class AppEvents {
 	}
 
 	private _setPresence(client: Client) {
-		client.user!.setPresence({
+		client.user.setPresence({
 			activities: [
 				{
 					name: 'the radio 📻',
@@ -71,7 +73,10 @@ export class AppEvents {
 
 		const itterateLogs = () => {
 			this._logger.debug('Lavalink is ready, resuming radio.');
-			this._lavalink.removeListener('ready', itterateLogs);
+			this._lavalink['removeListener'](
+				'ready',
+				itterateLogs
+			);
 			for (const { guildId } of logs) {
 				this._logger.debug(`Resuming radio for ${guildId}`);
 				this._radio.startWithoutConfig(guildId);

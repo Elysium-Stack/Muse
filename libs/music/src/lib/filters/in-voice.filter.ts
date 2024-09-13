@@ -1,9 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
-import { interactionReply } from '@util';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
 
 import { NotInVoiceException } from '../util/errors';
+
+import { interactionReply } from '@util';
 @Catch(NotInVoiceException)
 export class NotInVoiceExceptionFilter implements ExceptionFilter {
 	private readonly _logger = new Logger(NotInVoiceExceptionFilter.name);

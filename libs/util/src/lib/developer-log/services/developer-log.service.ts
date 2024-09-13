@@ -6,7 +6,7 @@ export class DeveloperLogService {
 	constructor(private _client: Client) {}
 
 	async sendError(
-		data: any,
+		data: unknown,
 		message: string,
 		source: string,
 		guildId?: string
@@ -34,21 +34,23 @@ export class DeveloperLogService {
 			.setDescription(`\`\`\`\n${JSON.stringify(data, null, 2)}\n\`\`\``);
 
 		const guild = await this._client.guilds.fetch(
-			process.env.DEVELOPMENT_SERVER_IDS
+			process.env['DEVELOPMENT_SERVER_IDS']
 		);
 		if (!guild) {
 			throw new Error('Could not find development server');
 		}
 
 		const channel = await guild.channels.fetch(
-			process.env.DEVELOPMENT_LOG_CHANNEL_ID
+			process.env['DEVELOPMENT_LOG_CHANNEL_ID']
 		);
 		if (!channel) {
 			throw new Error('Could not find development log channel');
 		}
 
 		if (!(channel instanceof TextChannel)) {
-			throw new TypeError('Development log channel is not a text channel');
+			throw new TypeError(
+				'Development log channel is not a text channel'
+			);
 		}
 
 		await channel.send({ embeds: [embed, errorEmbed] });

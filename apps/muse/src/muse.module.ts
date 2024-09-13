@@ -3,7 +3,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
-import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
 
@@ -38,26 +37,29 @@ import {
 } from './modules';
 import { SharedModule } from './shared.module';
 
+import { intents } from '@util';
+
+
 @Module({
 	imports: [
 		NecordModule.forRoot({
 			development:
-				process.env.NODE_ENV === 'production'
+				process.env['NODE_ENV'] === 'production'
 					? false
-					: process.env.DEVELOPMENT_SERVER_IDS!.split(','),
-			skipRegistration: process.env.REGISTER_COMMANDS === 'false',
-			token: process.env.DISCORD_TOKEN!,
+					: process.env['DEVELOPMENT_SERVER_IDS'].split(','),
+			skipRegistration: process.env['REGISTER_COMMANDS'] === 'false',
+			token: process.env['DISCORD_TOKEN'],
 			intents,
 		}),
 		SentryModule.forRoot({
-			dsn: process.env.SENTRY_DNS,
-			debug: process.env.NODE_ENV !== 'production',
+			dsn: process.env['SENTRY_DNS'],
+			debug: process.env['NODE_ENV'] !== 'production',
 			environment:
-				process.env.NODE_ENV === 'production' ? 'production' : 'development',
+				process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
 			logLevels: ['error'],
 			sampleRate: 1,
 			close: {
-				enabled: process.env.NODE_ENV === 'production',
+				enabled: process.env['NODE_ENV'] === 'production',
 				timeout: 5000,
 			},
 		}),

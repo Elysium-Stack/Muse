@@ -1,1 +1,9 @@
 node_modules
+templates
+.angular
+.github
+**/jest.config.ts
+**/*-e2e/**/support
+libs/prisma/src/lib/dto
+libs/sdk/src/lib
+**/__placeholder__.*

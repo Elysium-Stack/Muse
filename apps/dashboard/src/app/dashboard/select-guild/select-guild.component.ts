@@ -8,6 +8,8 @@ import { ParticlesComponent } from '../../../components/particles/particles.comp
 import { environment } from '../../../environment/environment';
 import { DashboardGuildService } from '../services/guild.service';
 
+
+// eslint-disable-next-line @angular-eslint/use-component-selector
 @Component({
 	standalone: true,
 	imports: [

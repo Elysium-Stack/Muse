@@ -1,10 +1,4 @@
-import {
-	MusicCommandDecorator,
-	MusicInVoiceGuard,
-	NotInVoiceExceptionFilter,
-} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { EnabledExceptionFilter } from '@util';
 import {
 	Button,
 	ButtonContext,
@@ -18,6 +12,14 @@ import {
 
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
+
+import {
+	MusicCommandDecorator,
+	MusicInVoiceGuard,
+	NotInVoiceExceptionFilter,
+} from '@music';
+
+import { EnabledExceptionFilter } from '@util';
 
 class MusicQueueOptions {
 	@NumberOption({

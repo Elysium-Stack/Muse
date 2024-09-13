@@ -23,12 +23,12 @@ export class MusicIsDJGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS!.split(',');
+		const admins = process.env['OWNER_IDS'].split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
-		const guild = await this._client.guilds.fetch(interaction.guildId!);
+		const guild = await this._client.guilds.fetch(interaction.guildId);
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
@@ -38,7 +38,7 @@ export class MusicIsDJGuard implements CanActivate {
 			return true;
 		}
 
-		const settings = await this._musicSettings.get(interaction.guildId!);
+		const settings = await this._musicSettings.get(interaction.guildId);
 
 		// TODO: Check role
 		if (!settings?.enabled) {

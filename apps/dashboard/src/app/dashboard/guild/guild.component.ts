@@ -7,6 +7,7 @@ import { filter, map, switchMap, take } from 'rxjs';
 import { DashboardLayoutComponent } from '../components/layout/layout.component';
 import { DashboardGuildService } from '../services/guild.service';
 
+// eslint-disable-next-line @angular-eslint/use-component-selector
 @Component({
 	standalone: true,
 	imports: [CommonModule, DashboardLayoutComponent, RouterModule],

@@ -5,9 +5,10 @@ import {
 	ForbiddenException,
 	Logger,
 } from '@nestjs/common';
-import { interactionReply } from '@util';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
+
+import { interactionReply } from '@util';
 @Catch(ForbiddenException)
 export class ForbiddenExceptionFilter implements ExceptionFilter {
 	private readonly _logger = new Logger(ForbiddenExceptionFilter.name);

@@ -1,10 +1,4 @@
-import {
-	MusicCommandDecorator,
-	MusicInVoiceGuard,
-	NotInVoiceExceptionFilter,
-} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { EnabledExceptionFilter } from '@util';
 import {
 	Context,
 	NumberOption,
@@ -15,6 +9,14 @@ import {
 
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
+
+import {
+	MusicCommandDecorator,
+	MusicInVoiceGuard,
+	NotInVoiceExceptionFilter,
+} from '@music';
+
+import { EnabledExceptionFilter } from '@util';
 
 class MusicVolumeOptions {
 	@NumberOption({
@@ -43,6 +45,6 @@ export class MusicVolumeCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { volume }: MusicVolumeOptions
 	) {
-		return this._music.setVolume(interaction, volume!);
+		return this._music.setVolume(interaction, volume);
 	}
 }

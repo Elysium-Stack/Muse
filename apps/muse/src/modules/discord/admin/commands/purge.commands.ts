@@ -1,11 +1,5 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
-	AdminGuard,
-	ForbiddenExceptionFilter,
-	GuildModeratorGuard,
-	MESSAGE_PREFIX,
-} from '@util';
-import {
 	ActionRowBuilder,
 	ChannelType,
 	ModalActionRowComponentBuilder,
@@ -27,6 +21,13 @@ import {
 
 import { AdminCommandDecorator } from '..';
 import { AdminPurgeService } from '../services/purge.service';
+
+import {
+	AdminGuard,
+	ForbiddenExceptionFilter,
+	GuildModeratorGuard,
+	MESSAGE_PREFIX,
+} from '@util';
 
 class AdminPurgeListOptions {
 	@StringOption({
@@ -90,7 +91,7 @@ export class AdminPurgeCommands {
 	) {
 		if (this._purge.checkGuild(interaction.guildId)) {
 			return interaction.reply({
-				content: `${MESSAGE_PREFIX} A purge check is already running, please wait a minute for it\'s reply.`,
+				content: `${MESSAGE_PREFIX} A purge check is already running, please wait a minute for it's reply.`,
 				ephemeral: true,
 			});
 		}

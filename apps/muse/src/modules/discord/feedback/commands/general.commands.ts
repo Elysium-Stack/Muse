@@ -1,5 +1,4 @@
 import { Logger } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	Client,
@@ -26,6 +25,8 @@ import {
 
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
+
+import { MESSAGE_PREFIX } from '@util';
 @FeedbackCommandDecorator()
 export class FeedbackGeneralCommands {
 	private readonly _logger = new Logger(FeedbackGeneralCommands.name);
@@ -40,7 +41,7 @@ export class FeedbackGeneralCommands {
 		description: 'Give feedback to a topic',
 	})
 	public async give(@Context() [interaction]: SlashCommandContext) {
-		const topics = await this._feedback.getAllTopics(interaction.guildId!);
+		const topics = await this._feedback.getAllTopics(interaction.guildId);
 
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('FEEDBACK_GIVE_TOPIC_SELECT')
@@ -79,7 +80,7 @@ export class FeedbackGeneralCommands {
 		);
 
 		const topic = await this._feedback.getTopicById(
-			interaction.guildId!,
+			interaction.guildId,
 			Number.parseInt(topicId, 10)
 		);
 
@@ -114,7 +115,7 @@ export class FeedbackGeneralCommands {
 
 		await this._feedback.processFeedback(
 			topicId,
-			interaction.guildId!,
+			interaction.guildId,
 			interaction.user,
 			response
 		);

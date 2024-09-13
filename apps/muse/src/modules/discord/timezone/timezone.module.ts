@@ -1,5 +1,6 @@
-import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
+
+import { SharedModule } from '@muse';
 
 import { TimezoneSetCommands } from './commands/set.commands';
 import { TimezoneSettingsCommands } from './commands/settings.commands';

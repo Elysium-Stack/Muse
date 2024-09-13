@@ -1,13 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
-import { HOUR_OPTIONS } from '@muse/util/constants';
-import { createHoursSelect } from '@muse/util/create-hour-select';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	GuildAdminGuard,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -43,6 +34,17 @@ import { QotDCommandDecorator } from '../qotd.decorator';
 import { QotDSettingsService } from '../services/settings.service';
 import { QotDSettingsInterface } from '../types/settings.interface';
 import { QOTD_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { HOUR_OPTIONS } from '@muse/util/constants';
+import { createHoursSelect } from '@muse/util/create-hour-select';
+
+import {
+	ForbiddenExceptionFilter,
+	GuildAdminGuard,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
 class QotDSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -131,7 +133,7 @@ export class QotDSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD has been ${
@@ -148,7 +150,7 @@ export class QotDSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'dailyEnabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'dailyEnabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD daily questions has been ${
@@ -163,7 +165,7 @@ export class QotDSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels
 	) {
-		await this._settings.set(interaction.guildId!, 'channelId', id);
+		await this._settings.set(interaction.guildId, 'channelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD channel has been changed to <#${id}>`,
@@ -176,7 +178,7 @@ export class QotDSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels
 	) {
-		await this._settings.set(interaction.guildId!, 'dailyChannelId', id);
+		await this._settings.set(interaction.guildId, 'dailyChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD daily channel has been changed to <#${id}>`,
@@ -189,7 +191,7 @@ export class QotDSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles
 	) {
-		await this._settings.set(interaction.guildId!, 'pingRoleId', id);
+		await this._settings.set(interaction.guildId, 'pingRoleId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD ping role has been changed to <@&${id}>`,
@@ -204,16 +206,16 @@ export class QotDSettingsCommands {
 	) {
 		const parsed = Number.parseInt(selected, 10);
 
-		if (isNaN(parsed)) {
+		if (Number.isNaN(parsed)) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} Something wen't wrong, try again later.`,
 				components: [this._getBackButtonRow()],
 			});
 		}
 
-		await this._settings.set(interaction.guildId!, 'dailyHour', parsed);
+		await this._settings.set(interaction.guildId, 'dailyHour', parsed);
 
-		const time = isNaN(parsed)
+		const time = Number.isNaN(parsed)
 			? 'none'
 			: (HOUR_OPTIONS.find(h => h.value === parsed)?.name ?? 'none');
 
@@ -228,7 +230,7 @@ export class QotDSettingsCommands {
 		option: keyof QotDSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue = settings?.[option];
 		let readableOption: string = option;
@@ -298,7 +300,7 @@ export class QotDSettingsCommands {
 			}
 			case 'dailyHour': {
 				readableOption = 'Daily hour';
-				currentValue = isNaN(settings![option])
+				currentValue = Number.isNaN(settings[option])
 					? 'none'
 					: `\`${
 							HOUR_OPTIONS.find(h => h.value === settings?.[option])?.name ??
@@ -318,7 +320,7 @@ export class QotDSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -326,7 +328,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

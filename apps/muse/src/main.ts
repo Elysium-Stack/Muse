@@ -2,9 +2,10 @@ import { ShutdownSignal } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { createLogger } from '@util';
 
 import { MuseModule } from './muse.module';
+
+import { createLogger } from '@util';
 
 async function bootstrap() {
 	const app = await NestFactory.create(MuseModule, {
@@ -22,7 +23,7 @@ async function bootstrap() {
 		},
 	});
 
-	if (process.env.NODE_ENV !== 'production') {
+	if (process.env['NODE_ENV'] !== 'production') {
 		const config = new DocumentBuilder()
 			.setTitle('Muse API')
 			.setDescription("The muse API for it's dashboard")
@@ -37,4 +38,5 @@ async function bootstrap() {
 	await app.startAllMicroservices();
 	await app.listen(3000);
 }
+
 bootstrap();

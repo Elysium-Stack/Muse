@@ -1,11 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
-import { MusicCommandDecorator } from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -40,6 +33,17 @@ import {
 import { MusicSettingsService } from '../services/settings.service';
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import { MusicCommandDecorator } from '@music';
+
+import {
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
+
 class MusicSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -128,7 +132,7 @@ export class MusicSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music has been ${
@@ -143,7 +147,7 @@ export class MusicSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedChannels() [[id]]: ISelectedChannels
 	) {
-		await this._settings.set(interaction.guildId!, 'channelId', id);
+		await this._settings.set(interaction.guildId, 'channelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music channel has been changed to <#${id}>`,
@@ -156,7 +160,7 @@ export class MusicSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles
 	) {
-		await this._settings.set(interaction.guildId!, 'djRoleId', id);
+		await this._settings.set(interaction.guildId, 'djRoleId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Music DJ role has been changed to <@&${id}>`,
@@ -169,7 +173,7 @@ export class MusicSettingsCommands {
 		option: keyof MusicSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue = settings?.[option];
 		let readableOption: string = option;
@@ -242,7 +246,7 @@ export class MusicSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -250,7 +254,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

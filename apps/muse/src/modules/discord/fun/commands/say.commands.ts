@@ -1,10 +1,5 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
-	ForbiddenExceptionFilter,
-	GuildAdminGuard,
-	MESSAGE_PREFIX,
-} from '@util';
-import {
 	ActionRowBuilder,
 	ModalActionRowComponentBuilder,
 	ModalBuilder,
@@ -19,6 +14,12 @@ import {
 	SlashCommand,
 	SlashCommandContext,
 } from 'necord';
+
+import {
+	ForbiddenExceptionFilter,
+	GuildAdminGuard,
+	MESSAGE_PREFIX,
+} from '@util';
 
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
@@ -79,7 +80,7 @@ export class FunSayCommands {
 
 		const channel = await interaction.guild.channels
 			.fetch(channelId)
-			.catch(error => null);
+			.catch(() => null);
 
 		if (!channel) {
 			return interaction.reply({
@@ -107,7 +108,7 @@ export class FunSayCommands {
 
 		const replyMessage = await channel.messages
 			.fetch(replyId)
-			.catch(error => null);
+			.catch(()=> null);
 
 		if (!replyMessage) {
 			return interaction.reply({

@@ -1,8 +1,10 @@
-import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
-import { getInteractionCommandName } from '@util';
 import { Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
+
+import { getUsername } from '@muse/util/get-username';
+
+import { getInteractionCommandName } from '@util';
 @Injectable()
 export class InteractionEvents {
 	private readonly _logger = new Logger(InteractionEvents.name);

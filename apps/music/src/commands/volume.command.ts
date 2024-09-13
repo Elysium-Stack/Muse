@@ -1,3 +1,6 @@
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { Button, ButtonContext, ComponentParam, Context } from 'necord';
+
 import {
 	HasNoPlayerExceptionFilter,
 	MusicCommandDecorator,
@@ -6,8 +9,6 @@ import {
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@music';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { Button, ButtonContext, ComponentParam, Context } from 'necord';
 
 @UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
 @UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)
@@ -46,7 +47,7 @@ export class MusicVolumeCommands {
 			amount = Number.parseInt(amount, 10);
 		}
 
-		const { result, volume } = await this._player.getVolume(
+		const { result, volume } = this._player.getVolume(
 			interaction.guildId
 		);
 
@@ -56,12 +57,12 @@ export class MusicVolumeCommands {
 
 		const current = volume * 100;
 
-		let newVolume = current + amount;
-		if (newVolume > 100) {
-			newVolume = 100;
+		let changedVolume = current + amount;
+		if (changedVolume > 100) {
+			changedVolume = 100;
 		}
 
-		await this._player.setVolume(interaction.guildId, newVolume, false);
+		await this._player.setVolume(interaction.guildId, changedVolume, false);
 		return interaction.deferUpdate();
 	}
 
@@ -85,12 +86,12 @@ export class MusicVolumeCommands {
 
 		const current = volume * 100;
 
-		let newVolume = current - amount;
-		if (newVolume < 0) {
-			newVolume = 0;
+		let changedVolume = current - amount;
+		if (changedVolume < 0) {
+			changedVolume = 0;
 		}
 
-		await this._player.setVolume(interaction.guildId, newVolume, false);
+		await this._player.setVolume(interaction.guildId, changedVolume, false);
 		return interaction.deferUpdate();
 	}
 }

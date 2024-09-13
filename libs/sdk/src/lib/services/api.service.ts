@@ -1,13 +1,13 @@
-/* tslint:disable */
-/* eslint-disable */
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpContext } from '@angular/common/http';
-import { BaseService } from '../base-service';
-import { ApiConfiguration } from '../api-configuration';
-import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+
+import { ApiConfiguration } from '../api-configuration';
+import { BaseService } from '../base-service';
+import { RequestBuilder } from '../request-builder';
+import { StrictHttpResponse } from '../strict-http-response';
+
 
 @Injectable({
 	providedIn: 'root',
@@ -29,7 +29,7 @@ export class ApiService extends BaseService {
 	 * This method doesn't expect any request body.
 	 */
 	prometheusControllerIndex$Response(
-		params?: {},
+		_: unknown,
 		context?: HttpContext
 	): Observable<StrictHttpResponse<void>> {
 		const rb = new RequestBuilder(
@@ -37,8 +37,6 @@ export class ApiService extends BaseService {
 			ApiService.PrometheusControllerIndexPath,
 			'get'
 		);
-		if (params) {
-		}
 
 		return this.http
 			.request(
@@ -49,9 +47,9 @@ export class ApiService extends BaseService {
 				})
 			)
 			.pipe(
-				filter((r: any) => r instanceof HttpResponse),
-				map((r: HttpResponse<any>) => {
-					return (r as HttpResponse<any>).clone({
+				filter((r) => r instanceof HttpResponse),
+				map((r) => {
+					return (r as HttpResponse<unknown>).clone({
 						body: undefined,
 					}) as StrictHttpResponse<void>;
 				})
@@ -65,7 +63,7 @@ export class ApiService extends BaseService {
 	 * This method doesn't expect any request body.
 	 */
 	prometheusControllerIndex(
-		params?: {},
+		params?: unknown,
 		context?: HttpContext
 	): Observable<void> {
 		return this.prometheusControllerIndex$Response(params, context).pipe(

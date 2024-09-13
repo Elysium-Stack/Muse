@@ -1,5 +1,6 @@
-import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
+
+import { SharedModule } from '@muse';
 
 import { BookwormGeneralCommands } from './commands/general.commands';
 import { BookwormSettingsCommands } from './commands/settings.commands';

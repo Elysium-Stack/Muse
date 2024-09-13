@@ -4,6 +4,6 @@ export class LavalinkMusicEvent {
 	constructor(
 		public player: KazagumoPlayer,
 		public source: string,
-		public data?: any
+		public data?: unknown
 	) {}
 }

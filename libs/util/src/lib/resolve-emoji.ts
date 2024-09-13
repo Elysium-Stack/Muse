@@ -23,7 +23,7 @@ export const resolveEmoji = (
 	let emojiId = emoji;
 
 	if (emojiId.includes(':')) {
-		const splittedEmoji = emoji!.split(':');
+		const splittedEmoji = emoji.split(':');
 		emojiId = splittedEmoji.at(-1).replaceAll('>', '');
 	}
 

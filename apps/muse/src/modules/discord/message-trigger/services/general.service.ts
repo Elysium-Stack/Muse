@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
-import { TriggerMatch } from '@prisma/client';
-import { escapeRegExp } from '@util';
 import { Message } from 'discord.js';
 
 import { MessageTriggerSettingsService } from './settings.service';
+
+import { PrismaService } from '@prisma';
+
+import { TriggerMatch } from '@prisma/client';
+
+import { escapeRegExp } from '@util';
+
 @Injectable()
 export class MessageTriggerGeneralService {
 	private readonly _logger = new Logger(MessageTriggerGeneralService.name);

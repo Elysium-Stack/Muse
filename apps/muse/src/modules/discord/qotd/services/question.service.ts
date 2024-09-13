@@ -1,11 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '@prisma';
-import { MESSAGE_PREFIX } from '@util';
 import { getHours } from 'date-fns';
 import { ChannelType, Client } from 'discord.js';
 
 import { createQuestionEmbed } from '../util/create-question-embed';
+
+import { PrismaService } from '@prisma';
+
+import { MESSAGE_PREFIX } from '@util';
 @Injectable()
 export class QotDQuestionService {
 	private readonly _logger = new Logger(QotDQuestionService.name);
@@ -542,7 +544,7 @@ export class QotDQuestionService {
 		});
 
 		if (latestLog) {
-			index = latestLog.index! + 1;
+			index = latestLog.index + 1;
 		}
 
 		if (index >= this.questions.length - 1) {
@@ -592,7 +594,7 @@ export class QotDQuestionService {
 				const embed = createQuestionEmbed(
 					`${MESSAGE_PREFIX} Daily question of the day`,
 					question,
-					this._client.user!
+					this._client.user
 				);
 				const content = qotdPingRoleId ? `<@&${qotdPingRoleId}>` : '';
 				await channel.send({ embeds: [embed], content });

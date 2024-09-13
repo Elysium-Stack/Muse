@@ -1,17 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { PrismaService } from '@prisma';
-import { MESSAGE_PREFIX } from '@util';
 import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	CommandInteraction,
-	EmbedBuilder,
-	MessageComponentInteraction,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    CommandInteraction,
+    EmbedBuilder,
+    MessageComponentInteraction,
 } from 'discord.js';
 import { KazagumoTrack } from 'kazagumo';
 import { firstValueFrom, take, timeout } from 'rxjs';
+
+import { PrismaService } from '@prisma';
+
+import { MESSAGE_PREFIX } from '@util';
 @Injectable()
 export class RadioService {
 	private readonly _logger = new Logger(RadioService.name);
@@ -49,7 +51,11 @@ export class RadioService {
 
 		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } = settings;
 
-		const radio = await this._sendCommand('RADIO_START', {
+		const radio = await this._sendCommand<{ data: {
+			tracks: KazagumoTrack[];
+			playlistName: string;
+			voiceChannelId: string;
+		}}>('RADIO_START', {
 			guildId: interaction.guildId,
 			radioPlaylist,
 			radioVoiceChannelId,
@@ -253,13 +259,13 @@ export class RadioService {
 		});
 	}
 
-	private async _sendCommand<T = { data: any }>(command: string, data: any) {
+	private async _sendCommand<T>(command: string, data: unknown) {
 		try {
 			const result = await (firstValueFrom(
 				this._radio.send(command, data).pipe(take(1), timeout(5000))
 			) as Promise<T & { result: string }>);
 
-			return result;
+			return result as { result: string } & T;
 		} catch (error) {
 			this._logger.error(error);
 			return null;

@@ -1,6 +1,7 @@
-import { SharedModule } from '@muse/shared.module';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+
+import { SharedModule } from '@muse/shared.module';
 
 import { DiscordApiService } from './services/api.service';
 

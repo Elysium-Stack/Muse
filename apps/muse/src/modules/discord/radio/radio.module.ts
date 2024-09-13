@@ -1,6 +1,7 @@
-import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
+import { SharedModule } from '@muse/shared.module';
 
 import { RadioNextCommands } from './commands/next.command';
 import { RadioPreviousCommands } from './commands/previous.command';
@@ -16,7 +17,7 @@ import { RadioService } from './services';
 				name: 'RADIO_SERVICE',
 				transport: Transport.TCP,
 				options: {
-					host: process.env.RADIO_BOT_HOST,
+					host: process.env['RADIO_BOT_HOST'],
 					port: 1337,
 				},
 			},

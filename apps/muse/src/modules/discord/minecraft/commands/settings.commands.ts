@@ -1,11 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	GuildAdminGuard,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -47,6 +40,15 @@ import { MinecraftCommandDecorator } from '../minecraft.decorator';
 import { MinecraftSettingsService } from '../services/settings.service';
 import { MinecraftSettingsInterface } from '../types/settings.interface';
 import { MINECRAFT_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import {
+	ForbiddenExceptionFilter,
+	GuildAdminGuard,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
 class MinecraftSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -137,7 +139,7 @@ export class MinecraftSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Minecraft has been ${
@@ -155,7 +157,7 @@ export class MinecraftSettingsCommands {
 		const parsedValue = value === 'true' ? true : false;
 
 		await this._settings.set(
-			interaction.guildId!,
+			interaction.guildId,
 			'bedrockEnabled',
 			parsedValue
 		);
@@ -173,7 +175,7 @@ export class MinecraftSettingsCommands {
 		@Context() [interaction]: ButtonContext,
 		@SelectedRoles() [[id]]: ISelectedRoles
 	) {
-		await this._settings.set(interaction.guildId!, 'requiredRoleId', id);
+		await this._settings.set(interaction.guildId, 'requiredRoleId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Minecraft required role has been changed to <@&${id}>`,
@@ -187,14 +189,14 @@ export class MinecraftSettingsCommands {
 	) {
 		const connectUrl = interaction.fields.getTextInputValue('connectUrl');
 		const bedrockPort = interaction.fields.getTextInputValue('bedrockPort');
-		if (bedrockPort.length > 0 && isNaN(Number.parseInt(bedrockPort, 10))) {
+		if (bedrockPort.length > 0 && Number.isNaN(Number.parseInt(bedrockPort, 10))) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Bedrock port must be a number.`,
 				components: [this._getBackButtonRow()],
 			});
 		}
 
-		await this._settings.setObj(interaction.guildId!, {
+		await this._settings.setObj(interaction.guildId, {
 			connectUrl,
 			bedrockPort,
 		});
@@ -210,7 +212,7 @@ export class MinecraftSettingsCommands {
 		@Ctx() [interaction]: ModalContext
 	) {
 		const rconPort = interaction.fields.getTextInputValue('rconPort');
-		if (isNaN(Number.parseInt(rconPort, 10))) {
+		if (Number.isNaN(Number.parseInt(rconPort, 10))) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Port must be a number.`,
 				components: [this._getBackButtonRow()],
@@ -220,7 +222,7 @@ export class MinecraftSettingsCommands {
 		const rconHost = interaction.fields.getTextInputValue('rconHost');
 		const rconPass = interaction.fields.getTextInputValue('rconPass');
 
-		await this._settings.setObj(interaction.guildId!, {
+		await this._settings.setObj(interaction.guildId, {
 			rconHost,
 			rconPort,
 			...(rconPass?.length ? { rconPass } : {}),
@@ -238,7 +240,7 @@ export class MinecraftSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'chatChannelId', id);
+		await this._settings.set(interaction.guildId, 'chatChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Minecraft Chat Channel changed to:${
@@ -253,7 +255,7 @@ export class MinecraftSettingsCommands {
 		option: string
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue = settings?.[option];
 		let readableOption: string = option;
@@ -429,7 +431,7 @@ export class MinecraftSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -437,7 +439,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

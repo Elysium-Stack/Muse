@@ -1,10 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { GuildsService } from '@sdk';
-import { BotOAuth2GuildDto } from '@sdk/models/bot-o-auth-2-guild-dto';
 import { UserService } from 'apps/dashboard/src/services/user.service';
 import { BehaviorSubject, take } from 'rxjs';
 
-@Injectable()
+import { GuildsService } from '@sdk';
+
+import { BotOAuth2GuildDto } from '@sdk/models/bot-o-auth-2-guild-dto';
+
+
+@Injectable({ providedIn: 'root' })
 export class DashboardGuildService {
 	private _guild = inject(GuildsService);
 	private _user = inject(UserService);
@@ -17,8 +20,9 @@ export class DashboardGuildService {
 	public selectedGuildId$ = signal<string | null>(null);
 	public selectedGuild$ = computed(
 		() =>
-			this.availableGuilds$().find(g => g.id === this.selectedGuildId$()) ||
-			null
+			this.availableGuilds$().find(
+				g => g.id === this.selectedGuildId$()
+			) || null
 	);
 
 	public availableGuilds$ = computed(() =>

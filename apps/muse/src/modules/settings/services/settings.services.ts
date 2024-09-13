@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import { PrismaService } from '@prisma';
 
 @Injectable()
@@ -37,7 +38,7 @@ export class SettingsService {
 		return settings;
 	}
 
-	async setKey(guildId: string, key: string, value: any) {
+	async setKey(guildId: string, key: string, value: unknown) {
 		const settings = await this.getSettings(guildId);
 
 		return this._prisma.settings.update({
@@ -51,6 +52,7 @@ export class SettingsService {
 		});
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	async setObj(guildId: string, obj: any) {
 		const settings = await this.getSettings(guildId);
 

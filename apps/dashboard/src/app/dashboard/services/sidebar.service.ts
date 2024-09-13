@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DashboardSidebarService {
 	public show$ = signal<boolean>(false);
 

@@ -9,10 +9,12 @@
 		<a
 			[class]="
 				'capitalize' +
-				(!segment.link && i != segments$().length - 1 ? ' text-white/40' : '')
+				(!segment.link && i !== segments$().length - 1
+					? ' text-white/40'
+					: '')
 			"
-			[class.text-primary]="i == segments$().length - 1"
-			[class.font-medium]="i == segments$().length - 1"
+			[class.text-primary]="i === segments$().length - 1"
+			[class.font-medium]="i === segments$().length - 1"
 			[routerLink]="segment.link"
 		>
 			{{ segment.label }}
@@ -32,9 +34,9 @@
 			class="ghost-loader w-56 h-8"
 		></div>
 		<ng-template #welcomeTemplate>
-			{{ user$().username
-			}}<ng-container *ngIf="user$().discriminator !== '0'"
-				>#{{ user$().discriminator }}</ng-container
+			{{ user$()!.username
+			}}<ng-container *ngIf="user$()!.discriminator !== '0'"
+				>#{{ user$()!.discriminator }}</ng-container
 			>
 		</ng-template>
 	</m-dashboard-page-title>

@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	HostBinding,
 	effect,
 	inject,
 } from '@angular/core';
@@ -27,6 +28,7 @@ import { filter } from 'rxjs';
 import { DashboardGuildService } from '../../services/guild.service';
 import { DashboardSidebarService } from '../../services/sidebar.service';
 
+
 @Component({
 	standalone: true,
 	selector: 'm-dashboard-sidebar',
@@ -46,11 +48,10 @@ import { DashboardSidebarService } from '../../services/sidebar.service';
 	],
 	templateUrl: './sidebar.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: {
-		class: 'relative z-50',
-	},
 })
 export class DashboardSidebarComponent {
+	@HostBinding() class = 'relative z-50';
+
 	private _sidebar = inject(DashboardSidebarService);
 	private _guild = inject(DashboardGuildService);
 	private _host = inject(ElementRef);
@@ -71,7 +72,10 @@ export class DashboardSidebarComponent {
 			document.removeEventListener('click', checkFn);
 
 			if (this.show$()) {
-				setTimeout(() => document.addEventListener('click', checkFn), 100);
+				setTimeout(
+					() => document.addEventListener('click', checkFn),
+					100
+				);
 				return;
 			}
 		});

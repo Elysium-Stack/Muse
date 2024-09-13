@@ -1,6 +1,4 @@
-import { MODULES } from '@muse/util/constants';
 import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
-import { ForbiddenExceptionFilter, MESSAGE_PREFIX, chunks } from '@util';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
@@ -10,6 +8,12 @@ import {
 	SlashCommand,
 	SlashCommandContext,
 } from 'necord';
+
+import { MODULES } from '@muse/util/constants';
+
+import { ForbiddenExceptionFilter, MESSAGE_PREFIX, chunks } from '@util';
+
+
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @Injectable()

@@ -6,8 +6,6 @@ import { Context, ContextOf, On, Once } from 'necord';
 export class AppEvents {
 	private readonly _logger = new Logger(AppEvents.name);
 
-	constructor() {}
-
 	@Once(Events.ClientReady)
 	public onReady(@Context() [client]: ContextOf<Events.ClientReady>) {
 		this._logger.log(`Bot logged in as ${client.user.username}`);
@@ -20,7 +18,7 @@ export class AppEvents {
 	}
 
 	private _setPresence(client: Client) {
-		client.user!.setPresence({
+		client.user.setPresence({
 			activities: [
 				{
 					name: 'you 👀',

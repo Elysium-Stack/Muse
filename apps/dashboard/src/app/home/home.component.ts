@@ -5,6 +5,7 @@ import { NavigationComponent } from '../../components/navigation/navigation.comp
 import { ParticlesComponent } from '../../components/particles/particles.component';
 import { environment } from '../../environment/environment';
 
+// eslint-disable-next-line @angular-eslint/use-component-selector
 @Component({
 	standalone: true,
 	imports: [CommonModule, ParticlesComponent, NavigationComponent],

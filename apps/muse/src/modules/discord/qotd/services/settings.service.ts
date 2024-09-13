@@ -1,9 +1,4 @@
-import { BaseSettingsService } from '@muse/base';
-import { SettingsService } from '@muse/modules/settings';
-import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
-import { HOUR_OPTIONS } from '@muse/util/constants';
 import { Injectable } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -18,6 +13,15 @@ import {
 
 import { QotDSettingsInterface } from '../types/settings.interface';
 import { QOTD_EMBED_COLOR, QOTD_SETTINGS_CHOICES } from '../util/constants';
+
+import { BaseSettingsService } from '@muse/base';
+import { SettingsService } from '@muse/modules/settings';
+import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
+import { HOUR_OPTIONS } from '@muse/util/constants';
+
+import { MESSAGE_PREFIX } from '@util';
+
+
 @Injectable()
 export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterface> {
 	protected _base = 'qotd';
@@ -29,7 +33,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction
 	) {
-		const settings = await this.get(interaction.guildId!);
+		const settings = await this.get(interaction.guildId);
 		if (!settings) {
 			return;
 		}

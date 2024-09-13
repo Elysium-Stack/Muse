@@ -4,10 +4,11 @@ import {
 	Injectable,
 	Logger,
 } from '@nestjs/common';
-import { ModuleNotEnabledException } from '@util/errors';
 import { NecordExecutionContext } from 'necord';
 
 import { MinecraftSettingsService } from '../services/settings.service';
+
+import { ModuleNotEnabledException } from '@util/errors';
 
 @Injectable()
 export class MinecraftEnabledGuard implements CanActivate {
@@ -20,12 +21,12 @@ export class MinecraftEnabledGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 		// if (!interaction.isChatInputCommand()) return false;
 
-		const admins = process.env.OWNER_IDS!.split(',');
+		const admins = process.env['OWNER_IDS'].split(',');
 		if (admins.includes(interaction.user.id)) {
 			return true;
 		}
 
-		const settings = await this._minecraftSettings.get(interaction.guildId!);
+		const settings = await this._minecraftSettings.get(interaction.guildId);
 
 		if (!settings?.enabled) {
 			throw new ModuleNotEnabledException('Minecraft');

@@ -1,10 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -36,6 +30,15 @@ import { ModLogCommandDecorator } from '../mod-log.decorator';
 import { ModLogSettingsService } from '../services/settings.service';
 import { ModLogSettingsInterface } from '../types/settings.interface';
 import { MOD_LOG_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import {
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
+
 
 class ModLogSettingsChangeOptions {
 	@StringOption({
@@ -125,7 +128,7 @@ export class ModLogSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log has been ${
@@ -141,7 +144,7 @@ export class ModLogSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'deleteChannelId', id);
+		await this._settings.set(interaction.guildId, 'deleteChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log message delete channel has been changed to:${
@@ -157,7 +160,7 @@ export class ModLogSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'editChannelId', id);
+		await this._settings.set(interaction.guildId, 'editChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log message edit channel has been changed to:${
@@ -173,7 +176,7 @@ export class ModLogSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'joinChannelId', id);
+		await this._settings.set(interaction.guildId, 'joinChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log member join channel has been changed to:${
@@ -189,7 +192,7 @@ export class ModLogSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'leaveChannelId', id);
+		await this._settings.set(interaction.guildId, 'leaveChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Mod log member leave channel has been changed to:${
@@ -204,7 +207,7 @@ export class ModLogSettingsCommands {
 		option: keyof ModLogSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue: string | string[] | boolean | undefined =
 			settings?.[option];
@@ -321,7 +324,7 @@ export class ModLogSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -329,7 +332,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

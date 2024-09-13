@@ -1,6 +1,4 @@
-import { getVoiceChannelFromInteraction } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -11,7 +9,11 @@ import {
 } from 'discord.js';
 import { KazagumoSearchResult, KazagumoTrack } from 'kazagumo';
 
+import { getVoiceChannelFromInteraction } from '@music';
+
 import { MusicInstancesService } from './instances.service';
+
+import { MESSAGE_PREFIX } from '@util';
 
 @Injectable()
 export class MusicService {
@@ -509,8 +511,8 @@ export class MusicService {
 	private async _send<T>(
 		interaction: CommandInteraction | MessageComponentInteraction,
 		command: string,
-		data: any
-	) {
+		data: unknown
+	): Promise<{result: string} & T> {
 		const voiceChannel = await getVoiceChannelFromInteraction(interaction);
 		const instance = await this._instances.getAvailableOrExisting(
 			interaction.guildId,
@@ -573,6 +575,6 @@ export class MusicService {
 			return null;
 		}
 
-		return music;
+		return music as { result: string } & T;
 	}
 }

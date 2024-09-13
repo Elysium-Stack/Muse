@@ -1,12 +1,11 @@
 import {
-	HttpErrorResponse,
-	HttpEvent,
-	HttpHandler,
-	HttpInterceptor,
-	HttpRequest,
+    HttpErrorResponse,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 
 import { UserService } from './user.service';
@@ -16,14 +15,14 @@ export class AuthInterceptor implements HttpInterceptor {
 	private _user = inject(UserService);
 
 	private isRefreshing = false;
-	private accessTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
+	private accessTokenSubject$ = new BehaviorSubject<string | null>(
 		null
 	);
 
 	intercept(
-		req: HttpRequest<any>,
+		req: HttpRequest<unknown>,
 		next: HttpHandler
-	): Observable<HttpEvent<Object>> {
+	) {
 		let authReq = req;
 		const accessToken = this._user.accessToken$();
 		const refreshToken = this._user.refreshToken$();
@@ -51,18 +50,19 @@ export class AuthInterceptor implements HttpInterceptor {
 		);
 	}
 
-	private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+	private handle401Error(request: HttpRequest<unknown>, next: HttpHandler) {
 		if (!this.isRefreshing) {
 			this.isRefreshing = true;
-			this.accessTokenSubject.next(null);
+			this.accessTokenSubject$.next(null);
 
 			const token = this._user.refreshToken$();
 
 			if (token) {
 				return this._user.refreshToken().pipe(
-					switchMap((token: any) => {
+					switchMap((token ) => {
 						this.isRefreshing = false;
 
+						this.accessTokenSubject$.next(token.accessToken);
 						return next.handle(this.addTokenHeader(request, token.accessToken));
 					}),
 					catchError(err => {
@@ -75,14 +75,14 @@ export class AuthInterceptor implements HttpInterceptor {
 			}
 		}
 
-		return this.accessTokenSubject.pipe(
-			filter(token => token !== null),
+		return this.accessTokenSubject$.pipe(
+			filter((token ) => token !== null),
 			take(1),
-			switchMap(token => next.handle(this.addTokenHeader(request, token)))
+			switchMap((token) => next.handle(this.addTokenHeader(request, token as string)))
 		);
 	}
 
-	private addTokenHeader(request: HttpRequest<any>, token: string) {
+	private addTokenHeader(request: HttpRequest<unknown>, token: string) {
 		return request.clone({
 			headers: request.headers.set('Authorization', `Bearer ${token}`),
 		});

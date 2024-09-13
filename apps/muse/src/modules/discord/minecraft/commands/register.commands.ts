@@ -1,9 +1,4 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	EnabledExceptionFilter,
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-} from '@util';
 import { Client } from 'discord.js';
 import {
 	BooleanOption,
@@ -19,6 +14,12 @@ import { MinecraftRequiredRoleGuard } from '../guards/required-role.guard';
 import { MinecraftCommandDecorator } from '../minecraft.decorator';
 import { MinecraftGeneralService } from '../services/general.service';
 import { MinecraftSettingsService } from '../services/settings.service';
+
+import {
+	EnabledExceptionFilter,
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+} from '@util';
 
 class MinecraftRegisterOptions {
 	@StringOption({

@@ -1,8 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
-import { interactionReply } from '@util';
-import { ModuleNotEnabledException } from '@util/errors';
 import { EmbedBuilder } from 'discord.js';
 import { SlashCommandContext } from 'necord';
+
+import { interactionReply } from '@util';
+
+import { ModuleNotEnabledException } from '@util/errors';
 
 @Catch(ModuleNotEnabledException)
 export class EnabledExceptionFilter implements ExceptionFilter {

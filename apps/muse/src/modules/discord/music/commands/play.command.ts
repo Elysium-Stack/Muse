@@ -1,10 +1,4 @@
-import {
-	MusicCommandDecorator,
-	MusicInVoiceGuard,
-	NotInVoiceExceptionFilter,
-} from '@music';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { EnabledExceptionFilter } from '@util';
 import {
 	Context,
 	Options,
@@ -15,6 +9,14 @@ import {
 
 import { MusicEnabledGuard } from '../guards/enabled.guard';
 import { MusicService } from '../services';
+
+import {
+	MusicCommandDecorator,
+	MusicInVoiceGuard,
+	NotInVoiceExceptionFilter,
+} from '@music';
+
+import { EnabledExceptionFilter } from '@util';
 
 class MusicPlayOptions {
 	@StringOption({
@@ -41,6 +43,6 @@ export class MusicPlayCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { song }: MusicPlayOptions
 	) {
-		return this._music.play(interaction, song!);
+		return this._music.play(interaction, song);
 	}
 }

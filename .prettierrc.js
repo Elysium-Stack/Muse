@@ -7,6 +7,5 @@
 var conventions = require('./node_modules/@paperless/conventions/.prettierrc');
 
 module.exports = Object.assign(conventions, {
-	// tailwindConfig: './tailwind.config.ts',
-	plugins: [],
+	tailwindConfig: './tailwind.config.js',
 });

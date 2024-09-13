@@ -1,5 +1,6 @@
-import { SharedModule } from '@muse';
 import { Module } from '@nestjs/common';
+
+import { SharedModule } from '@muse';
 
 import { ModLogSettingsCommands } from './commands/settings.commands';
 import { ModLogMemberEvents } from './events/member.events';

@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '@prisma';
 import { PlayerState } from 'kazagumo';
 import { firstValueFrom, take, timeout } from 'rxjs';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class MusicInstancesService implements OnModuleInit {
@@ -130,7 +131,7 @@ export class MusicInstancesService implements OnModuleInit {
 		});
 	}
 
-	async sendCommand<T = any>(instance: number, command: string, data: any) {
+	async sendCommand<T>(instance: number, command: string, data: unknown) {
 		const _instance = this.get(instance);
 
 		if (!_instance) {

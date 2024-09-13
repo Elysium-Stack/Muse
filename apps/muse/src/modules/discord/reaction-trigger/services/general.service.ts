@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
-import { TriggerMatch } from '@prisma/client';
-import { escapeRegExp, resolveEmoji } from '@util';
 import { Client, Message } from 'discord.js';
 
 import { ReactionTriggerSettingsService } from './settings.service';
+
+import { PrismaService } from '@prisma';
+
+import { TriggerMatch } from '@prisma/client';
+
+import { escapeRegExp, resolveEmoji } from '@util';
+
 @Injectable()
 export class ReactionTriggerGeneralService {
 	private readonly _logger = new Logger(ReactionTriggerGeneralService.name);
@@ -33,7 +37,7 @@ export class ReactionTriggerGeneralService {
 
 				return {
 					...trigger,
-					emoji: clientEmoji ? clientEmoji : unicode ? trigger.emojiId : null,
+					emoji: clientEmoji ?? (unicode ? trigger.emojiId : null),
 				};
 			})
 			.filter(trigger => !!trigger.emoji);

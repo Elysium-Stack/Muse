@@ -1,12 +1,11 @@
-import { MusicModule } from '@music';
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
-import { PrismaModule } from '@prisma';
-import { intents } from '@util';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { NecordModule } from 'necord';
+
+import { MusicModule } from '@music';
 
 import { MusicLoopCommands } from './commands/loop.command';
 import { MusicNextCommands } from './commands/next.command';
@@ -21,15 +20,19 @@ import { AppEvents } from './events/app.events';
 import { MusicEvents } from './events/music.events';
 import { botMetrics } from './metrics/bot.metrics';
 
+import { PrismaModule } from '@prisma';
+
+import { intents } from '@util';
+
 @Module({
 	imports: [
 		NecordModule.forRoot({
 			development:
-				process.env.NODE_ENV === 'production'
+				process.env['NODE_ENV'] === 'production'
 					? false
-					: process.env.DEVELOPMENT_SERVER_IDS!.split(','),
+					: process.env['DEVELOPMENT_SERVER_IDS'].split(','),
 			skipRegistration: true,
-			token: process.env[`MUSIC_${process.env.INSTANCE_NUMBER}_DISCORD_TOKEN`]!,
+			token: process.env[`MUSIC_${process.env['INSTANCE_NUMBER']}_DISCORD_TOKEN`],
 			intents,
 		}),
 		EventEmitterModule.forRoot(),

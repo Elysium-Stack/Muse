@@ -1,9 +1,13 @@
-import { LavalinkMusicEvent } from '@music/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { RadioService } from '@radio/services/radio.service';
-import { MESSAGE_PREFIX } from '@util/constants';
 import { ChannelType, Client } from 'discord.js';
+
+import { LavalinkMusicEvent } from '@music/util';
+
+import { RadioService } from '@radio/services/radio.service';
+
+import { MESSAGE_PREFIX } from '@util/constants';
+
 
 @Injectable()
 export class MusicEvents {
@@ -17,7 +21,11 @@ export class MusicEvents {
 	) {}
 
 	@OnEvent('music.disconnected')
-	handleMusicDisconnected({ player, source, data }: LavalinkMusicEvent) {
+	handleMusicDisconnected({
+		player,
+		source,
+		data,
+	}: LavalinkMusicEvent & { data: { byRemote: boolean } }) {
 		if (source === 'playerClosed') {
 			if (data.byRemote) {
 				player.destroy();
@@ -33,7 +41,11 @@ export class MusicEvents {
 
 		if (autoRestart) {
 			this._startTimeout = setTimeout(async () => {
-				const channel = await this._client.channels.fetch(player.textId!);
+				if (!player.textId) {
+					return;
+				}
+
+				const channel = await this._client.channels.fetch(player.textId);
 
 				if (this._retryCount === 4) {
 					this._logger.warn("No longer resuming, we've tried 5 times");

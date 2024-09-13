@@ -1,4 +1,92 @@
 {
 	"extends": "./node_modules/@paperless/conventions/.eslintrc.js",
-	"root": true
+	"root": true,
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"rules": {
+				"unicorn/prefer-top-level-await": "off",
+				"import/order": [
+					"error",
+					{
+						"pathGroups": [
+							{
+								"pattern": "@muse",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@muse/**",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@music",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@music/**",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@radio",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@radio/**",
+								"group": "parent",
+								"position": "after"
+							},
+							{
+								"pattern": "@prisma",
+								"group": "sibling",
+								"position": "after"
+							},
+							{
+								"pattern": "@prisma/**",
+								"group": "sibling",
+								"position": "after"
+							},
+							{
+								"pattern": "@sdk",
+								"group": "sibling",
+								"position": "after"
+							},
+							{
+								"pattern": "@sdk/**",
+								"group": "sibling",
+								"position": "after"
+							},
+							{
+								"pattern": "@util",
+								"group": "sibling",
+								"position": "after"
+							},
+							{
+								"pattern": "@util/**",
+								"group": "sibling",
+								"position": "after"
+							}
+						],
+						"pathGroupsExcludedImportTypes": ["builtin"],
+						"groups": [
+							"builtin",
+							"external",
+							"parent",
+							"sibling",
+							"index"
+						],
+						"newlines-between": "always",
+						"alphabetize": {
+							"order": "asc",
+							"caseInsensitive": true
+						}
+					}
+				]
+			}
+		}
+	]
 }

@@ -1,7 +1,9 @@
 import { EmbedBuilder } from '@discordjs/builders';
-import { readableTime } from '@util';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, User } from 'discord.js';
 import { KazagumoPlayer, KazagumoTrack } from 'kazagumo';
+
+import { readableTime } from '@util';
+
 
 export const createPlayingEmbed = (
 	player: KazagumoPlayer,
@@ -26,7 +28,7 @@ export const createPlayingEmbed = (
 				: []),
 			{
 				name: 'Duration',
-				value: `\`${readableTime(track.length!)}\``,
+				value: `\`${track?.length && readableTime(track.length)}\``,
 				inline: true,
 			}
 		);

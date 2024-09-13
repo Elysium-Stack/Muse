@@ -1,4 +1,5 @@
 import { SettingsService } from '@muse/settings';
+
 import { Settings } from '@prisma/client';
 
 export abstract class BaseSettingsService<T> {
@@ -16,7 +17,7 @@ export abstract class BaseSettingsService<T> {
 		return this._formatSettings(settings);
 	}
 
-	async set(guildId: string, key: string, value: any) {
+	async set(guildId: string, key: string, value: unknown) {
 		const defaultKey = `${this._base}${key
 			.charAt(0)
 			.toUpperCase()}${key.slice(1)}`;
@@ -24,27 +25,27 @@ export abstract class BaseSettingsService<T> {
 	}
 
 	async setObj(guildId: string, obj: Partial<T>) {
-		const newObj = {};
+		const parsedObj = {};
 		for (const key of Object.keys(obj)) {
-			newObj[`${this._base}${key.charAt(0).toUpperCase()}${key.slice(1)}`] =
+			parsedObj[`${this._base}${key.charAt(0).toUpperCase()}${key.slice(1)}`] =
 				obj[key];
 		}
 
-		this._settings.setObj(guildId, newObj);
+		this._settings.setObj(guildId, parsedObj);
 	}
 
 	private _formatSettings(settings: Settings): T {
-		const newSettings: any = {};
+		const parsedSettings= {};
 
 		for (const [key, value] of Object.entries(settings)) {
 			if (key.startsWith(this._base)) {
-				let newKey = key.replace(this._base, '');
-				newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+				let parsedKey = key.replace(this._base, '');
+				parsedKey = parsedKey.charAt(0).toLowerCase() + parsedKey.slice(1);
 
-				newSettings[newKey] = value;
+				parsedSettings[parsedKey] = value;
 			}
 		}
 
-		return newSettings as T;
+		return parsedSettings as T;
 	}
 }

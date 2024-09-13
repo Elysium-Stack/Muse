@@ -71,15 +71,15 @@ export class MusicPlayerService {
 		player.data.set('previousVolume', 50);
 		player.data.set('radio', radio);
 		player.data.set('auto-restart', radio);
-		player.data.set('no-dc', process.env.NODE_ENV === 'development');
+		player.data.set('no-dc', process.env['NODE_ENV'] === 'development');
 
 		if (player.queue.size > 0) {
 			player.queue.clear();
 		}
 
 		for (const track of result.tracks) {
-			const newTrack = this._transformTrack(track);
-			player.queue.add(newTrack);
+			const transformedTrack = this._transformTrack(track);
+			player.queue.add(transformedTrack);
 		}
 
 		if (radio) {
@@ -155,6 +155,7 @@ export class MusicPlayerService {
 			};
 		}
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		player.play(player.queue.previous, {
 			replaceCurrent: true,
@@ -328,10 +329,14 @@ export class MusicPlayerService {
 	}
 
 	private _transformTrack(track: KazagumoTrack) {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		const newTrack = new KazagumoTrack(track.getRaw()._raw, track.requester);
-		newTrack.thumbnail = track.thumbnail;
+		const transformedTrack = new KazagumoTrack(
+			track.getRaw()._raw,
+			track.requester
+		);
+		transformedTrack.thumbnail = track.thumbnail;
 
-		return newTrack;
+		return transformedTrack;
 	}
 }

@@ -1,8 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
-import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -40,6 +36,14 @@ import {
 import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleGeneralService } from '../services';
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import { Prisma } from '@prisma/client';
+
+import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
+
+import { GuildModeratorGuard } from '@util/guards';
 
 class FeedbackTopicsListOptions {
 	@NumberOption({
@@ -160,8 +164,8 @@ export class RequestRoleModeratorCommands {
 		);
 
 		const topic = await this._requestRole.removeEntryById(
-			interaction.guildId!,
-			id!
+			interaction.guildId,
+			id
 		);
 
 		if (!topic) {
@@ -245,7 +249,7 @@ export class RequestRoleModeratorCommands {
 		page = page ?? 1;
 
 		const { entries, total } = await this._requestRole.getEntriesPerPage(
-			interaction.guildId!,
+			interaction.guildId,
 			page
 		);
 
@@ -287,7 +291,7 @@ export class RequestRoleModeratorCommands {
 
 		let embed = new EmbedBuilder()
 			.setTitle(
-				`${MESSAGE_PREFIX} Request role entries for ${interaction.guild!.name}`
+				`${MESSAGE_PREFIX} Request role entries for ${interaction.guild.name}`
 			)
 			.setColor(REQUEST_ROLE_EMBED_COLOR)
 			.addFields([

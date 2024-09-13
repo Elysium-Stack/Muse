@@ -4,7 +4,9 @@
 	"overrides": [
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-			"rules": {}
+			"rules": {
+				"@angular-eslint/use-injectable-provided-in": "off"
+			}
 		},
 		{
 			"files": ["*.ts", "*.tsx"],

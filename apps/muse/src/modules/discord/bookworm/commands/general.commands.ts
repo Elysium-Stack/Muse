@@ -1,9 +1,4 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ChannelExceptionFilter,
-	EnabledExceptionFilter,
-	MESSAGE_PREFIX,
-} from '@util';
 import { Client } from 'discord.js';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
 
@@ -12,6 +7,12 @@ import { BookwormChannelGuard } from '../guards/channel.guard';
 import { BookwormEnabledGuard } from '../guards/enabled.guard';
 import { BookwormQuestionService } from '../services/question.service';
 import { createQuestionEmbed } from '../util/create-question-embed';
+
+import {
+	ChannelExceptionFilter,
+	EnabledExceptionFilter,
+	MESSAGE_PREFIX,
+} from '@util';
 @UseGuards(BookwormEnabledGuard)
 @UseFilters(EnabledExceptionFilter)
 @BookwormCommandDecorator()
@@ -44,7 +45,7 @@ export class BookwormGeneralCommands {
 		const embed = createQuestionEmbed(
 			`${MESSAGE_PREFIX} Random question`,
 			question,
-			this._client.user!
+			this._client.user
 		);
 		return interaction.reply({ content: '', embeds: [embed] });
 	}

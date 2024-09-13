@@ -1,8 +1,4 @@
-import { BaseSettingsService } from '@muse/base';
-import { SettingsService } from '@muse/modules/settings';
-import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 import { Injectable } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -17,6 +13,14 @@ import {
 
 import { MusicSettingsInterface } from '../types/settings.interface';
 import { MUSIC_EMBED_COLOR, MUSIC_SETTINGS_CHOICES } from '../util/constants';
+
+import { BaseSettingsService } from '@muse/base';
+import { SettingsService } from '@muse/modules/settings';
+import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
+
+import { MESSAGE_PREFIX } from '@util';
+
+
 @Injectable()
 export class MusicSettingsService extends BaseSettingsService<MusicSettingsInterface> {
 	protected _base = 'music';
@@ -28,7 +32,7 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction
 	) {
-		const settings = await this.get(interaction.guildId!);
+		const settings = await this.get(interaction.guildId);
 
 		if (!settings) {
 			return;

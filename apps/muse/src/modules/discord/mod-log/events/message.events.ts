@@ -1,10 +1,11 @@
-import { EMBED_STATUS_COLORS } from '@muse/util/constants';
-import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { EmbedBuilder, Events, TextChannel } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
 
 import { ModLogSettingsService } from '../services';
+
+import { EMBED_STATUS_COLORS } from '@muse/util/constants';
+import { getUsername } from '@muse/util/get-username';
 
 @Injectable()
 export class ModLogMessageEvents {
@@ -16,19 +17,19 @@ export class ModLogMessageEvents {
 	public async onMessageDelete(
 		@Context() [message]: ContextOf<Events.MessageDelete>
 	) {
-		const { guildId } = message;
+		const { guildId, guild, author, id, channelId, attachments } = message;
 		const { enabled, deleteChannelId } = await this._settings.get(guildId);
 
 		if (!enabled || !deleteChannelId?.length) {
 			return;
 		}
 
-		if (message.author.bot) {
+		if (author.bot) {
 			return;
 		}
 
 		this._logger.log(
-			`Mod log message delete running for ${guildId}\nMessage ID: ${message.id}\nAuthor ID:${message.author.id}`
+			`Mod log message delete running for ${guildId}\nMessage ID: ${id}\nAuthor ID:${author.id}`
 		);
 
 		const channel = await message.channel.fetch();
@@ -43,7 +44,7 @@ export class ModLogMessageEvents {
 			const embed = new EmbedBuilder()
 				.setTitle(`Message delete in ${channel.name}`)
 				.setDescription(
-					`https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`
+					`https://discord.com/channels/${guildId}/${channelId}/${id}`
 				)
 				.addFields(
 					...(content?.length
@@ -52,11 +53,11 @@ export class ModLogMessageEvents {
 								value: part,
 							}))
 						: []),
-					...(message.attachments.size > 0
+					...(attachments.size > 0
 						? [
 								{
 									name: 'Attachments',
-									value: message.attachments
+									value: attachments
 										.map(a => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
@@ -64,14 +65,14 @@ export class ModLogMessageEvents {
 						: [])
 				)
 				.setAuthor({
-					name: `${getUsername(message.author)} | ${message.author.id}`,
-					iconURL: message.author.displayAvatarURL() || undefined,
+					name: `${getUsername(author)} | ${author.id}`,
+					iconURL: author.displayAvatarURL() || undefined,
 				})
-				.setImage(message.attachments.first()?.url || undefined)
+				.setImage(attachments.first()?.url || undefined)
 				.setColor(EMBED_STATUS_COLORS.danger)
 				.setTimestamp();
 
-			const deleteChannel = await message.guild.channels.fetch(deleteChannelId);
+			const deleteChannel = await guild.channels.fetch(deleteChannelId);
 
 			if (!deleteChannel.isTextBased()) {
 				return;
@@ -90,8 +91,7 @@ export class ModLogMessageEvents {
 	public async onMessageUpdate(
 		@Context() [original, updated]: ContextOf<Events.MessageUpdate>
 	) {
-		const { guildId } = original;
-		const { enabled, editChannelId } = await this._settings.get(guildId);
+		const { enabled, editChannelId } = await this._settings.get(original.guildId);
 
 		if (!enabled || !editChannelId?.length) {
 			return;
@@ -106,7 +106,7 @@ export class ModLogMessageEvents {
 		}
 
 		this._logger.log(
-			`Mod log message edit running for ${guildId}\nMessage ID: ${updated.id}\nAuthor ID:${updated.author.id}`
+			`Mod log message edit running for ${original.guildId}\nMessage ID: ${updated.id}\nAuthor ID:${updated.author.id}`
 		);
 
 		const channel = await updated.channel.fetch();

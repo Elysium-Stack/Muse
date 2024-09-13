@@ -1,3 +1,6 @@
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { Button, ButtonContext, Context } from 'necord';
+
 import {
 	HasNoPlayerExceptionFilter,
 	MusicCommandDecorator,
@@ -6,8 +9,6 @@ import {
 	MusicPlayerService,
 	NotInVoiceExceptionFilter,
 } from '@music';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { Button, ButtonContext, Context } from 'necord';
 
 @UseGuards(MusicInVoiceGuard, MusicHasPlayerGuard)
 @UseFilters(NotInVoiceExceptionFilter, HasNoPlayerExceptionFilter)

@@ -1,8 +1,6 @@
-import { LavalinkMusicEvent } from '@music/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron } from '@nestjs/schedule';
-import { DeveloperLogService, MESSAGE_PREFIX } from '@util';
 import { ChannelType, Client, Events, VoiceState } from 'discord.js';
 import {
 	Kazagumo,
@@ -25,6 +23,10 @@ import {
 	createPlayingEmbed,
 } from '../util/currently-playing-embed';
 
+import { LavalinkMusicEvent } from '@music/util';
+
+import { DeveloperLogService, MESSAGE_PREFIX } from '@util';
+
 @Injectable()
 export class MusicLavalinkService extends Kazagumo {
 	private readonly _logger = new Logger(MusicLavalinkService.name);
@@ -45,11 +47,13 @@ export class MusicLavalinkService extends Kazagumo {
 					if (guild) guild.shard.send(payload);
 				},
 				plugins: [
-					...(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET
+					...(process.env['SPOTIFY_CLIENT_ID'] &&
+					process.env['SPOTIFY_CLIENT_SECRET']
 						? [
 								new Spotify({
-									clientId: process.env.SPOTIFY_CLIENT_ID,
-									clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+									clientId: process.env['SPOTIFY_CLIENT_ID'],
+									clientSecret:
+										process.env['SPOTIFY_CLIENT_SECRET'],
 									playlistPageLimit: 10,
 									albumPageLimit: 5,
 									searchLimit: 20,
@@ -62,9 +66,9 @@ export class MusicLavalinkService extends Kazagumo {
 			new Connectors.DiscordJS(_client),
 			[
 				{
-					name: process.env.LAVALINK_ID!,
-					url: `${process.env.LAVALINK_HOST}:${process.env.LAVALINK_PORT}`,
-					auth: process.env.LAVALINK_PASSWORD!,
+					name: process.env['LAVALINK_ID'] as string,
+					url: `${process.env['LAVALINK_HOST']}:${process.env['LAVALINK_PORT']}`,
+					auth: process.env['LAVALINK_PASSWORD'] as string,
 					secure: false,
 				},
 			]
@@ -119,7 +123,7 @@ export class MusicLavalinkService extends Kazagumo {
 			);
 		});
 
-		this.shoukaku.on('disconnect', (name: any, moved: any) => {
+		this.shoukaku.on('disconnect', (name, moved) => {
 			this.shoukaku.on('error', async (name, error) => {
 				this._logger.error(`Lavalink ${name}: Error Caught,`, error);
 				await this._developerLog.sendError(
@@ -136,7 +140,7 @@ export class MusicLavalinkService extends Kazagumo {
 			const players = [...this.players.keys()].map((key: string) =>
 				this.players.get(key)
 			);
-			players.map((player: any) => player.connection.disconnect());
+			players.filter(p => !!p).map(player => player.disconnect());
 			this._logger.warn(`Lavalink ${name}: Disconnected`);
 		});
 
@@ -161,7 +165,9 @@ export class MusicLavalinkService extends Kazagumo {
 			)
 		);
 
-		this.on('playerStuck', (player, data) => this._onPlayerStuck(player, data));
+		this.on('playerStuck', (player, data) =>
+			this._onPlayerStuck(player, data)
+		);
 
 		this.on('playerException', (player, data) =>
 			this._onPlayerException(player, data)
@@ -217,27 +223,30 @@ export class MusicLavalinkService extends Kazagumo {
 	private async _onPlayerEmpty(player: KazagumoPlayer) {
 		this._logger.log(`Player empty for ${player.guildId}`);
 
-		const channel = await this._client.channels.fetch(player.textId!);
-		if (channel?.type !== ChannelType.GuildText) {
-			return;
+		if (player.textId) {
+			const channel = await this._client.channels.fetch(player.textId);
+			if (channel?.type !== ChannelType.GuildText) {
+				return;
+			}
+
+			player.data
+				.get('message')
+				?.delete()
+				.catch(() => null);
+
+			await channel.send({
+				content: `${MESSAGE_PREFIX} No more songs to play, disconnecting.`,
+			});
 		}
-
-		player.data
-			.get('message')
-			?.delete()
-			.catch(() => null);
-
-		await channel.send({
-			content: `${MESSAGE_PREFIX} No more songs to play, disconnecting.`,
-		});
 
 		player.destroy();
 	}
 
-	private async _onPlayerStuck(player: KazagumoPlayer, data: TrackStuckEvent) {
+	private async _onPlayerStuck(
+		player: KazagumoPlayer,
+		data: TrackStuckEvent
+	) {
 		this._logger.error(`Player stuck\n ${JSON.stringify({ data })}`);
-
-		const channel = await this._client.channels.fetch(player.textId!);
 
 		let skipping = true;
 		if (player.queue.size === 0 && player.loop === 'none') {
@@ -258,6 +267,12 @@ export class MusicLavalinkService extends Kazagumo {
 			'MusicLavalinkService',
 			player.guildId
 		);
+
+		if (!player.textId) {
+			return;
+		}
+
+		const channel = await this._client.channels.fetch(player.textId);
 
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
@@ -331,15 +346,17 @@ export class MusicLavalinkService extends Kazagumo {
 			return;
 		}
 
-		const textChannel = await this._client.channels.fetch(player.textId!);
+		const textChannel =
+			player.textId && (await this._client.channels.fetch(player.textId));
 		player.data.set(
 			'disconnectTimeout',
 			setTimeout(async () => {
-				if (textChannel?.type === ChannelType.GuildText) {
+				if (textChannel && textChannel.type === ChannelType.GuildText) {
 					await textChannel.send({
 						content: `${MESSAGE_PREFIX} Disconnected player due to inactivity.`,
 					});
 				}
+
 				player.destroy();
 				player.data.delete('disconnectTimeout');
 			}, 5000)
@@ -355,7 +372,11 @@ export class MusicLavalinkService extends Kazagumo {
 			?.delete()
 			.catch(() => null);
 
-		const channel = await this._client.channels.fetch(player.textId!);
+		if (!player.textId) {
+			return;
+		}
+
+		const channel = await this._client.channels.fetch(player.textId);
 		if (channel?.type !== ChannelType.GuildText) {
 			return;
 		}

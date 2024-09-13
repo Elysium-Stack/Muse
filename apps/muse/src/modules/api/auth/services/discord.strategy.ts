@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-discord';
+import { Profile, Strategy } from 'passport-discord';
 
 import { DiscordPayload } from '../types/discord-payload.type';
 
@@ -10,11 +10,11 @@ import { AuthService } from './auth.service';
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
 	constructor(private readonly _auth: AuthService) {
 		super({
-			clientID: process.env.DISCORD_OAUTH_CLIENT_ID!,
-			clientSecret: process.env.DISCORD_OAUTH_CLIENT_SECRET!,
-			callbackURL: process.env.DISCORD_OAUTH_CALLBACK_URL!,
-			scope: process.env.DISCORD_OAUTH_SCOPES
-				? process.env.DISCORD_OAUTH_SCOPES.split(',')
+			clientID: process.env['DISCORD_OAUTH_CLIENT_ID'],
+			clientSecret: process.env['DISCORD_OAUTH_CLIENT_SECRET'],
+			callbackURL: process.env['DISCORD_OAUTH_CALLBACK_URL'],
+			scope: process.env['DISCORD_OAUTH_SCOPES']
+				? process.env['DISCORD_OAUTH_SCOPES'].split(',')
 				: [],
 		});
 	}
@@ -22,8 +22,8 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
 	async validate(
 		accessToken: string,
 		refreshToken: string,
-		profile: any
-	): Promise<any> {
+		profile: Profile
+	)  {
 		const { id, username, discriminator } = profile;
 		const payload: DiscordPayload = {
 			id,

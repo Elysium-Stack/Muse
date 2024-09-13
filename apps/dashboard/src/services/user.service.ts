@@ -1,8 +1,11 @@
 import { EventEmitter, Injectable, inject, signal } from '@angular/core';
-import { AuthService } from '@sdk';
 import { take, tap } from 'rxjs';
 
 import { TokenStorageService } from './token-storage.service';
+
+import { AuthService } from '@sdk';
+
+import { WhoamiDiscordResponseDto } from '@sdk/models/whoami-discord-response-dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -11,7 +14,7 @@ export class UserService {
 
 	public accessToken$ = signal<string | null>(null);
 	public refreshToken$ = signal<string | null>(null);
-	public user$ = signal<any>(null);
+	public user$ = signal<null | WhoamiDiscordResponseDto>(null);
 	public loadingUser$ = signal<boolean>(false);
 
 	public signout$ = new EventEmitter<void>();

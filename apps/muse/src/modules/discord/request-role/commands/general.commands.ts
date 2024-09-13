@@ -1,6 +1,4 @@
 import { Logger } from '@nestjs/common';
-import { Prisma, RequestRoleEntries } from '@prisma/client';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -28,6 +26,10 @@ import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleGeneralService } from '../services';
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
 
+import { Prisma, RequestRoleEntries } from '@prisma/client';
+
+import { MESSAGE_PREFIX } from '@util';
+
 @RequestRoleCommandDecorator()
 export class RequestRoleGeneralCommands {
 	private readonly _logger = new Logger(RequestRoleGeneralCommands.name);
@@ -39,13 +41,13 @@ export class RequestRoleGeneralCommands {
 		description: 'Request a role',
 	})
 	public async give(@Context() [interaction]: SlashCommandContext) {
-		const entries = await this._requestRole.getAllEntries(interaction.guildId!);
+		const entries = await this._requestRole.getAllEntries(interaction.guildId);
 
 		const entriesWithRole = (await Promise.all(
 			entries.map(async e => {
 				const role = await interaction.guild.roles
 					.fetch(e.roleId)
-					.catch(_ => null);
+					.catch(() => null);
 				if (!role) {
 					return e;
 				}

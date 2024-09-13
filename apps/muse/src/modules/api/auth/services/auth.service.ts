@@ -1,7 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { HealthIndicator } from '@nestjs/terminus';
-import { PrismaService } from '@prisma';
 import * as argon2 from 'argon2';
 import { User } from 'discord.js';
 
@@ -9,6 +8,8 @@ import { DiscordApiService } from '../../discord/services';
 import { avatarIdToString } from '../../discord/utils/avatar-id-to-string';
 import { DiscordPayload } from '../types/discord-payload.type';
 import { JWT_REFRESh_SECRET, JWT_SECRET } from '../util/constants';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class AuthService extends HealthIndicator {
@@ -94,7 +95,7 @@ export class AuthService extends HealthIndicator {
 					sub: userId,
 					discord: {
 						...discordUser,
-						avatar: avatarIdToString(discordUser.id, discordUser.avatar!),
+						avatar: avatarIdToString(discordUser.id, discordUser.avatar),
 					},
 				},
 				{

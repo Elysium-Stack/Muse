@@ -1,10 +1,11 @@
-import { EMBED_STATUS_COLORS } from '@muse/util/constants';
-import { getUsername } from '@muse/util/get-username';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client, EmbedBuilder, Events } from 'discord.js';
 import { Context, ContextOf, On } from 'necord';
 
 import { ModLogSettingsService } from '../services';
+
+import { EMBED_STATUS_COLORS } from '@muse/util/constants';
+import { getUsername } from '@muse/util/get-username';
 
 @Injectable()
 export class ModLogMemberEvents {

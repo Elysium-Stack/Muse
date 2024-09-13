@@ -1,9 +1,10 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { ForbiddenExceptionFilter } from '@util';
 import { AdminGuard } from 'libs/util/src/lib/guards/admin.guard';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
 
 import { AdminCommandDecorator } from '..';
+
+import { ForbiddenExceptionFilter } from '@util';
 @UseGuards(AdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @AdminCommandDecorator({

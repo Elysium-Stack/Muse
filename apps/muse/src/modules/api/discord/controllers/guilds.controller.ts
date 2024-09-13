@@ -1,12 +1,14 @@
-import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PrismaService, UsersEntity } from '@prisma';
 import { Client, OAuth2Guild, PermissionsBitField } from 'discord.js';
 
 import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { DiscordApiService } from '../services/api.service';
 import { BotOAuth2GuildDTO } from '../types/guild.type';
+
+import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
+
+import { PrismaService, UsersEntity } from '@prisma';
 
 @Controller('discord/guilds')
 @ApiTags('Guilds')
@@ -31,7 +33,7 @@ export class GuildsController {
 		);
 		return guilds
 			.filter(g =>
-				new PermissionsBitField((g as any).permissions_new).has(
+				new PermissionsBitField(g['permissions_new']).has(
 					PermissionsBitField.Flags.ManageGuild
 				)
 			)

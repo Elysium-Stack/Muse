@@ -1,10 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -38,6 +32,15 @@ import { MessageTriggerCommandDecorator } from '../message-trigger.decorator';
 import { MessageTriggerSettingsService } from '../services/settings.service';
 import { MessageTriggerSettingsInterface } from '../types/settings.interface';
 import { MESSAGE_TRIGGER_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import {
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
+
 
 class MessageTriggerSettingsChangeOptions {
 	@StringOption({
@@ -202,7 +205,7 @@ export class MessageTriggerSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Message trigger has been ${
@@ -219,7 +222,7 @@ export class MessageTriggerSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const ids = [...data.keys()];
-		await this._settings.set(interaction.guildId!, 'ignoredChannelIds', ids);
+		await this._settings.set(interaction.guildId, 'ignoredChannelIds', ids);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Message trigger ignored channels has been changed to:${
@@ -234,7 +237,7 @@ export class MessageTriggerSettingsCommands {
 		option: keyof MessageTriggerSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue: string | string[] | boolean | undefined =
 			settings?.[option];
@@ -296,7 +299,7 @@ export class MessageTriggerSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -304,7 +307,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

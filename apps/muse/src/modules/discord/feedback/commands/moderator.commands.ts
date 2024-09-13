@@ -1,8 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { FeedbackTopicsType } from '@prisma/client';
-import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
-import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -28,6 +24,14 @@ import {
 import { FeedbackCommandDecorator } from '../feedback.decorator';
 import { FeedbackService } from '../services';
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import { FeedbackTopicsType } from '@prisma/client';
+
+import { ForbiddenExceptionFilter, MESSAGE_PREFIX } from '@util';
+
+import { GuildModeratorGuard } from '@util/guards';
 class FeedbackTopicsListOptions {
 	@NumberOption({
 		name: 'page',
@@ -152,8 +156,8 @@ export class FeedbackModeratorCommands {
 		}
 
 		await this._feedback.addFeedbackTopicByName(
-			interaction.guildId!,
-			name!,
+			interaction.guildId,
+			name,
 			type as FeedbackTopicsType,
 			referenceId
 		);
@@ -177,8 +181,8 @@ export class FeedbackModeratorCommands {
 		);
 
 		const topic = await this._feedback.removeFeedbackTopicById(
-			interaction.guildId!,
-			id!
+			interaction.guildId,
+			id
 		);
 
 		if (!topic) {
@@ -201,7 +205,7 @@ export class FeedbackModeratorCommands {
 		page = page ?? 1;
 
 		const { topics, total } = await this._feedback.getTopicsPerPage(
-			interaction.guildId!,
+			interaction.guildId,
 			page
 		);
 
@@ -242,7 +246,7 @@ export class FeedbackModeratorCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Topics for ${interaction.guild!.name}`)
+			.setTitle(`${MESSAGE_PREFIX} Topics for ${interaction.guild.name}`)
 			.setColor(FEEDBACK_EMBED_COLOR)
 			.addFields([
 				{

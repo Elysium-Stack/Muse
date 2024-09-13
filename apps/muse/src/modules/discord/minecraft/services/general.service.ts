@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
 import { Message } from 'discord.js';
-import Rcon from 'rcon-ts';
+import { default as Rcon } from 'rcon-ts';
 
 import { stringToUuid } from '../util/string-to-uuid';
 
 import { MinecraftSettingsService } from './settings.service';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class MinecraftGeneralService {

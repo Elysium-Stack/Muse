@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
-import { FeedbackTopics, FeedbackTopicsType } from '@prisma/client';
-import { MESSAGE_PREFIX } from '@util';
 import { Client, EmbedBuilder, User } from 'discord.js';
 
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
+
+import { PrismaService } from '@prisma';
+
+import { FeedbackTopics, FeedbackTopicsType } from '@prisma/client';
+
+import { MESSAGE_PREFIX } from '@util';
+
 @Injectable()
 export class FeedbackService {
 	private readonly _logger = new Logger(FeedbackService.name);

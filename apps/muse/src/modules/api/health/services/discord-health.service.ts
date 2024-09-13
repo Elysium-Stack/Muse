@@ -18,7 +18,7 @@ export class DiscordHealthService extends HealthIndicator {
 			const status = this._client.ws.status !== Status.Disconnected;
 
 			if (ping === -1 || !status) {
-				throw new Error();
+				throw new Error("Discord unreachable");
 			}
 
 			return {

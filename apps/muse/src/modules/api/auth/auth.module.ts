@@ -1,7 +1,8 @@
-import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+
+import { SharedModule } from '@muse/shared.module';
 
 import { AuthSharedModule } from './auth.shared.module';
 import { AuthController } from './controllers/auth.controller';

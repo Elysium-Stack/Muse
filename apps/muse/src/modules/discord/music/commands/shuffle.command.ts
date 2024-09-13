@@ -1,14 +1,16 @@
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { Context, SlashCommandContext, Subcommand } from 'necord';
+
+import { MusicEnabledGuard } from '../guards/enabled.guard';
+import { MusicService } from '../services';
+
 import {
 	MusicCommandDecorator,
 	MusicInVoiceGuard,
 	NotInVoiceExceptionFilter,
 } from '@music';
-import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { EnabledExceptionFilter } from '@util';
-import { Context, SlashCommandContext, Subcommand } from 'necord';
 
-import { MusicEnabledGuard } from '../guards/enabled.guard';
-import { MusicService } from '../services';
+import { EnabledExceptionFilter } from '@util';
 
 @UseGuards(MusicEnabledGuard, MusicInVoiceGuard)
 @UseFilters(EnabledExceptionFilter, NotInVoiceExceptionFilter)

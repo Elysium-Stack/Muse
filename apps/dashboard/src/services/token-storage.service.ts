@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'muse-access-token';
 const REFRESHTOKEN_KEY = 'muse-refresh-token';
-const USER_KEY = 'muse-user';
+// const USER_KEY = 'muse-user';
 
 @Injectable({
 	providedIn: 'root',

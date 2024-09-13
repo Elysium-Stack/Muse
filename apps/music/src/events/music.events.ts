@@ -1,7 +1,8 @@
-import { LavalinkMusicEvent } from '@music/util';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
+
+import { LavalinkMusicEvent } from '@music/util';
 
 @Injectable()
 export class MusicEvents implements OnModuleInit {
@@ -11,7 +12,7 @@ export class MusicEvents implements OnModuleInit {
 
 	onModuleInit() {
 		this._muse.emit('MUSIC_INSTANCE_BOOTED', {
-			instance: Number.parseInt(process.env.INSTANCE_NUMBER),
+			instance: Number.parseInt(process.env['INSTANCE_NUMBER']),
 		});
 	}
 
@@ -19,7 +20,7 @@ export class MusicEvents implements OnModuleInit {
 	async handleMusicConnected({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we connected');
 		this._muse.emit('MUSIC_CONNECTED', {
-			instance: Number.parseInt(process.env.INSTANCE_NUMBER),
+			instance: Number.parseInt(process.env['INSTANCE_NUMBER']),
 			guildId: player.guildId,
 			voiceChannelId: player.voiceId,
 		});
@@ -29,7 +30,7 @@ export class MusicEvents implements OnModuleInit {
 	async handleMusicStateChange({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we changed state');
 		this._muse.emit('MUSIC_STATE_CHANGED', {
-			instance: Number.parseInt(process.env.INSTANCE_NUMBER),
+			instance: Number.parseInt(process.env['INSTANCE_NUMBER']),
 			guildId: player.guildId,
 			state: player.state,
 		});
@@ -39,7 +40,7 @@ export class MusicEvents implements OnModuleInit {
 	handleMusicDisconnected({ player }: LavalinkMusicEvent) {
 		this._logger.log('Informing muse we disconnected');
 		this._muse.emit('MUSIC_DISCONNECTED', {
-			instance: Number.parseInt(process.env.INSTANCE_NUMBER),
+			instance: Number.parseInt(process.env['INSTANCE_NUMBER']),
 			guildId: player.guildId,
 			voiceChannelId: player.voiceId,
 		});

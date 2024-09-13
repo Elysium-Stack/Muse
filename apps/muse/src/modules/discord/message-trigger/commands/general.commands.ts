@@ -1,12 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { TriggerMatch } from '@prisma/client';
-import {
-	EnabledExceptionFilter,
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-} from '@util';
-import { GuildModeratorGuard } from '@util/guards';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -31,6 +23,18 @@ import { MessageTriggerEnabledGuard } from '../guards/enabled.guard';
 import { MessageTriggerCommandDecorator } from '../message-trigger.decorator';
 import { MessageTriggerGeneralService } from '../services/general.service';
 import { MESSAGE_TRIGGER_EMBED_COLOR } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import { TriggerMatch } from '@prisma/client';
+
+import {
+	EnabledExceptionFilter,
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+} from '@util';
+
+import { GuildModeratorGuard } from '@util/guards';
 
 class MessageTriggerListOptions {
 	@NumberOption({
@@ -196,8 +200,8 @@ export class MessageTriggerGeneralCommands {
 		);
 
 		await this._general.addMessageTriggerByWord(
-			interaction.guildId!,
-			phrase!,
+			interaction.guildId,
+			phrase,
 			match ?? 'word',
 			message
 		);
@@ -221,8 +225,8 @@ export class MessageTriggerGeneralCommands {
 		);
 
 		const messageTrigger = await this._general.removeMessageTriggerByID(
-			interaction.guildId!,
-			id!
+			interaction.guildId,
+			id
 		);
 
 		return interaction.reply({
@@ -238,7 +242,7 @@ export class MessageTriggerGeneralCommands {
 		page = page ?? 1;
 
 		const { triggers, total } = await this._general.getMessageTriggers(
-			interaction.guildId!,
+			interaction.guildId,
 			page
 		);
 
@@ -279,7 +283,7 @@ export class MessageTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`)
+			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`)
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{

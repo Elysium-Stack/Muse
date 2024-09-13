@@ -1,10 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -38,6 +32,15 @@ import { TimezoneSettingsService } from '../services/settings.service';
 import { TimezoneCommandDecorator } from '../timezone.decorator';
 import { TimezoneSettingsInterface } from '../types/settings.interface';
 import { TIMEZONE_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import {
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
+
 
 class TimezoneSettingsChangeOptions {
 	@StringOption({
@@ -200,7 +203,7 @@ export class TimezoneSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Timezone module has been ${
@@ -217,7 +220,7 @@ export class TimezoneSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const ids = [...data.keys()];
-		await this._settings.set(interaction.guildId!, 'ignoredChannelIds', ids);
+		await this._settings.set(interaction.guildId, 'ignoredChannelIds', ids);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Timezone ignored channels has been changed to:${
@@ -232,7 +235,7 @@ export class TimezoneSettingsCommands {
 		option: keyof TimezoneSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue: string | string[] | boolean | undefined =
 			settings?.[option];
@@ -294,7 +297,7 @@ export class TimezoneSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -302,7 +305,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

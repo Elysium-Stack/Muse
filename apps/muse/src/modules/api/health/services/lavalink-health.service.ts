@@ -1,10 +1,11 @@
-import { MusicLavalinkService } from '@music';
 import { Injectable } from '@nestjs/common';
 import {
 	HealthCheckError,
 	HealthIndicator,
 	HealthIndicatorResult,
 } from '@nestjs/terminus';
+
+import { MusicLavalinkService } from '@music';
 
 @Injectable()
 export class LavalinkHealthService extends HealthIndicator {
@@ -16,7 +17,7 @@ export class LavalinkHealthService extends HealthIndicator {
 		try {
 			const status = await this._lavalink.getStatus();
 			if (!status) {
-				throw new Error();
+				throw new Error("Lavalink unreachable");
 			}
 
 			return {

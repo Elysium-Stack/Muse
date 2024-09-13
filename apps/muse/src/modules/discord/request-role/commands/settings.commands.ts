@@ -1,10 +1,4 @@
-import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import {
-	ForbiddenExceptionFilter,
-	MESSAGE_PREFIX,
-	camelCaseToSnakeCase,
-} from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -36,6 +30,15 @@ import { RequestRoleCommandDecorator } from '../request-role.decorator';
 import { RequestRoleSettingsService } from '../services/settings.service';
 import { RequestRoleSettingsInterface } from '../types/settings.interface';
 import { REQUEST_ROLE_SETTINGS_CHOICES } from '../util/constants';
+
+import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+
+import {
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	camelCaseToSnakeCase,
+} from '@util';
+
 
 class RequestRoleSettingsChangeOptions {
 	@StringOption({
@@ -111,7 +114,7 @@ export class RequestRoleSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId!, 'enabled', parsedValue);
+		await this._settings.set(interaction.guildId, 'enabled', parsedValue);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Request role has been ${
@@ -143,7 +146,7 @@ export class RequestRoleSettingsCommands {
 		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
-		await this._settings.set(interaction.guildId!, 'logChannelId', id);
+		await this._settings.set(interaction.guildId, 'logChannelId', id);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Request role log channel has been changed to:${
@@ -158,7 +161,7 @@ export class RequestRoleSettingsCommands {
 		option: keyof RequestRoleSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
-		const settings = await this._settings.get(interaction.guildId!);
+		const settings = await this._settings.get(interaction.guildId);
 
 		let currentValue: string | string[] | boolean | undefined =
 			settings?.[option];
@@ -218,7 +221,7 @@ export class RequestRoleSettingsCommands {
 		if (interaction instanceof MessageComponentInteraction) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 				components,
 			});
@@ -226,7 +229,7 @@ Current value: ${currentValue}`,
 
 		return interaction.reply({
 			content: `${MESSAGE_PREFIX} What would you like to change **${readableOption}** to?
-				
+
 Current value: ${currentValue}`,
 			components,
 			ephemeral: true,

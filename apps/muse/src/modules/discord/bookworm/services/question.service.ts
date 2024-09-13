@@ -1,11 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '@prisma';
-import { MESSAGE_PREFIX } from '@util';
 import { getHours } from 'date-fns';
 import { ChannelType, Client } from 'discord.js';
 
 import { createQuestionEmbed } from '../util/create-question-embed';
+
+import { PrismaService } from '@prisma';
+
+import { MESSAGE_PREFIX } from '@util';
 @Injectable()
 export class BookwormQuestionService {
 	private readonly _logger = new Logger(BookwormQuestionService.name);
@@ -181,7 +183,7 @@ export class BookwormQuestionService {
 		});
 
 		if (latestLog) {
-			index = latestLog.index! + 1;
+			index = latestLog.index + 1;
 		}
 
 		if (index >= this.questions.length - 1) {
@@ -235,7 +237,7 @@ export class BookwormQuestionService {
 				const embed = createQuestionEmbed(
 					`${MESSAGE_PREFIX} Daily bookworm question`,
 					question,
-					this._client.user!
+					this._client.user
 				);
 				const content = bookwormPingRoleId ? `<@&${bookwormPingRoleId}>` : '';
 				await channel.send({ embeds: [embed], content });

@@ -42,7 +42,7 @@ export class AppEvents {
 	}
 
 	private _setPresence(client: Client) {
-		client.user!.setPresence({
+		client.user.setPresence({
 			activities: [
 				{
 					name: 'music 🎶',

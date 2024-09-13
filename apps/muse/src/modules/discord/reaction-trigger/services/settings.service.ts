@@ -1,8 +1,4 @@
-import { BaseSettingsService } from '@muse/base';
-import { SettingsService } from '@muse/modules/settings';
-import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 import { Injectable } from '@nestjs/common';
-import { MESSAGE_PREFIX } from '@util';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -20,6 +16,14 @@ import {
 	REACTION_TRIGGER_EMBED_COLOR,
 	REACTION_TRIGGER_SETTINGS_CHOICES,
 } from '../util/constants';
+
+import { BaseSettingsService } from '@muse/base';
+import { SettingsService } from '@muse/modules/settings';
+import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
+
+import { MESSAGE_PREFIX } from '@util';
+
+
 @Injectable()
 export class ReactionTriggerSettingsService extends BaseSettingsService<ReactionTriggerSettingsInterface> {
 	protected _base = 'reactionTrigger';
@@ -31,7 +35,7 @@ export class ReactionTriggerSettingsService extends BaseSettingsService<Reaction
 	async showSettings(
 		interaction: MessageComponentInteraction | CommandInteraction
 	) {
-		const settings = await this.get(interaction.guildId!);
+		const settings = await this.get(interaction.guildId);
 
 		if (!settings) {
 			return;

@@ -25,7 +25,11 @@ export class MusicHasPlayerGuard implements CanActivate {
 			return false;
 		}
 
-		const player = this._lavalink.players.get(interaction.guildId!);
+		if (!interaction.guildId) {
+			return false;
+		}
+
+		const player = this._lavalink.players.get(interaction.guildId);
 		if (!player) {
 			throw new HasNoPlayerException();
 		}

@@ -43,6 +43,7 @@ export class TimezoneMessageEvents {
 		let timeIndication = null;
 
 		if (hourMinuteMatch?.length) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const [_, matchedHour, matchedMinutes, matchedTimeindication] =
 				hourMinuteMatch;
 			hour = Number.parseInt(matchedHour);
@@ -52,12 +53,13 @@ export class TimezoneMessageEvents {
 
 		const hourMatch = hourRegex.exec(message.cleanContent);
 		if (!hourMinuteMatch?.length && hourMatch?.length) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const [_, matchedHour, matchedTimeindication] = hourMatch;
 			hour = Number.parseInt(matchedHour);
 			timeIndication = matchedTimeindication?.toLowerCase();
 		}
 
-		if (isNaN(hour) || isNaN(minutes)) {
+		if (Number.isNaN(hour) || Number.isNaN(minutes)) {
 			return;
 		}
 

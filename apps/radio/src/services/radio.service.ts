@@ -1,8 +1,10 @@
-import { MusicPlayerService } from '@music';
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Gauge } from 'prom-client';
+
+import { MusicPlayerService } from '@music';
+
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class RadioService {
@@ -23,11 +25,16 @@ export class RadioService {
 			},
 		});
 
-		if (!settings || !settings.radioPlaylist || !settings.radioVoiceChannelId) {
+		if (
+			!settings ||
+			!settings.radioPlaylist ||
+			!settings.radioVoiceChannelId
+		) {
 			return;
 		}
 
-		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } = settings;
+		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } =
+			settings;
 
 		return this.start(
 			guildId,
@@ -57,8 +64,8 @@ export class RadioService {
 
 		const data = await this._player.play(
 			guildId,
-			radioPlaylist!,
-			radioVoiceChannelId!,
+			radioPlaylist,
+			radioVoiceChannelId,
 			radioTextChannelId,
 			true
 		);
@@ -75,7 +82,7 @@ export class RadioService {
 		});
 
 		if (data.data?.tracks) {
-			data.data.tracks = [...data.data?.tracks].map(track => {
+			data.data.tracks = [...data.data.tracks].map(track => {
 				delete track.kazagumo;
 				return track;
 			});
@@ -85,7 +92,7 @@ export class RadioService {
 	}
 
 	async stop(guildId: string) {
-		const data = await this._player.stop(guildId);
+		const data = this._player.stop(guildId);
 
 		if (data.result === 'STOPPED') {
 			this.playing.labels('None').dec(1);

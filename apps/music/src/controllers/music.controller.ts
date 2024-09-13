@@ -1,9 +1,10 @@
-import { MusicPlayerService } from '@music';
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { User } from 'discord.js';
 import { Gauge } from 'prom-client';
+
+import { MusicPlayerService } from '@music';
 
 @Controller()
 export class MusicController {
@@ -66,8 +67,8 @@ export class MusicController {
 
 		const data = await this._player.play(
 			guildId,
-			song!,
-			voiceChannelId!,
+			song,
+			voiceChannelId,
 			textChannelId,
 			false,
 			author
@@ -85,7 +86,7 @@ export class MusicController {
 		// });
 
 		if (data.data?.tracks) {
-			data.data.tracks = [...data.data?.tracks].map(track => {
+			data.data.tracks = [...data.data.tracks].map(track => {
 				delete track.kazagumo;
 				return track;
 			});

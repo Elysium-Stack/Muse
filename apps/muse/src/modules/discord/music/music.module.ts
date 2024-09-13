@@ -1,6 +1,7 @@
-import { SharedModule } from '@muse/shared.module';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
+import { SharedModule } from '@muse/shared.module';
 
 import { MusicLoopCommands } from './commands/loop.command';
 import { MusicNextCommands } from './commands/next.command';
@@ -18,7 +19,7 @@ import { MusicService } from './services';
 import { MusicInstancesService } from './services/instances.service';
 import { MusicSettingsService } from './services/settings.service';
 
-const musicBotHosts = process.env.MUSIC_BOT_HOSTS.split(',');
+const musicBotHosts = process.env['MUSIC_BOT_HOSTS'].split(',');
 @Module({
 	imports: [
 		ClientsModule.register(
