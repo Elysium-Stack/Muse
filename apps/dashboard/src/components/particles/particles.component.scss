@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 $color-particle-1: #a5f3fc;
 $color-particle-2: #c084fc;
 $color-particle-3: #fef08a;
@@ -14,7 +16,9 @@ $time-4: 200s;
 	@for $i from 1 through $max {
 		$val:
 			#{$val},
-			random($spacing) + px random($spacing) + px $color-particle;
+			(math.random(math.div($spacing, 1px)) + px)
+				(math.random(math.div($spacing, 1px)) + px)
+				$color-particle;
 	}
 	@return $val;
 }
@@ -26,7 +30,7 @@ $time-4: 200s;
 }
 
 .animation-wrapper {
-	@apply absolute top-0 left-0 w-full h-full overflow-hidden -z-10;
+	@apply absolute left-0 top-0 -z-10 h-full w-full overflow-hidden;
 }
 
 .particle,

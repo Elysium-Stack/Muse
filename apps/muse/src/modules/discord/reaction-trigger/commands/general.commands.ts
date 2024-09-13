@@ -1,22 +1,22 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonInteraction,
-    ButtonStyle,
-    CommandInteraction,
-    EmbedBuilder
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonInteraction,
+	ButtonStyle,
+	CommandInteraction,
+	EmbedBuilder,
 } from 'discord.js';
 import {
-    Button,
-    ButtonContext,
-    ComponentParam,
-    Context,
-    NumberOption,
-    Options,
-    SlashCommandContext,
-    StringOption,
-    Subcommand,
+	Button,
+	ButtonContext,
+	ComponentParam,
+	Context,
+	NumberOption,
+	Options,
+	SlashCommandContext,
+	StringOption,
+	Subcommand,
 } from 'necord';
 
 import { ReactionTriggerEnabledGuard } from '../guards/enabled.guard';
@@ -29,10 +29,10 @@ import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.
 import { TriggerMatch } from '@prisma/client';
 
 import {
-    EnabledExceptionFilter,
-    ForbiddenExceptionFilter,
-    MESSAGE_PREFIX,
-    resolveEmoji,
+	EnabledExceptionFilter,
+	ForbiddenExceptionFilter,
+	MESSAGE_PREFIX,
+	resolveEmoji,
 } from '@util';
 
 import { GuildModeratorGuard } from '@util/guards';
@@ -136,10 +136,10 @@ export class ReactionTriggerGeneralCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions
 	) {
-		const {
-			unicode,
-			clientEmoji,
-		} = resolveEmoji(emoji, interaction.client);
+		const { unicode, clientEmoji } = resolveEmoji(
+			emoji,
+			interaction.client
+		);
 
 		if (!unicode && !clientEmoji) {
 			return interaction.reply({
@@ -240,7 +240,9 @@ export class ReactionTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`)
+			.setTitle(
+				`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`
+			)
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{
@@ -256,7 +258,10 @@ export class ReactionTriggerGeneralCommands {
 				{
 					name: 'Phrase',
 					value: triggers
-						.map(t => `${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`)
+						.map(
+							t =>
+								`${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`
+						)
 						.join('\n'),
 					inline: true,
 				},

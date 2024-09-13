@@ -23,7 +23,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
 		accessToken: string,
 		refreshToken: string,
 		profile: Profile
-	)  {
+	) {
 		const { id, username, discriminator } = profile;
 		const payload: DiscordPayload = {
 			id,

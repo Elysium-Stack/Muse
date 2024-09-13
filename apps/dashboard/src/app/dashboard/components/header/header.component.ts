@@ -12,7 +12,6 @@ import { UserButtonComponent } from 'apps/dashboard/src/components/user-button/u
 import { DashboardSidebarService } from '../../services/sidebar.service';
 import { DashboardBreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 
-
 @Component({
 	standalone: true,
 	selector: 'm-dashboard-header',

@@ -1,9 +1,9 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
-    ParsedTokenResponseDTO,
-    TokensResponseDTO,
+	ParsedTokenResponseDTO,
+	TokensResponseDTO,
 } from '../../../../types/responses.type';
 import { AccessTokenGuard } from '../guards/access-token.guard';
 import { DiscordOAuthGuard } from '../guards/discord-oauth.guard';
@@ -18,13 +18,24 @@ export class AuthController {
 	constructor(private _authService: AuthService) {}
 
 	/**
+	 * Authenticate the user with discord.
+	 */
+	@Get()
+	@UseGuards(DiscordOAuthGuard)
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	async auth() {}
+
+	/**
 	 * Trade in discord code for a jwt token
 	 */
 	@Get('callback')
 	@UseGuards(DiscordOAuthGuard)
 	callback(
 		@Request() req: AuthenticatedRequestDTO,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		@Query('code') code: string
 	): TokensResponseDTO {
+		console.log(code);
 		return req.user as TokensResponseDTO;
 	}
 
@@ -51,9 +62,11 @@ export class AuthController {
 	 */
 	@Get('refresh')
 	@UseGuards(RefreshTokenGuard)
-	refresh(@Request() req: AuthenticatedRequestDTO): Promise<TokensResponseDTO> {
+	refresh(
+		@Request() req: AuthenticatedRequestDTO
+	): Promise<TokensResponseDTO> {
 		const userId = req.user.sub;
-		const refreshToken = req.user.refreshToken;
+		const refreshToken = req.user.refreshToken!;
 		return this._authService.refreshTokens(userId, refreshToken);
 	}
 }

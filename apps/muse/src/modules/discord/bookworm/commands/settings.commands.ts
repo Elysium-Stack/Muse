@@ -71,7 +71,9 @@ export class BookwormSettingsCommands {
 		description: 'Show bookworm settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
-		this._logger.verbose(`Loaded bookworm settings for ${interaction.guildId}`);
+		this._logger.verbose(
+			`Loaded bookworm settings for ${interaction.guildId}`
+		);
 
 		return this._settings.showSettings(interaction);
 	}
@@ -150,7 +152,11 @@ export class BookwormSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId, 'dailyEnabled', parsedValue);
+		await this._settings.set(
+			interaction.guildId,
+			'dailyEnabled',
+			parsedValue
+		);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Bookworm daily questions has been ${
@@ -238,7 +244,8 @@ export class BookwormSettingsCommands {
 		switch (option) {
 			case 'enabled':
 			case 'dailyEnabled': {
-				readableOption = option === 'enabled' ? 'Enabled' : 'Daily enabled';
+				readableOption =
+					option === 'enabled' ? 'Enabled' : 'Daily enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -266,8 +273,11 @@ export class BookwormSettingsCommands {
 			}
 			case 'channelId':
 			case 'dailyChannelId': {
-				readableOption = option === 'channelId' ? 'Channel' : 'Daily channel';
-				currentValue = settings?.[option] ? `<#${settings[option]}>` : 'none';
+				readableOption =
+					option === 'channelId' ? 'Channel' : 'Daily channel';
+				currentValue = settings?.[option]
+					? `<#${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
@@ -284,7 +294,9 @@ export class BookwormSettingsCommands {
 			}
 			case 'pingRoleId': {
 				readableOption = 'Ping role';
-				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
+				currentValue = settings?.[option]
+					? `<@&${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
@@ -303,8 +315,9 @@ export class BookwormSettingsCommands {
 				currentValue = Number.isNaN(settings[option])
 					? 'none'
 					: `\`${
-							HOUR_OPTIONS.find(h => h.value === settings?.[option])?.name ??
-							'-'
+							HOUR_OPTIONS.find(
+								h => h.value === settings?.[option]
+							)?.name ?? '-'
 						}\``;
 				components = [
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(

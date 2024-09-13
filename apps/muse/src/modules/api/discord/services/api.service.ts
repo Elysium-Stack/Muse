@@ -74,7 +74,10 @@ export class DiscordApiService {
 	private async _refreshTokens(userId: number, refreshToken: string) {
 		const formData = new FormData();
 		formData.append('client_id', process.env['DISCORD_OAUTH_CLIENT_ID']);
-		formData.append('client_secret', process.env['DISCORD_OAUTH_CLIENT_SECRET']);
+		formData.append(
+			'client_secret',
+			process.env['DISCORD_OAUTH_CLIENT_SECRET']
+		);
 		formData.append('refresh_token', refreshToken);
 		formData.append('grant_type', 'refresh_token');
 

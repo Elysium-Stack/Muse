@@ -8,7 +8,6 @@ import { RadioService } from '@radio/services/radio.service';
 
 import { MESSAGE_PREFIX } from '@util/constants';
 
-
 @Injectable()
 export class MusicEvents {
 	private readonly _logger = new Logger(MusicEvents.name);
@@ -45,10 +44,14 @@ export class MusicEvents {
 					return;
 				}
 
-				const channel = await this._client.channels.fetch(player.textId);
+				const channel = await this._client.channels.fetch(
+					player.textId
+				);
 
 				if (this._retryCount === 4) {
-					this._logger.warn("No longer resuming, we've tried 5 times");
+					this._logger.warn(
+						"No longer resuming, we've tried 5 times"
+					);
 
 					this._retryCount = 0;
 
@@ -62,7 +65,9 @@ export class MusicEvents {
 
 				this._retryCount += 1;
 
-				this._logger.warn("Resuming the closed player because it's the radio");
+				this._logger.warn(
+					"Resuming the closed player because it's the radio"
+				);
 
 				await this._radio.startWithoutConfig(player.guildId);
 

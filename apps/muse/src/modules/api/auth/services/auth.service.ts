@@ -22,7 +22,8 @@ export class AuthService extends HealthIndicator {
 	}
 
 	async signin(payload: DiscordPayload) {
-		const { id, username, discriminator, accessToken, refreshToken } = payload;
+		const { id, username, discriminator, accessToken, refreshToken } =
+			payload;
 
 		const user = await this._prisma.users.upsert({
 			where: {
@@ -87,7 +88,10 @@ export class AuthService extends HealthIndicator {
 	}
 
 	private async _getTokens(userId: number) {
-		const discordUser = await this._discord.request<User>(userId, '/users/@me');
+		const discordUser = await this._discord.request<User>(
+			userId,
+			'/users/@me'
+		);
 
 		const [accessToken, refreshToken] = await Promise.all([
 			this._jwt.signAsync(
@@ -95,7 +99,10 @@ export class AuthService extends HealthIndicator {
 					sub: userId,
 					discord: {
 						...discordUser,
-						avatar: avatarIdToString(discordUser.id, discordUser.avatar),
+						avatar: avatarIdToString(
+							discordUser.id,
+							discordUser.avatar
+						),
 					},
 				},
 				{

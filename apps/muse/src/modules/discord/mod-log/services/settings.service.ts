@@ -23,8 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
-
 @Injectable()
 export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInterface> {
 	protected _base = 'modLog';
@@ -62,7 +60,9 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				},
 				{
 					name: 'Message delete',
-					value: deleteChannelId?.length ? `<#${deleteChannelId}>` : '-',
+					value: deleteChannelId?.length
+						? `<#${deleteChannelId}>`
+						: '-',
 					inline: true,
 				},
 				{
@@ -77,7 +77,9 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				},
 				{
 					name: 'Member leave',
-					value: leaveChannelId?.length ? `<#${leaveChannelId}>` : '-',
+					value: leaveChannelId?.length
+						? `<#${leaveChannelId}>`
+						: '-',
 					inline: true,
 				}
 			);
@@ -123,9 +125,8 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

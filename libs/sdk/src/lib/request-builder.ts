@@ -54,7 +54,10 @@ abstract class Parameter {
 		if (this.options.style === null || this.options.style === undefined) {
 			this.options.style = defaultStyle;
 		}
-		if (this.options.explode === null || this.options.explode === undefined) {
+		if (
+			this.options.explode === null ||
+			this.options.explode === undefined
+		) {
 			this.options.explode = defaultExplode;
 		}
 	}
@@ -107,7 +110,11 @@ class PathParameter extends Parameter {
 			value = '';
 		}
 		let prefix = this.options.style === 'label' ? '.' : '';
-		let separator = this.options.explode ? (prefix === '' ? ',' : prefix) : ',';
+		let separator = this.options.explode
+			? prefix === ''
+				? ','
+				: prefix
+			: ',';
 		let alreadySerialized = false;
 		if (this.options.style === 'matrix') {
 			// The parameter name is just used as prefix, except in some cases...
@@ -116,7 +123,9 @@ class PathParameter extends Parameter {
 				prefix = ';';
 				if (value instanceof Array) {
 					// For arrays we have to repeat the name for each element
-					value = value.map(v => `${this.name}=${this.serializeValue(v, ';')}`);
+					value = value.map(
+						v => `${this.name}=${this.serializeValue(v, ';')}`
+					);
 					value = value.join(';');
 					alreadySerialized = true;
 				} else {
@@ -196,7 +205,10 @@ class QueryParameter extends Parameter {
 				for (const key of Object.keys(this.value)) {
 					const propVal = this.value[key];
 					if (propVal !== null && propVal !== undefined) {
-						params = params.append(key, this.serializeValue(propVal));
+						params = params.append(
+							key,
+							this.serializeValue(propVal)
+						);
 					}
 				}
 			} else {
@@ -234,7 +246,10 @@ class HeaderParameter extends Parameter {
 					headers = headers.append(this.name, this.serializeValue(v));
 				}
 			} else {
-				headers = headers.append(this.name, this.serializeValue(this.value));
+				headers = headers.append(
+					this.name,
+					this.serializeValue(this.value)
+				);
 			}
 		}
 		return headers;
@@ -307,7 +322,10 @@ export class RequestBuilder {
 				}
 			}
 			this._bodyContent = pairs
-				.map(p => `${encodeURIComponent(p[0])}=${encodeURIComponent(p[1])}`)
+				.map(
+					p =>
+						`${encodeURIComponent(p[0])}=${encodeURIComponent(p[1])}`
+				)
 				.join('&');
 		} else if (this._bodyContentType === 'multipart/form-data') {
 			// Handle multipart form data
@@ -394,7 +412,10 @@ export class RequestBuilder {
 
 		// Request content headers
 		if (this._bodyContentType && !(this._bodyContent instanceof FormData)) {
-			httpHeaders = httpHeaders.set('Content-Type', this._bodyContentType);
+			httpHeaders = httpHeaders.set(
+				'Content-Type',
+				this._bodyContentType
+			);
 		}
 
 		// Perform the request

@@ -1,86 +1,86 @@
 version: '3'
 
 services:
-  muse:
-    build:
-      context: .
-      target: base
-    init: true
-    tty: true
-    command: yarn muse:docker:start
-    env_file: ./.env
-    ports:
-      - '$EXPOSED_API_PORT:3000'
-      - '$EXPOSED_MUSE_DEBUGGING_PORT:9229'
-    volumes:
-      - ./:/opt/app
-    depends_on:
-      - db
-  radio:
-    build:
-      context: .
-      target: base
-    tty: true
-    command: yarn radio:docker:start
-    env_file: ./.env
-    ports:
-      - '$EXPOSED_RADIO_DEBUGGING_PORT:9229'
-    volumes:
-      - ./:/opt/app
-    depends_on:
-      - db
-  music:
-    build:
-      context: .
-      target: base
-    tty: true
-    command: yarn music:docker:start
-    env_file: ./.env
-    environment:
-      - INSTANCE_NUMBER=1
-    volumes:
-      - ./:/opt/app
-    depends_on:
-      - db
-  music2:
-    build:
-      context: .
-      target: base
-    tty: true
-    command: yarn music:docker:start
-    env_file: ./.env
-    environment:
-      - INSTANCE_NUMBER=2
-    volumes:
-      - ./:/opt/app
-    depends_on:
-      - db
-  dashboard:
-    build:
-      context: .
-      target: base
-    tty: true
-    command: yarn dashboard:docker:start
-    env_file: ./.env
-    ports:
-      - '$EXPOSED_DASHBOARD_PORT:3000'
-    volumes:
-      - ./:/opt/app
-  db:
-    image: postgres:12.2
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: muse
-    ports:
-      - '$EXPOSED_DB_PORT:5432'
-  lavalink:
-    image: ghcr.io/lavalink-devs/lavalink:latest
-    volumes:
-      - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./.docker/prometheus.dev.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - '$EXPOSED_PROM_PORT:9090'
+    muse:
+        build:
+            context: .
+            target: base
+        init: true
+        tty: true
+        command: yarn muse:docker:start
+        env_file: ./.env
+        ports:
+            - '$EXPOSED_API_PORT:3000'
+            - '$EXPOSED_MUSE_DEBUGGING_PORT:9229'
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+    radio:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn radio:docker:start
+        env_file: ./.env
+        ports:
+            - '$EXPOSED_RADIO_DEBUGGING_PORT:9229'
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+    music:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn music:docker:start
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=1
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+    music2:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn music:docker:start
+        env_file: ./.env
+        environment:
+            - INSTANCE_NUMBER=2
+        volumes:
+            - ./:/opt/app
+        depends_on:
+            - db
+    dashboard:
+        build:
+            context: .
+            target: base
+        tty: true
+        command: yarn dashboard:docker:start
+        env_file: ./.env
+        ports:
+            - '$EXPOSED_DASHBOARD_PORT:3000'
+        volumes:
+            - ./:/opt/app
+    db:
+        image: postgres:12.2
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: muse
+        ports:
+            - '$EXPOSED_DB_PORT:5432'
+    lavalink:
+        image: ghcr.io/lavalink-devs/lavalink:latest
+        volumes:
+            - ./.docker/lavalink.yml:/opt/Lavalink/application.yml:ro
+    prometheus:
+        image: prom/prometheus
+        volumes:
+            - ./.docker/prometheus.dev.yml:/etc/prometheus/prometheus.yml
+        ports:
+            - '$EXPOSED_PROM_PORT:9090'

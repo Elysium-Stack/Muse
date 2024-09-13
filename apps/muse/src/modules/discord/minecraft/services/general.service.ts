@@ -114,7 +114,9 @@ export class MinecraftGeneralService {
 	private _getJavaData(username: string) {
 		return fetch(`${this._uuidUrl}/${username}`)
 			.then(res => res.json())
-			.then(res => (res?.id ? { ...res, uuid: stringToUuid(res.id) } : null))
+			.then(res =>
+				res?.id ? { ...res, uuid: stringToUuid(res.id) } : null
+			)
 			.catch(() => null);
 	}
 
@@ -166,7 +168,8 @@ export class MinecraftGeneralService {
 	}
 
 	private async _sendRcon(guildId, command: string) {
-		const { rconHost, rconPort, rconPass } = await this._settings.get(guildId);
+		const { rconHost, rconPort, rconPass } =
+			await this._settings.get(guildId);
 
 		const client = new Rcon({
 			host: rconHost,

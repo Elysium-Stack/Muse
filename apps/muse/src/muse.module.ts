@@ -39,7 +39,6 @@ import { SharedModule } from './shared.module';
 
 import { intents } from '@util';
 
-
 @Module({
 	imports: [
 		NecordModule.forRoot({
@@ -55,7 +54,9 @@ import { intents } from '@util';
 			dsn: process.env['SENTRY_DNS'],
 			debug: process.env['NODE_ENV'] !== 'production',
 			environment:
-				process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
+				process.env['NODE_ENV'] === 'production'
+					? 'production'
+					: 'development',
 			logLevels: ['error'],
 			sampleRate: 1,
 			close: {

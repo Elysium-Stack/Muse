@@ -128,31 +128,37 @@ export class AdminPurgeCommands {
 			.setTitle('Uno yeet momento')
 			.setCustomId(`ADMIN_PURGE_YEET_MODAL`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
-					new TextInputBuilder()
-						.setCustomId('reason')
-						.setLabel('Reason for kicking members')
-						.setRequired(true)
-						.setMaxLength(120)
-						.setStyle(TextInputStyle.Short),
-				]),
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
-					new TextInputBuilder()
-						.setCustomId('userids')
-						.setLabel("List of user id's. **COMMA SEPERATED**")
-						.setRequired(true)
-						.setStyle(TextInputStyle.Paragraph),
-				]),
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
-					new TextInputBuilder()
-						.setCustomId('message')
-						.setLabel('A kick message')
-						.setPlaceholder(
-							'You can use {username} to address them by their username.'
-						)
-						.setRequired(false)
-						.setStyle(TextInputStyle.Paragraph),
-				]),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('reason')
+							.setLabel('Reason for kicking members')
+							.setRequired(true)
+							.setMaxLength(120)
+							.setStyle(TextInputStyle.Short),
+					]
+				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('userids')
+							.setLabel("List of user id's. **COMMA SEPERATED**")
+							.setRequired(true)
+							.setStyle(TextInputStyle.Paragraph),
+					]
+				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('message')
+							.setLabel('A kick message')
+							.setPlaceholder(
+								'You can use {username} to address them by their username.'
+							)
+							.setRequired(false)
+							.setStyle(TextInputStyle.Paragraph),
+					]
+				),
 			]);
 
 		return interaction.showModal(modal);

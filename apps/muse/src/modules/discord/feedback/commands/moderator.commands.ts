@@ -104,7 +104,9 @@ export class FeedbackModeratorCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { page }: FeedbackTopicsListOptions
 	) {
-		this._logger.verbose(`Listing feedback topics for ${interaction.guildId}`);
+		this._logger.verbose(
+			`Listing feedback topics for ${interaction.guildId}`
+		);
 
 		return this._listTopics(interaction, page);
 	}
@@ -258,7 +260,9 @@ export class FeedbackModeratorCommands {
 					name: 'Report',
 					value: topics
 						.map(t =>
-							t.type === 'CHANNEL' ? `<#${t.referenceId}>` : 'Google Sheet'
+							t.type === 'CHANNEL'
+								? `<#${t.referenceId}>`
+								: 'Google Sheet'
 						)
 						.join('\n'),
 					inline: true,

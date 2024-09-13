@@ -276,7 +276,10 @@ export class MusicPlayerService {
 		player.setVolume(volume);
 
 		if (isMute) {
-			await this._lavalink.createPlayerMessage(player, player.queue.current);
+			await this._lavalink.createPlayerMessage(
+				player,
+				player.queue.current
+			);
 		}
 
 		return {

@@ -48,5 +48,6 @@ Thumbs.db
 .next
 
 .angular
+.nx
 
 libs/prisma/src/lib/dto

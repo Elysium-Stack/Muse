@@ -91,7 +91,9 @@ export class ModLogMessageEvents {
 	public async onMessageUpdate(
 		@Context() [original, updated]: ContextOf<Events.MessageUpdate>
 	) {
-		const { enabled, editChannelId } = await this._settings.get(original.guildId);
+		const { enabled, editChannelId } = await this._settings.get(
+			original.guildId
+		);
 
 		if (!enabled || !editChannelId?.length) {
 			return;
@@ -116,7 +118,8 @@ export class ModLogMessageEvents {
 		}
 
 		try {
-			const originalContent = original.content.match(/(.|[\n\r]){1,1024}/g);
+			const originalContent =
+				original.content.match(/(.|[\n\r]){1,1024}/g);
 			const updatedContent = updated.content.match(/(.|[\n\r]){1,1024}/g);
 
 			const embeds = [];
@@ -127,7 +130,8 @@ export class ModLogMessageEvents {
 					`https://discord.com/channels/${updated.guildId}/${updated.channelId}/${updated.id}`
 				)
 				.addFields(
-					...(originalContent?.length === 1 && updatedContent?.length === 1
+					...(originalContent?.length === 1 &&
+					updatedContent?.length === 1
 						? [
 								{
 									name: 'Original content',
@@ -135,7 +139,8 @@ export class ModLogMessageEvents {
 								},
 							]
 						: []),
-					...(originalContent?.length === 1 && updatedContent?.length === 1
+					...(originalContent?.length === 1 &&
+					updatedContent?.length === 1
 						? [
 								{
 									name: 'Edited content',
@@ -192,7 +197,8 @@ export class ModLogMessageEvents {
 						// )
 						.setAuthor({
 							name: `${getUsername(original.author)} | ${original.author.id}`,
-							iconURL: original.author.displayAvatarURL() || undefined,
+							iconURL:
+								original.author.displayAvatarURL() || undefined,
 						})
 						.setColor(EMBED_STATUS_COLORS.warning)
 						.setTimestamp()
@@ -217,14 +223,16 @@ export class ModLogMessageEvents {
 						// )
 						.setAuthor({
 							name: `${getUsername(updated.author)} | ${updated.author.id}`,
-							iconURL: updated.author.displayAvatarURL() || undefined,
+							iconURL:
+								updated.author.displayAvatarURL() || undefined,
 						})
 						.setColor(EMBED_STATUS_COLORS.warning)
 						.setTimestamp()
 				);
 			}
 
-			const editChannel = await original.guild.channels.fetch(editChannelId);
+			const editChannel =
+				await original.guild.channels.fetch(editChannelId);
 
 			if (!editChannel.isTextBased()) {
 				return;

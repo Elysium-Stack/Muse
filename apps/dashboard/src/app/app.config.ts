@@ -9,7 +9,6 @@ import {
 	withEnabledBlockingInitialNavigation,
 } from '@angular/router';
 
-
 import { environment } from '../environment/environment';
 import { AuthInterceptor } from '../services/auth.interceptor';
 import { TokenStorageService } from '../services/token-storage.service';
@@ -17,7 +16,7 @@ import { UserService } from '../services/user.service';
 
 import { appRoutes } from './app.routes';
 
-import { provideServices } from '@sdk';
+import { provideServices } from '@sdk/provider';
 
 export const appConfig: ApplicationConfig = {
 	providers: [

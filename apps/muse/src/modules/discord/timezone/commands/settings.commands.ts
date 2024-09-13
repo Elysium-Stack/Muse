@@ -41,7 +41,6 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
-
 class TimezoneSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -77,7 +76,9 @@ export class TimezoneSettingsCommands {
 		description: 'Show timezone settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
-		this._logger.verbose(`Loaded timezone settings for ${interaction.guildId}`);
+		this._logger.verbose(
+			`Loaded timezone settings for ${interaction.guildId}`
+		);
 
 		return this._settings.showSettings(interaction);
 	}
@@ -224,7 +225,9 @@ export class TimezoneSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Timezone ignored channels has been changed to:${
-				ids.length > 0 ? `\n${ids.map(id => `<#${id}>`).join(', ')}` : ' None'
+				ids.length > 0
+					? `\n${ids.map(id => `<#${id}>`).join(', ')}`
+					: ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -285,7 +288,9 @@ export class TimezoneSettingsCommands {
 								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select the channels to ignore (max 25)')
+							.setPlaceholder(
+								'Select the channels to ignore (max 25)'
+							)
 					),
 				];
 				break;

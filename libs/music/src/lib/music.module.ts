@@ -6,7 +6,6 @@ import { MusicLavalinkService, MusicPlayerService } from './services';
 
 import { DeveloperLogModule } from '@util';
 
-
 @Module({
 	imports: [DeveloperLogModule, EventEmitterModule, ScheduleModule],
 	providers: [MusicLavalinkService, MusicPlayerService],

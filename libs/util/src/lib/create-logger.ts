@@ -36,7 +36,9 @@ export const createLogger = (name: string) => {
 							interval: 5,
 							labels: {
 								app: `${name.toLowerCase().replaceAll(' ', '-')}${
-									process.env['NODE_ENV'] === 'production' ? '' : '-development'
+									process.env['NODE_ENV'] === 'production'
+										? ''
+										: '-development'
 								}`,
 							},
 							json: true,
@@ -44,12 +46,16 @@ export const createLogger = (name: string) => {
 							replaceTimestamp: true,
 							gracefulShutdown: true,
 							onConnectionError: err => console.error(err),
-							level: process.env['NODE_ENV'] === 'production' ? 'info' : 'debug',
+							level:
+								process.env['NODE_ENV'] === 'production'
+									? 'info'
+									: 'debug',
 						}),
 					]
 				: []),
 			new transports.Console({
-				level: process.env['NODE_ENV'] === 'production' ? 'info' : 'debug',
+				level:
+					process.env['NODE_ENV'] === 'production' ? 'info' : 'debug',
 				format: format.printf(({ context, level, message }) => {
 					return getColor(level)(
 						`[${name}] ${process.pid} - ${colors.white(

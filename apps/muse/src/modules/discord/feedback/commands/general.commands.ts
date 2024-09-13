@@ -54,9 +54,8 @@ export class FeedbackGeneralCommands {
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const data = {
 			content: `${MESSAGE_PREFIX} What topic would you give feedback to?`,
@@ -95,12 +94,14 @@ export class FeedbackGeneralCommands {
 			.setTitle(topic.name)
 			.setCustomId(`FEEDBACK_GIVE_MODAL_RESPONSE/${topicId}`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
-					new TextInputBuilder()
-						.setCustomId('response')
-						.setLabel('Your feedback')
-						.setStyle(TextInputStyle.Paragraph),
-				]),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('response')
+							.setLabel('Your feedback')
+							.setStyle(TextInputStyle.Paragraph),
+					]
+				),
 			]);
 
 		return interaction.showModal(modal);

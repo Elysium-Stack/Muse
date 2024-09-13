@@ -17,7 +17,7 @@ export class LavalinkHealthService extends HealthIndicator {
 		try {
 			const status = await this._lavalink.getStatus();
 			if (!status) {
-				throw new Error("Lavalink unreachable");
+				throw new Error('Lavalink unreachable');
 			}
 
 			return {

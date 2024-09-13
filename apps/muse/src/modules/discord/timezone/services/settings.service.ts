@@ -23,8 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
-
 @Injectable()
 export class TimezoneSettingsService extends BaseSettingsService<TimezoneSettingsInterface> {
 	protected _base = 'timezone';
@@ -104,9 +102,8 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

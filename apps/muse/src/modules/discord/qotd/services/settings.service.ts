@@ -21,7 +21,6 @@ import { HOUR_OPTIONS } from '@muse/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterface> {
 	protected _base = 'qotd';
@@ -126,9 +125,8 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

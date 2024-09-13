@@ -62,7 +62,14 @@ export class RadioController {
 	@MessagePattern('RADIO_QUEUE')
 	async getQueue(
 		@Payload()
-		{ guildId, page }: { guildId: string; voiceChannelId: string; page: number }
+		{
+			guildId,
+			page,
+		}: {
+			guildId: string;
+			voiceChannelId: string;
+			page: number;
+		}
 	) {
 		this._logger.log(`Received queue message for ${guildId}`);
 		const data = await this._radio.queue(guildId, page);

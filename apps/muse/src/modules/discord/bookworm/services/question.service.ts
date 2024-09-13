@@ -165,7 +165,9 @@ export class BookwormQuestionService {
 			const min = 0;
 			const max = this.questions.length - 1;
 
-			return this.questions[Math.floor(Math.random() * (max - min + 1)) + min];
+			return this.questions[
+				Math.floor(Math.random() * (max - min + 1)) + min
+			];
 		}
 
 		if (!guildId) {
@@ -239,7 +241,9 @@ export class BookwormQuestionService {
 					question,
 					this._client.user
 				);
-				const content = bookwormPingRoleId ? `<@&${bookwormPingRoleId}>` : '';
+				const content = bookwormPingRoleId
+					? `<@&${bookwormPingRoleId}>`
+					: '';
 				await channel.send({ embeds: [embed], content });
 			}
 		}

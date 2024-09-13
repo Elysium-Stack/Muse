@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    CommandInteraction,
-    EmbedBuilder,
-    MessageComponentInteraction,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	CommandInteraction,
+	EmbedBuilder,
+	MessageComponentInteraction,
 } from 'discord.js';
 import { KazagumoTrack } from 'kazagumo';
 import { firstValueFrom, take, timeout } from 'rxjs';
@@ -33,7 +33,9 @@ export class RadioService {
 		});
 
 		if (
-			(!settings || !settings.radioPlaylist || !settings.radioVoiceChannelId) &&
+			(!settings ||
+				!settings.radioPlaylist ||
+				!settings.radioVoiceChannelId) &&
 			interaction
 		) {
 			const content = `${MESSAGE_PREFIX} Radio settings we're not configured correctly.`;
@@ -49,13 +51,16 @@ export class RadioService {
 			});
 		}
 
-		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } = settings;
+		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } =
+			settings;
 
-		const radio = await this._sendCommand<{ data: {
-			tracks: KazagumoTrack[];
-			playlistName: string;
-			voiceChannelId: string;
-		}}>('RADIO_START', {
+		const radio = await this._sendCommand<{
+			data: {
+				tracks: KazagumoTrack[];
+				playlistName: string;
+				voiceChannelId: string;
+			};
+		}>('RADIO_START', {
 			guildId: interaction.guildId,
 			radioPlaylist,
 			radioVoiceChannelId,

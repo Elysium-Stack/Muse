@@ -13,7 +13,6 @@ import { MODULES } from '@muse/util/constants';
 
 import { ForbiddenExceptionFilter, MESSAGE_PREFIX, chunks } from '@util';
 
-
 @UseGuards(GuildAdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @Injectable()

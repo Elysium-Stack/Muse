@@ -39,7 +39,6 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
-
 class RequestRoleSettingsChangeOptions {
 	@StringOption({
 		name: 'option',

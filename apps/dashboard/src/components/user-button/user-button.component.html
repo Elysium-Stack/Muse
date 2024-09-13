@@ -1,53 +1,45 @@
 <ng-container *ngIf="loadingUser$(); else userTemplate">
 	<div class="btn btn-ghost flex items-center gap-4">
-		<div class="ghost-loader w-8 h-8 mask mask-squircle rounded-none"></div>
-		<div class="ghost-loader w-32 h-6 flex-1"></div>
+		<div class="ghost-loader mask mask-squircle h-8 w-8 rounded-none"></div>
+		<div class="ghost-loader h-6 w-32 flex-1"></div>
 	</div>
 </ng-container>
 
 <ng-template #userTemplate>
 	<ng-container *ngIf="user$() as user; else signinButtonTemplate">
-		<div class="dropdown dropdown-end">
-			<label
-				tabindex="0"
-				class="btn btn-ghost flex gap-4 items-center"
-			>
-				<img
-					[src]="user.avatar"
-					class="mask mask-squircle"
-					width="32"
-					height="32"
-					[alt]="
-						user.username +
-						(user.discriminator === '0' ? '' : '#' + user.discriminator)
-					"
-				/>
-				<span class="text-white">
-					{{ user.username
-					}}<ng-container *ngIf="user.discriminator !== '0'"
-						>#{{ user.discriminator }}</ng-container
-					>
-				</span>
-				<ng-icon name="cssChevronDown"></ng-icon>
-			</label>
-			<ul
-				tabindex="0"
-				class="menu dropdown-content p-2 shadow bg-neutral rounded-box w-52 mt-2"
-			>
-				<!-- <li><a>Item 1</a></li> -->
-				<li *ngIf="showDashboard">
-					<a routerLink="dashboard"> Dashboard </a>
-				</li>
-				<li>
-					<a
-						class="text-error"
-						(click)="signout()"
-					>
-						Sign out
-					</a>
-				</li>
-			</ul>
-		</div>
+		<button
+			tabindex="0"
+			class="group btn btn-ghost flex items-center gap-4 text-white hover:text-red-500"
+			(click)="signout()"
+		>
+			<img
+				[src]="user.avatar"
+				class="mask mask-squircle"
+				width="32"
+				height="32"
+				[alt]="
+					user.username +
+					(user.discriminator === '0' ? '' : '#' + user.discriminator)
+				"
+			/>
+
+			<span class="group-hover:hidden">
+				{{ user.username
+				}}<ng-container *ngIf="user.discriminator !== '0'"
+					>#{{ user.discriminator }}</ng-container
+				>
+			</span>
+			<span class="hidden group-hover:inline-block">Signout</span>
+
+			<ng-icon
+				name="cssChevronDown"
+				class="group-hover:hidden"
+			></ng-icon>
+			<ng-icon
+				name="cssLogOut"
+				class="!hidden group-hover:!inline-block"
+			></ng-icon>
+		</button>
 	</ng-container>
 </ng-template>
 

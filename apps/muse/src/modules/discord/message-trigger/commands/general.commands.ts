@@ -283,7 +283,9 @@ export class MessageTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`)
+			.setTitle(
+				`${MESSAGE_PREFIX} Triggers for ${interaction.guild.name}`
+			)
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{
@@ -294,7 +296,10 @@ export class MessageTriggerGeneralCommands {
 				{
 					name: 'Phrase',
 					value: triggers
-						.map(t => `${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`)
+						.map(
+							t =>
+								`${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`
+						)
 						.join('\n'),
 					inline: true,
 				},

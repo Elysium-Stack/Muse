@@ -144,7 +144,9 @@ export class MetricsEvents {
 	}
 
 	private async _loadMembers(client = this._client) {
-		const promises = client.guilds.cache.map(guild => guild.members.fetch());
+		const promises = client.guilds.cache.map(guild =>
+			guild.members.fetch()
+		);
 		return Promise.allSettled(promises);
 	}
 }

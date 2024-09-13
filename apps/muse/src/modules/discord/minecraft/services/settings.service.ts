@@ -23,7 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class MinecraftSettingsService extends BaseSettingsService<MinecraftSettingsInterface> {
 	protected _base = 'minecraft';
@@ -160,9 +159,8 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

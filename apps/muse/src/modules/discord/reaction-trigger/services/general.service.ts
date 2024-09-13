@@ -122,7 +122,10 @@ export class ReactionTriggerGeneralService {
 
 			switch (match) {
 				case 'word': {
-					regexInstance = new RegExp(`\\b${escapeRegExp(phrase)}\\b`, 'gim');
+					regexInstance = new RegExp(
+						`\\b${escapeRegExp(phrase)}\\b`,
+						'gim'
+					);
 					test = regexInstance.test(message.cleanContent);
 					break;
 				}

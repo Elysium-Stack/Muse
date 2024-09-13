@@ -41,7 +41,6 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
-
 class ReactionTriggerSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -161,7 +160,9 @@ export class ReactionTriggerSettingsCommands {
 		@Context() [interaction]: SlashCommandContext,
 		@Options() { option }: ReactionTriggerSettingsChangeOptions
 	) {
-		this._logger.verbose(`Change reaction trigger settings, option: ${option}`);
+		this._logger.verbose(
+			`Change reaction trigger settings, option: ${option}`
+		);
 
 		if (!option) {
 			return this._settings.promptSettings(interaction);
@@ -225,7 +226,9 @@ export class ReactionTriggerSettingsCommands {
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
-				ids.length > 0 ? `\n${ids.map(id => `<#${id}>`).join(', ')}` : ' None'
+				ids.length > 0
+					? `\n${ids.map(id => `<#${id}>`).join(', ')}`
+					: ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -286,7 +289,9 @@ export class ReactionTriggerSettingsCommands {
 								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select the channels to ignore (max 25)')
+							.setPlaceholder(
+								'Select the channels to ignore (max 25)'
+							)
 					),
 				];
 				break;
@@ -317,7 +322,9 @@ Current value: ${currentValue}`,
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`REACTION_TRIGGER_SETTINGS_BACK`)
-				.setLabel(isCancel ? 'Cancel' : 'Back to reaction trigger settings')
+				.setLabel(
+					isCancel ? 'Cancel' : 'Back to reaction trigger settings'
+				)
 				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary)
 		);
 	}

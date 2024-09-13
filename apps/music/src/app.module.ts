@@ -32,7 +32,9 @@ import { intents } from '@util';
 					? false
 					: process.env['DEVELOPMENT_SERVER_IDS'].split(','),
 			skipRegistration: true,
-			token: process.env[`MUSIC_${process.env['INSTANCE_NUMBER']}_DISCORD_TOKEN`],
+			token: process.env[
+				`MUSIC_${process.env['INSTANCE_NUMBER']}_DISCORD_TOKEN`
+			],
 			intents,
 		}),
 		EventEmitterModule.forRoot(),

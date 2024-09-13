@@ -4,7 +4,9 @@ export const guildRoutes: Route[] = [
 	{
 		path: '',
 		loadComponent: () =>
-			import('./guild.component').then(mod => mod.DashboardGuildComponent),
+			import('./guild.component').then(
+				mod => mod.DashboardGuildComponent
+			),
 		children: [
 			{
 				path: '',
@@ -50,9 +52,9 @@ export const guildRoutes: Route[] = [
 			{
 				path: 'module/reaction-trigger',
 				loadComponent: () =>
-					import('./reaction-trigger/reaction-trigger.component').then(
-						mod => mod.DashboardModulesReactionTriggerComponent
-					),
+					import(
+						'./reaction-trigger/reaction-trigger.component'
+					).then(mod => mod.DashboardModulesReactionTriggerComponent),
 			},
 			{
 				path: 'module/fun',

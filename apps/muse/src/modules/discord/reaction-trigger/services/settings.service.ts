@@ -23,7 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class ReactionTriggerSettingsService extends BaseSettingsService<ReactionTriggerSettingsInterface> {
 	protected _base = 'reactionTrigger';
@@ -46,7 +45,9 @@ export class ReactionTriggerSettingsService extends BaseSettingsService<Reaction
 		const embed = new EmbedBuilder()
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)
 			.setTitle('Reaction trigger settings')
-			.setDescription(`These are the settings for the reaction trigger module`)
+			.setDescription(
+				`These are the settings for the reaction trigger module`
+			)
 			.addFields(
 				{
 					name: 'Status',
@@ -95,17 +96,17 @@ export class ReactionTriggerSettingsService extends BaseSettingsService<Reaction
 			.setCustomId('REACTION_TRIGGER_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				REACTION_TRIGGER_SETTINGS_CHOICES.map(({ name, description, value }) =>
-					new StringSelectMenuOptionBuilder()
-						.setLabel(name)
-						.setDescription(description)
-						.setValue(value)
+				REACTION_TRIGGER_SETTINGS_CHOICES.map(
+					({ name, description, value }) =>
+						new StringSelectMenuOptionBuilder()
+							.setLabel(name)
+							.setDescription(description)
+							.setValue(value)
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

@@ -73,10 +73,7 @@ export class AppEvents {
 
 		const itterateLogs = () => {
 			this._logger.debug('Lavalink is ready, resuming radio.');
-			this._lavalink['removeListener'](
-				'ready',
-				itterateLogs
-			);
+			this._lavalink['removeListener']('ready', itterateLogs);
 			for (const { guildId } of logs) {
 				this._logger.debug(`Resuming radio for ${guildId}`);
 				this._radio.startWithoutConfig(guildId);

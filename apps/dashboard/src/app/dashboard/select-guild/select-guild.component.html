@@ -1,22 +1,22 @@
 <m-particles />
-<main class="container mx-auto px-4 text-content-base-100 min-h-screen">
+<main class="text-content-base-100 container mx-auto min-h-screen px-4">
 	<m-navigation />
 	<div
-		class="mx-auto mt-32 md:mt-60 flex flex-col items-center justify-center group gap-3"
+		class="group mx-auto mt-32 flex flex-col items-center justify-center gap-3 md:mt-60"
 	>
-		<h1 class="text-5xl text-white mt-8 font-black text-center">Servers</h1>
+		<h1 class="mt-8 text-center text-5xl font-black text-white">Servers</h1>
 
 		<ng-container *ngIf="loadingGuilds$(); else guildsTemplate">
-			<div class="flex gap-4 mt-8">
-				<div class="ghost-loader w-16 h-16 rounded-full"></div>
-				<div class="ghost-loader w-16 h-16 rounded-full"></div>
-				<div class="ghost-loader w-16 h-16 rounded-full"></div>
-				<div class="ghost-loader w-16 h-16 rounded-full"></div>
+			<div class="mt-8 flex gap-4">
+				<div class="ghost-loader h-16 w-16 rounded-full"></div>
+				<div class="ghost-loader h-16 w-16 rounded-full"></div>
+				<div class="ghost-loader h-16 w-16 rounded-full"></div>
+				<div class="ghost-loader h-16 w-16 rounded-full"></div>
 			</div>
 		</ng-container>
 		<ng-template #guildsTemplate>
 			<ng-container *ngIf="availableGuilds$().length">
-				<p class="text-gray-300 text-center">
+				<p class="text-center text-gray-300">
 					Select a server you want to configure Muse for.
 				</p>
 
@@ -34,7 +34,7 @@
 			</ng-container>
 
 			<p
-				class="text-gray-300 text-center"
+				class="text-center text-gray-300"
 				[class.mt-6]="availableGuilds$().length"
 			>
 				Invite Muse to your server

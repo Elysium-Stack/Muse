@@ -41,7 +41,9 @@ export class RequestRoleGeneralCommands {
 		description: 'Request a role',
 	})
 	public async give(@Context() [interaction]: SlashCommandContext) {
-		const entries = await this._requestRole.getAllEntries(interaction.guildId);
+		const entries = await this._requestRole.getAllEntries(
+			interaction.guildId
+		);
 
 		const entriesWithRole = (await Promise.all(
 			entries.map(async e => {
@@ -72,9 +74,8 @@ export class RequestRoleGeneralCommands {
 					)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const data = {
 			content: `${MESSAGE_PREFIX} What role would you like to request?`,
@@ -101,7 +102,9 @@ export class RequestRoleGeneralCommands {
 		const entry = await this._requestRole.getEntryById(parsedEntryId);
 
 		if (
-			(entry.blacklistedUsers as Prisma.JsonArray).includes(interaction.user.id)
+			(entry.blacklistedUsers as Prisma.JsonArray).includes(
+				interaction.user.id
+			)
 		) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} Sorry, you've been blacklisted from requesting this role`,
@@ -111,7 +114,9 @@ export class RequestRoleGeneralCommands {
 
 		const requiredRoles = entry.requiredRoles as Prisma.JsonArray;
 		if (requiredRoles.length > 0) {
-			const member = await interaction.guild.members.fetch(interaction.user.id);
+			const member = await interaction.guild.members.fetch(
+				interaction.user.id
+			);
 			const allowed = member.roles.cache.some(role =>
 				requiredRoles.includes(role.id)
 			);

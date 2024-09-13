@@ -3,9 +3,8 @@ import { take, tap } from 'rxjs';
 
 import { TokenStorageService } from './token-storage.service';
 
-import { AuthService } from '@sdk';
-
 import { WhoamiDiscordResponseDto } from '@sdk/models/whoami-discord-response-dto';
+import { AuthService } from '@sdk/services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

@@ -32,7 +32,8 @@ export class TimezoneMessageEvents {
 			return;
 		}
 
-		const hourRegex = /(?:\W|^)(\d{1,2})\s*(a\.m\.|p\.m\.|am|pm)(?:\W|$)/gim;
+		const hourRegex =
+			/(?:\W|^)(\d{1,2})\s*(a\.m\.|p\.m\.|am|pm)(?:\W|$)/gim;
 		const hourMinuteRegex =
 			/(?:\W|^)((?:[01]{0,1}\d)|(?:2[0-3]))[.:：]((?:[0-5]\d))(?:\s*(a\.m\.|p\.m\.|am|pm))?(?:\W|$)/gim;
 

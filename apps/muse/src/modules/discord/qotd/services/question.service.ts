@@ -526,7 +526,9 @@ export class QotDQuestionService {
 			const min = 0;
 			const max = this.questions.length - 1;
 
-			return this.questions[Math.floor(Math.random() * (max - min + 1)) + min];
+			return this.questions[
+				Math.floor(Math.random() * (max - min + 1)) + min
+			];
 		}
 
 		if (!guildId) {
@@ -577,7 +579,11 @@ export class QotDQuestionService {
 			},
 		});
 
-		for (const { guildId, qotdDailyChannelId, qotdPingRoleId } of settings) {
+		for (const {
+			guildId,
+			qotdDailyChannelId,
+			qotdPingRoleId,
+		} of settings) {
 			if (!qotdDailyChannelId) {
 				continue;
 			}

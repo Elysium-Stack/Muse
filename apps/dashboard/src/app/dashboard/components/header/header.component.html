@@ -1,4 +1,4 @@
-<div class="flex gap-4 items-center">
+<div class="flex items-center gap-4">
 	<img
 		src="/assets/images/logo.png"
 		width="48"
@@ -9,7 +9,7 @@
 
 	<button
 		(click)="showSidebar()"
-		class="btn btn-ghost p-1 text-2xl aspect-square block lg:hidden"
+		class="btn btn-ghost block aspect-square p-1 text-2xl lg:hidden"
 	>
 		<ng-icon name="cssMenuLeft"></ng-icon>
 	</button>
@@ -20,4 +20,4 @@
 	/>
 </div>
 
-<m-dashboard-breacrumbs class="block lg:hidden my-2" />
+<m-dashboard-breacrumbs class="my-2 block lg:hidden" />

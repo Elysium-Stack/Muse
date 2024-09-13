@@ -5,7 +5,7 @@ import { environment } from '../environment/environment';
 import { UserService } from '../services/user.service';
 import { tokenExpired } from '../util/jwt-token';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthenticatedGuard {
 	private _user = inject(UserService);
 

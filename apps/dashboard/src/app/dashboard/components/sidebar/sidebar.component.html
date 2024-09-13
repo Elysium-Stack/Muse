@@ -1,13 +1,13 @@
 <aside
 	[class.translate-x-4]="show$()"
 	[class.-translate-x-full]="!show$()"
-	class="absolute left-0 top-0 h-[calc(100vh-2rem)] -ml-4 lg:ml-0 rounded-2xl mt-4 w-[calc(100vw-2rem)] md:w-64 bg-base-0 duration-200 ease-linear lg:static lg:translate-x-0 text-white flex flex-col p-2"
+	class="absolute left-0 top-0 -ml-4 mt-4 flex h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] flex-col rounded-2xl bg-base-0 p-2 text-white duration-200 ease-linear md:w-64 lg:static lg:ml-0 lg:translate-x-0"
 >
 	<!-- overflow-y-hidden -->
 	<div class="dropdown dropdown-bottom md:dropdown-right">
 		<label
 			tabindex="0"
-			class="btn btn-ghost w-full flex items-center gap-4 h-16 px-2"
+			class="btn btn-ghost flex h-16 w-full items-center gap-4 px-2"
 			*ngIf="
 				!loadingGuilds$() && selectedGuild$() as selectedGuild;
 				else guildsLoadingTemplate
@@ -15,7 +15,7 @@
 		>
 			<m-guild-icon [guild]="selectedGuild" />
 			<h1
-				class="font-semibold flex-1 whitespace-nowrap overflow-hidden text-ellipsis text-start"
+				class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-start font-semibold"
 			>
 				{{ selectedGuild.name }}
 			</h1>
@@ -29,27 +29,29 @@
 			></ng-icon>
 		</label>
 		<ng-template #guildsLoadingTemplate>
-			<div class="w-full flex items-center gap-4 h-16 px-2">
-				<div class="ghost-loader w-8 h-8 rounded-full"></div>
-				<div class="ghost-loader w-full h-6 flex-1"></div>
+			<div class="flex h-16 w-full items-center gap-4 px-2">
+				<div class="ghost-loader h-8 w-8 rounded-full"></div>
+				<div class="ghost-loader h-6 w-full flex-1"></div>
 			</div>
 		</ng-template>
 		<ul
 			*ngIf="!loadingGuilds$()"
 			tabindex="0"
-			class="menu dropdown-content p-2 shadow bg-base-0 rounded-box max-w-[16rem] max-h-[80vh] md:max-h-[calc(100vh-2rem)] md:ml-4 md:-mt-2 overflow-y-auto flex flex-col flex-nowrap"
+			class="dropdown-content menu rounded-box flex max-h-[80vh] max-w-[16rem] flex-col flex-nowrap overflow-y-auto bg-base-0 p-2 shadow md:-mt-2 md:ml-4 md:max-h-[calc(100vh-2rem)]"
 		>
 			<li
 				class="w-full"
 				*ngFor="let guild of availableGuilds$()"
 			>
 				<a
-					class="flex gap-4 w-full"
+					class="flex w-full gap-4"
 					[routerLink]="['../', guild.id]"
 					routerLinkActive="active"
 				>
 					<m-guild-icon [guild]="guild" />
-					<p class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
+					<p
+						class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+					>
 						{{ guild.name }}
 					</p>
 				</a>
@@ -63,12 +65,14 @@
 				*ngFor="let guild of unavailableGuilds$()"
 			>
 				<a
-					class="flex gap-4 w-full"
+					class="flex w-full gap-4"
 					[href]="inviteUrl"
 					target="_INVITE"
 				>
 					<m-guild-icon [guild]="guild" />
-					<p class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
+					<p
+						class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+					>
 						{{ guild.name }}
 					</p>
 				</a>
@@ -76,7 +80,7 @@
 		</ul>
 	</div>
 
-	<ul class="menu menu-compact lg:menu-normal mt-4">
+	<ul class="menu menu-compact mt-4 lg:menu-normal">
 		<li>
 			<a
 				routerLink="./"

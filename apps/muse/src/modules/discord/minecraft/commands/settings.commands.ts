@@ -189,7 +189,10 @@ export class MinecraftSettingsCommands {
 	) {
 		const connectUrl = interaction.fields.getTextInputValue('connectUrl');
 		const bedrockPort = interaction.fields.getTextInputValue('bedrockPort');
-		if (bedrockPort.length > 0 && Number.isNaN(Number.parseInt(bedrockPort, 10))) {
+		if (
+			bedrockPort.length > 0 &&
+			Number.isNaN(Number.parseInt(bedrockPort, 10))
+		) {
 			return interaction.reply({
 				content: `${MESSAGE_PREFIX} Bedrock port must be a number.`,
 				components: [this._getBackButtonRow()],
@@ -317,7 +320,9 @@ export class MinecraftSettingsCommands {
 			}
 			case 'requiredRoleId': {
 				readableOption = 'Required role';
-				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
+				currentValue = settings?.[option]
+					? `<@&${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
@@ -345,7 +350,9 @@ export class MinecraftSettingsCommands {
 								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select the channel to listen for chats')
+							.setPlaceholder(
+								'Select the channel to listen for chats'
+							)
 					),
 				];
 				break;

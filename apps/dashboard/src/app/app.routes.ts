@@ -14,6 +14,8 @@ export const appRoutes: Route[] = [
 		providers: [AuthenticatedGuard],
 		canActivate: [() => inject(AuthenticatedGuard).canActivate()],
 		loadChildren: () =>
-			import('./dashboard/dashboard.routes').then(mod => mod.dashboardRoutes),
+			import('./dashboard/dashboard.routes').then(
+				mod => mod.dashboardRoutes
+			),
 	},
 ];

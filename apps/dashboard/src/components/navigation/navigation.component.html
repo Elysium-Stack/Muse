@@ -1,5 +1,5 @@
 <div class="navbar sticky top-0 px-0">
-	<div class="flex-1 lg:flex-none gap-4">
+	<div class="flex-1 gap-4 lg:flex-none">
 		<a
 			href="/"
 			class="mr-6"
@@ -13,29 +13,29 @@
 		</a>
 		<a
 			[href]="inviteUrl"
-			class="hidden md:block link text-white"
+			class="link hidden text-white md:block"
 			target="_INVITE"
 		>
 			Add to server
 		</a>
 	</div>
-	<div class="flex flex-1 justify-end items-center">
-		<div class="flex md:hidden gap-4 items-center">
+	<div class="flex flex-1 items-center justify-end">
+		<div class="flex items-center gap-4 md:hidden">
 			<div class="dropdown dropdown-end">
 				<label
 					tabindex="0"
-					class="btn btn-ghost p-1 text-2xl aspect-square"
+					class="btn btn-ghost aspect-square p-1 text-2xl"
 				>
 					<ng-icon name="cssMenuRight"></ng-icon>
 				</label>
 				<ul
 					tabindex="0"
-					class="menu dropdown-content p-2 shadow bg-neutral rounded-box w-64 mt-2"
+					class="dropdown-content menu rounded-box mt-2 w-64 bg-neutral p-2 shadow"
 				>
 					<ng-container *ngIf="user$() as user">
-						<li class="rounded-none w-full">
+						<li class="w-full rounded-none">
 							<div
-								class="flex gap-4 px-4 hover:bg-transparent border-b border-gray-700 !rounded-none mb-2 w-full cursor-default"
+								class="mb-2 flex w-full cursor-default gap-4 !rounded-none border-b border-gray-700 px-4 hover:bg-transparent"
 							>
 								<img
 									[src]="user.avatar"
@@ -44,14 +44,17 @@
 									height="32"
 									[alt]="
 										user.username +
-										(user.discriminator === '0' ? '' : '#' + user.discriminator)
+										(user.discriminator === '0'
+											? ''
+											: '#' + user.discriminator)
 									"
 								/>
 								<p
-									class="flex-1 text-white whitespace-nowrap overflow-hidden text-ellipsis"
+									class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-white"
 								>
 									{{ user.username
-									}}<ng-container *ngIf="user.discriminator !== '0'"
+									}}<ng-container
+										*ngIf="user.discriminator !== '0'"
 										>#{{ user.discriminator }}</ng-container
 									>
 								</p>
@@ -96,7 +99,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="hidden md:flex gap-4 items-center">
+		<div class="hidden items-center gap-4 md:flex">
 			<m-user-button />
 		</div>
 	</div>

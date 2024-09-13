@@ -40,7 +40,11 @@ export class TimezoneGeneralService {
 		});
 	}
 
-	async checkTimezonedMessage(message: Message, hour: number, minutes: number) {
+	async checkTimezonedMessage(
+		message: Message,
+		hour: number,
+		minutes: number
+	) {
 		const data = await this.getTimezone(message.guildId, message.author.id);
 		if (!data) {
 			return;

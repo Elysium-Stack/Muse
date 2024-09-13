@@ -14,6 +14,10 @@ import { PrismaHealthService } from './services/prisma-health.service';
 @Module({
 	imports: [SharedModule, HttpModule, TerminusModule, MusicLibModule],
 	controllers: [HealthController],
-	providers: [PrismaHealthService, DiscordHealthService, LavalinkHealthService],
+	providers: [
+		PrismaHealthService,
+		DiscordHealthService,
+		LavalinkHealthService,
+	],
 })
 export class HealthModule {}

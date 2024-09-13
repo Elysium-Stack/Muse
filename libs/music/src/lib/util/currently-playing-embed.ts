@@ -4,7 +4,6 @@ import { KazagumoPlayer, KazagumoTrack } from 'kazagumo';
 
 import { readableTime } from '@util';
 
-
 export const createPlayingEmbed = (
 	player: KazagumoPlayer,
 	track: KazagumoTrack
@@ -58,12 +57,16 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 		new ButtonBuilder()
 			.setCustomId(
 				`MUSIC_VOLUME_SET/${
-					player.volume === 0 ? (player.data.get('previousVolume') ?? 50) : 0
+					player.volume === 0
+						? (player.data.get('previousVolume') ?? 50)
+						: 0
 				}/true`
 			)
 			.setLabel('🔇')
 			.setStyle(
-				player.volume === 0 ? ButtonStyle.Success : ButtonStyle.Secondary
+				player.volume === 0
+					? ButtonStyle.Success
+					: ButtonStyle.Secondary
 			),
 		new ButtonBuilder()
 			.setCustomId(`MUSIC_VOLUME_DECREASE/10`)
@@ -91,7 +94,9 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 			.setCustomId(`MUSIC_LOOP`)
 			.setLabel('🔁')
 			.setStyle(
-				player.loop === 'none' ? ButtonStyle.Secondary : ButtonStyle.Success
+				player.loop === 'none'
+					? ButtonStyle.Secondary
+					: ButtonStyle.Success
 			)
 	),
 ];

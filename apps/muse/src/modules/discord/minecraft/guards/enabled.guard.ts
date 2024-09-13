@@ -14,7 +14,9 @@ import { ModuleNotEnabledException } from '@util/errors';
 export class MinecraftEnabledGuard implements CanActivate {
 	private readonly _logger = new Logger(MinecraftEnabledGuard.name);
 
-	constructor(private readonly _minecraftSettings: MinecraftSettingsService) {}
+	constructor(
+		private readonly _minecraftSettings: MinecraftSettingsService
+	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const ctx = NecordExecutionContext.create(context);

@@ -26,6 +26,7 @@
 			"@radio/*": ["apps/radio/src/*"],
 			"@sdk": ["libs/sdk/src/index.ts"],
 			"@sdk/*": ["libs/sdk/src/lib/*"],
+			"@sdk/provider": ["libs/sdk/src/provider.ts"],
 			"@util": ["libs/util/src/index.ts"],
 			"@util/*": ["libs/util/src/lib/*"]
 		}

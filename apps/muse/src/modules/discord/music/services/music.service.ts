@@ -512,7 +512,7 @@ export class MusicService {
 		interaction: CommandInteraction | MessageComponentInteraction,
 		command: string,
 		data: unknown
-	): Promise<{result: string} & T> {
+	): Promise<{ result: string } & T> {
 		const voiceChannel = await getVoiceChannelFromInteraction(interaction);
 		const instance = await this._instances.getAvailableOrExisting(
 			interaction.guildId,
@@ -537,7 +537,11 @@ export class MusicService {
 			return null;
 		}
 
-		const music = await this._instances.sendCommand(instance, command, data);
+		const music = await this._instances.sendCommand(
+			instance,
+			command,
+			data
+		);
 
 		if (!music) {
 			const content = `${MESSAGE_PREFIX} Something wen't wrong, try again later!`;

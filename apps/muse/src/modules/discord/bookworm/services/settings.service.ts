@@ -24,7 +24,6 @@ import { HOUR_OPTIONS } from '@muse/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class BookwormSettingsService extends BaseSettingsService<BookwormSettingsInterface> {
 	protected _base = 'bookworm';
@@ -129,9 +128,8 @@ export class BookwormSettingsService extends BaseSettingsService<BookwormSetting
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

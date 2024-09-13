@@ -28,7 +28,6 @@ import { filter } from 'rxjs';
 import { DashboardGuildService } from '../../services/guild.service';
 import { DashboardSidebarService } from '../../services/sidebar.service';
 
-
 @Component({
 	standalone: true,
 	selector: 'm-dashboard-sidebar',

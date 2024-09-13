@@ -20,7 +20,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class MusicSettingsService extends BaseSettingsService<MusicSettingsInterface> {
 	protected _base = 'music';
@@ -103,9 +102,8 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

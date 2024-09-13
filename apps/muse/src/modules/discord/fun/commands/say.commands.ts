@@ -108,7 +108,7 @@ export class FunSayCommands {
 
 		const replyMessage = await channel.messages
 			.fetch(replyId)
-			.catch(()=> null);
+			.catch(() => null);
 
 		if (!replyMessage) {
 			return interaction.reply({

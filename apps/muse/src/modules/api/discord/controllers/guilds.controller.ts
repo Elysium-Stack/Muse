@@ -39,7 +39,10 @@ export class GuildsController {
 			)
 			.map(
 				guild =>
-					new BotOAuth2GuildDTO(this._client.guilds.cache.has(guild.id), guild)
+					new BotOAuth2GuildDTO(
+						this._client.guilds.cache.has(guild.id),
+						guild
+					)
 			);
 	}
 	/**

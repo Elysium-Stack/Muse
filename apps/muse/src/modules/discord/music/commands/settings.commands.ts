@@ -70,7 +70,9 @@ export class MusicSettingsCommands {
 		description: 'Show music settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
-		this._logger.verbose(`Loaded music settings for ${interaction.guildId}`);
+		this._logger.verbose(
+			`Loaded music settings for ${interaction.guildId}`
+		);
 
 		return this._settings.showSettings(interaction);
 	}
@@ -208,7 +210,9 @@ export class MusicSettingsCommands {
 			}
 			case 'channelId': {
 				readableOption = 'Channel';
-				currentValue = settings?.[option] ? `<#${settings[option]}>` : 'none';
+				currentValue = settings?.[option]
+					? `<#${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
@@ -225,7 +229,9 @@ export class MusicSettingsCommands {
 			}
 			case 'djRoleId': {
 				readableOption = 'DJ role';
-				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
+				currentValue = settings?.[option]
+					? `<@&${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()

@@ -42,7 +42,10 @@ function addSwaggerPluginTransformer(prevGetCustomTransformers) {
 				: undefined),
 		};
 		customTransformers.before = [
-			require('@nestjs/swagger/plugin').before(SwaggerPluginOptions, program),
+			require('@nestjs/swagger/plugin').before(
+				SwaggerPluginOptions,
+				program
+			),
 			...(customTransformers.before || []),
 		];
 		return customTransformers;

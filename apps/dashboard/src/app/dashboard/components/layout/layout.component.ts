@@ -5,7 +5,6 @@ import { ParticlesHeaderComponent } from 'apps/dashboard/src/components/particle
 import { DashboardHeaderComponent } from '../header/header.component';
 import { DashboardSidebarComponent } from '../sidebar/sidebar.component';
 
-
 @Component({
 	standalone: true,
 	selector: 'm-dashboard-layout',

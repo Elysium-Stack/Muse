@@ -23,7 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
 @Injectable()
 export class MessageTriggerSettingsService extends BaseSettingsService<MessageTriggerSettingsInterface> {
 	protected _base = 'messageTrigger';
@@ -46,7 +45,9 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 		const embed = new EmbedBuilder()
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.setTitle('Message trigger settings')
-			.setDescription(`These are the settings for the message trigger module`)
+			.setDescription(
+				`These are the settings for the message trigger module`
+			)
 			.addFields(
 				{
 					name: 'Status',
@@ -95,17 +96,17 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 			.setCustomId('MESSAGE_TRIGGER_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				MESSAGE_TRIGGER_SETTINGS_CHOICES.map(({ name, description, value }) =>
-					new StringSelectMenuOptionBuilder()
-						.setLabel(name)
-						.setDescription(description)
-						.setValue(value)
+				MESSAGE_TRIGGER_SETTINGS_CHOICES.map(
+					({ name, description, value }) =>
+						new StringSelectMenuOptionBuilder()
+							.setLabel(name)
+							.setDescription(description)
+							.setValue(value)
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()

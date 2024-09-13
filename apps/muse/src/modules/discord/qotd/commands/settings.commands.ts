@@ -150,7 +150,11 @@ export class QotDSettingsCommands {
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
-		await this._settings.set(interaction.guildId, 'dailyEnabled', parsedValue);
+		await this._settings.set(
+			interaction.guildId,
+			'dailyEnabled',
+			parsedValue
+		);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} QotD daily questions has been ${
@@ -238,7 +242,8 @@ export class QotDSettingsCommands {
 		switch (option) {
 			case 'enabled':
 			case 'dailyEnabled': {
-				readableOption = option === 'enabled' ? 'Enabled' : 'Daily enabled';
+				readableOption =
+					option === 'enabled' ? 'Enabled' : 'Daily enabled';
 				currentValue = settings?.[option] ? 'Enabled' : 'Disabled';
 				components = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -266,8 +271,11 @@ export class QotDSettingsCommands {
 			}
 			case 'channelId':
 			case 'dailyChannelId': {
-				readableOption = option === 'channelId' ? 'Channel' : 'Daily channel';
-				currentValue = settings?.[option] ? `<#${settings[option]}>` : 'none';
+				readableOption =
+					option === 'channelId' ? 'Channel' : 'Daily channel';
+				currentValue = settings?.[option]
+					? `<#${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
@@ -284,7 +292,9 @@ export class QotDSettingsCommands {
 			}
 			case 'pingRoleId': {
 				readableOption = 'Ping role';
-				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
+				currentValue = settings?.[option]
+					? `<@&${settings[option]}>`
+					: 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
@@ -303,8 +313,9 @@ export class QotDSettingsCommands {
 				currentValue = Number.isNaN(settings[option])
 					? 'none'
 					: `\`${
-							HOUR_OPTIONS.find(h => h.value === settings?.[option])?.name ??
-							'-'
+							HOUR_OPTIONS.find(
+								h => h.value === settings?.[option]
+							)?.name ?? '-'
 						}\``;
 				components = [
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(

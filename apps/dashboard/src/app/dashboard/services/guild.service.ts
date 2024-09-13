@@ -1,11 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { UserService } from 'apps/dashboard/src/services/user.service';
 import { BehaviorSubject, take } from 'rxjs';
 
-import { GuildsService } from '@sdk';
-
 import { BotOAuth2GuildDto } from '@sdk/models/bot-o-auth-2-guild-dto';
+import { GuildsService } from '@sdk/services/guilds.service';
 
+import { UserService } from 'apps/dashboard/src/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardGuildService {

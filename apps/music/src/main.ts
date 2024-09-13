@@ -5,7 +5,6 @@ import { AppModule } from './app.module';
 
 import { createLogger } from '@util';
 
-
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
 		logger: createLogger('Muse Music'),

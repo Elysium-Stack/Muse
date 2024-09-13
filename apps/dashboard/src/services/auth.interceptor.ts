@@ -1,8 +1,8 @@
 import {
-    HttpErrorResponse,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
+	HttpErrorResponse,
+	HttpHandler,
+	HttpInterceptor,
+	HttpRequest,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, throwError } from 'rxjs';
@@ -15,14 +15,9 @@ export class AuthInterceptor implements HttpInterceptor {
 	private _user = inject(UserService);
 
 	private isRefreshing = false;
-	private accessTokenSubject$ = new BehaviorSubject<string | null>(
-		null
-	);
+	private accessTokenSubject$ = new BehaviorSubject<string | null>(null);
 
-	intercept(
-		req: HttpRequest<unknown>,
-		next: HttpHandler
-	) {
+	intercept(req: HttpRequest<unknown>, next: HttpHandler) {
 		let authReq = req;
 		const accessToken = this._user.accessToken$();
 		const refreshToken = this._user.refreshToken$();
@@ -59,11 +54,13 @@ export class AuthInterceptor implements HttpInterceptor {
 
 			if (token) {
 				return this._user.refreshToken().pipe(
-					switchMap((token ) => {
+					switchMap(token => {
 						this.isRefreshing = false;
 
 						this.accessTokenSubject$.next(token.accessToken);
-						return next.handle(this.addTokenHeader(request, token.accessToken));
+						return next.handle(
+							this.addTokenHeader(request, token.accessToken)
+						);
 					}),
 					catchError(err => {
 						this.isRefreshing = false;
@@ -76,9 +73,11 @@ export class AuthInterceptor implements HttpInterceptor {
 		}
 
 		return this.accessTokenSubject$.pipe(
-			filter((token ) => token !== null),
+			filter(token => token !== null),
 			take(1),
-			switchMap((token) => next.handle(this.addTokenHeader(request, token as string)))
+			switchMap(token =>
+				next.handle(this.addTokenHeader(request, token as string))
+			)
 		);
 	}
 

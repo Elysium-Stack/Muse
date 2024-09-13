@@ -47,9 +47,7 @@ export class MusicVolumeCommands {
 			amount = Number.parseInt(amount, 10);
 		}
 
-		const { result, volume } = this._player.getVolume(
-			interaction.guildId
-		);
+		const { result, volume } = this._player.getVolume(interaction.guildId);
 
 		if (result === 'NO_PLAYER') {
 			return interaction.deferUpdate();

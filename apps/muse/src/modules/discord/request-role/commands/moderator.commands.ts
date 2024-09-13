@@ -138,14 +138,16 @@ export class RequestRoleModeratorCommands {
 			.setTitle(`Terms for request role`)
 			.setCustomId(`REQUEST_ROLE_SET_TERMS/${role.id}`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
-					new TextInputBuilder()
-						.setCustomId('tos')
-						.setLabel('tos (optional)')
-						.setPlaceholder('You must be a good person...')
-						.setRequired(false)
-						.setStyle(TextInputStyle.Paragraph),
-				]),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+					[
+						new TextInputBuilder()
+							.setCustomId('tos')
+							.setLabel('tos (optional)')
+							.setPlaceholder('You must be a good person...')
+							.setRequired(false)
+							.setStyle(TextInputStyle.Paragraph),
+					]
+				),
 			]);
 
 		return interaction.showModal(modal);
@@ -199,7 +201,9 @@ export class RequestRoleModeratorCommands {
 			components: [
 				new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 					new RoleSelectMenuBuilder()
-						.setCustomId(`REQUEST_ROLE_SET_REQUIRED_ROLES/${entry.id}`)
+						.setCustomId(
+							`REQUEST_ROLE_SET_REQUIRED_ROLES/${entry.id}`
+						)
 						.setMinValues(1)
 						.setMaxValues(20)
 						.setPlaceholder('Select the required roles')
@@ -308,7 +312,9 @@ export class RequestRoleModeratorCommands {
 				{
 					name: 'Required Roles',
 					value: entries
-						.map(e => (e.requiredRoles as Prisma.JsonArray).join(', '))
+						.map(e =>
+							(e.requiredRoles as Prisma.JsonArray).join(', ')
+						)
 						.join('\n'),
 					inline: true,
 				},

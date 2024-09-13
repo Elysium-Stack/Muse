@@ -26,12 +26,12 @@
 
 html,
 body {
-	@apply w-full h-full;
+	@apply h-full w-full;
 	font-family: 'Inter', serif;
 }
 
 .link {
-	@apply opacity-75 hover:opacity-100 transition-opacity no-underline hover:underline;
+	@apply no-underline opacity-75 transition-opacity hover:underline hover:opacity-100;
 }
 
 .menu {
@@ -45,7 +45,7 @@ body {
 			@apply opacity-100;
 
 			> span {
-				@apply text-secondary text-xs font-semibold uppercase;
+				@apply text-xs font-semibold uppercase text-secondary;
 			}
 		}
 	}

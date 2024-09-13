@@ -72,7 +72,10 @@ export class DashboardBreadcrumbsComponent {
 		}
 
 		const segments = splitted.map(segment => ({
-			link: segment === 'music' && splitted.length > 1 ? './music' : undefined,
+			link:
+				segment === 'music' && splitted.length > 1
+					? './music'
+					: undefined,
 			label: segment.replaceAll('-', ' '),
 		}));
 

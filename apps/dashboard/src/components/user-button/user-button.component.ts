@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { cssChevronDown, cssRedo } from '@ng-icons/css.gg';
+import { cssChevronDown, cssLogOut, cssRedo } from '@ng-icons/css.gg';
 
 import { environment } from '../../environment/environment';
 import { UserService } from '../../services/user.service';
@@ -16,7 +16,7 @@ import { UserService } from '../../services/user.service';
 	standalone: true,
 	selector: 'm-user-button',
 	imports: [CommonModule, NgIconComponent, RouterModule],
-	providers: [provideIcons({ cssChevronDown, cssRedo })],
+	providers: [provideIcons({ cssChevronDown, cssRedo, cssLogOut })],
 	templateUrl: './user-button.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

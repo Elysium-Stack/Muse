@@ -39,7 +39,6 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
-
 class ModLogSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -66,7 +65,9 @@ export class ModLogSettingsCommands {
 		description: 'Show mod log settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
-		this._logger.verbose(`Loaded mod log settings for ${interaction.guildId}`);
+		this._logger.verbose(
+			`Loaded mod log settings for ${interaction.guildId}`
+		);
 
 		return this._settings.showSettings(interaction);
 	}

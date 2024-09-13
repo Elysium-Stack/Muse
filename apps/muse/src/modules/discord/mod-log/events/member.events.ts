@@ -115,7 +115,9 @@ export class ModLogMemberEvents {
 				{
 					name: 'Roles',
 					value:
-						roles.length > 0 ? roles.map(id => `<@&${id}>`).join(', ') : 'None',
+						roles.length > 0
+							? roles.map(id => `<@&${id}>`).join(', ')
+							: 'None',
 					inline: roles.length === 0,
 				}
 			)

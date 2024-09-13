@@ -23,8 +23,6 @@ import { ALL_SETTINGS_BUTTON } from '@muse/modules/settings/util/constants';
 
 import { MESSAGE_PREFIX } from '@util';
 
-
-
 @Injectable()
 export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleSettingsInterface> {
 	protected _base = 'requestRole';
@@ -47,7 +45,9 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 		const embed = new EmbedBuilder()
 			.setColor(REQUEST_ROLE_EMBED_COLOR)
 			.setTitle('Request role settings')
-			.setDescription(`These are the settings for the request role module`)
+			.setDescription(
+				`These are the settings for the request role module`
+			)
 			.addFields(
 				{
 					name: 'Status',
@@ -94,17 +94,17 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 			.setCustomId('REQUEST_ROLE_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				REQUEST_ROLE_SETTINGS_CHOICES.map(({ name, description, value }) =>
-					new StringSelectMenuOptionBuilder()
-						.setLabel(name)
-						.setDescription(description)
-						.setValue(value)
+				REQUEST_ROLE_SETTINGS_CHOICES.map(
+					({ name, description, value }) =>
+						new StringSelectMenuOptionBuilder()
+							.setLabel(name)
+							.setDescription(description)
+							.setValue(value)
 				)
 			);
 
-		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			select
-		);
+		const selectRow =
+			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
