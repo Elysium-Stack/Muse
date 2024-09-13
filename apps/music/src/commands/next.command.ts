@@ -20,7 +20,7 @@ export class MusicNextCommands {
 	@Button('MUSIC_NEXT')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.next(interaction.guildId);
 		return interaction.deferUpdate();

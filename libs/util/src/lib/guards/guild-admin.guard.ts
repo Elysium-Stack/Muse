@@ -36,7 +36,7 @@ export class GuildAdminGuard implements CanActivate {
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
-			PermissionsBitField.Flags.Administrator,
+			PermissionsBitField.Flags.Administrator
 		);
 		if (hasPermission) {
 			return true;

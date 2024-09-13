@@ -27,7 +27,7 @@ $ git clone git@github.com:Elysium-Stack/Muse.git
 
 #### Prerequisite
 
--   [Docker](https://www.docker.com/)
+- [Docker](https://www.docker.com/)
 
 ### Running the app
 
@@ -54,10 +54,10 @@ $ docker-compose exec -it muse yarn prisma migrate dev
 
 #### Prerequisite
 
--   [NodeJS 18.x](https://nodejs.org/en/download)
--   [PostgresDB](https://www.postgresql.org/)
--   [RabbitMQ](https://www.rabbitmq.com/)
--   [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
+- [NodeJS 18.x](https://nodejs.org/en/download)
+- [PostgresDB](https://www.postgresql.org/)
+- [RabbitMQ](https://www.rabbitmq.com/)
+- [Lavalink](https://github.com/freyacodes/Lavalink) ([Free hosted](https://lavalink.darrennathanael.com/NoSSL/lavalink-without-ssl/))
 
 #### Installing
 
@@ -93,8 +93,8 @@ $ yarn radio:start:prod
 
 ## Stay in touch
 
--   Author - [Jurien Hamaker](https://jurien.dev)
--   Website - [https://the-river-styx.com](https://the-river-styx.com/)
+- Author - [Jurien Hamaker](https://jurien.dev)
+- Website - [https://the-river-styx.com](https://the-river-styx.com/)
 
 ## License
 

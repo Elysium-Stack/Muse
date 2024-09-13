@@ -6,7 +6,6 @@ import { createLogger } from '@util';
 
 import { MuseModule } from './muse.module';
 
-
 async function bootstrap() {
 	const app = await NestFactory.create(MuseModule, {
 		cors: true,

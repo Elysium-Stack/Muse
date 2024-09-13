@@ -64,7 +64,7 @@ export class RequestRoleSettingsCommands {
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Loaded request role settings for ${interaction.guildId}`,
+			`Loaded request role settings for ${interaction.guildId}`
 		);
 
 		return this._settings.showSettings(interaction);
@@ -73,7 +73,7 @@ export class RequestRoleSettingsCommands {
 	@Button('REQUEST_ROLE_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.showSettings(interaction);
 	}
@@ -85,7 +85,7 @@ export class RequestRoleSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: RequestRoleSettingsChangeOptions,
+		@Options() { option }: RequestRoleSettingsChangeOptions
 	) {
 		this._logger.verbose(`Change request role settings, option: ${option}`);
 
@@ -99,7 +99,7 @@ export class RequestRoleSettingsCommands {
 	@StringSelect('REQUEST_ROLE_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: (keyof RequestRoleSettingsInterface)[],
+		@SelectedStrings() selected: (keyof RequestRoleSettingsInterface)[]
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -107,7 +107,7 @@ export class RequestRoleSettingsCommands {
 	@Button('REQUEST_ROLE_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
+		@ComponentParam('value') value: string
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
@@ -124,7 +124,7 @@ export class RequestRoleSettingsCommands {
 	@Button('REQUEST_ROLE_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -132,7 +132,7 @@ export class RequestRoleSettingsCommands {
 	@Button('REQUEST_ROLE_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -140,7 +140,7 @@ export class RequestRoleSettingsCommands {
 	@ChannelSelect('REQUEST_ROLE_SETTINGS_CHANGE_LOG_CHANNEL_ID')
 	public async onDeleteChannelChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() data: ISelectedChannels,
+		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
 		await this._settings.set(interaction.guildId!, 'logChannelId', id);
@@ -155,7 +155,7 @@ export class RequestRoleSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: keyof RequestRoleSettingsInterface,
+		option: keyof RequestRoleSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
@@ -173,8 +173,8 @@ export class RequestRoleSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MOD_LOG_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/true`,
+									option
+								).toUpperCase()}/true`
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
@@ -182,12 +182,12 @@ export class RequestRoleSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MOD_LOG_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/false`,
+									option
+								).toUpperCase()}/false`
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings?.[option] === false),
+							.setDisabled(settings?.[option] === false)
 					),
 				];
 				break;
@@ -202,11 +202,11 @@ export class RequestRoleSettingsCommands {
 						new ChannelSelectMenuBuilder()
 							.setCustomId(
 								`REQUEST_ROLE_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select the channel to log to'),
+							.setPlaceholder('Select the channel to log to')
 					),
 				];
 				break;
@@ -238,7 +238,7 @@ Current value: ${currentValue}`,
 			new ButtonBuilder()
 				.setCustomId(`REQUEST_ROLE_SETTINGS_BACK`)
 				.setLabel(isCancel ? 'Cancel' : 'Back to request role settings')
-				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
+				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary)
 		);
 	}
 }

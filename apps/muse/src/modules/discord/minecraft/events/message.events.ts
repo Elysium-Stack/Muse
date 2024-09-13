@@ -12,7 +12,7 @@ export class MinecraftMessageEvents {
 
 	@On(Events.MessageCreate)
 	public onMessageCreate(
-		@Context() [message]: ContextOf<Events.MessageCreate>,
+		@Context() [message]: ContextOf<Events.MessageCreate>
 	) {
 		return;
 		//this._general.sendMessage(message);

@@ -35,7 +35,7 @@ export class AuthenticatedGuard {
 
 		return this._user.refreshToken().pipe(
 			take(1),
-			map(({ accessToken }) => !!accessToken || this._decline()),
+			map(({ accessToken }) => !!accessToken || this._decline())
 		);
 	}
 }

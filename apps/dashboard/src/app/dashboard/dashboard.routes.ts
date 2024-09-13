@@ -8,24 +8,20 @@ export const dashboardRoutes: Route[] = [
 		path: '',
 		providers: [DashboardSidebarService, DashboardGuildService],
 		loadComponent: () =>
-			import('./dashboard.component').then(
-				(mod) => mod.DashboardComponent,
-			),
+			import('./dashboard.component').then(mod => mod.DashboardComponent),
 		children: [
 			{
 				path: '',
 				pathMatch: 'full',
 				loadComponent: () =>
 					import('./select-guild/select-guild.component').then(
-						(mod) => mod.DashboardSelectGuildComponent,
+						mod => mod.DashboardSelectGuildComponent
 					),
 			},
 			{
 				path: ':guildId',
 				loadChildren: () =>
-					import('./guild/guild.routes').then(
-						(mod) => mod.guildRoutes,
-					),
+					import('./guild/guild.routes').then(mod => mod.guildRoutes),
 			},
 		],
 	},

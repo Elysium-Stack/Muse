@@ -98,11 +98,9 @@ export class FeedbackModeratorCommands {
 	})
 	public async list(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: FeedbackTopicsListOptions,
+		@Options() { page }: FeedbackTopicsListOptions
 	) {
-		this._logger.verbose(
-			`Listing feedback topics for ${interaction.guildId}`,
-		);
+		this._logger.verbose(`Listing feedback topics for ${interaction.guildId}`);
 
 		return this._listTopics(interaction, page);
 	}
@@ -111,7 +109,7 @@ export class FeedbackModeratorCommands {
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string,
+		@ComponentParam('page') page: string
 	) {
 		const pageInt = Number.parseInt(page, 10);
 		return this._listTopics(interaction, pageInt);
@@ -123,10 +121,10 @@ export class FeedbackModeratorCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { name, type, channel }: FeedbackTopicsCreateOptions,
+		@Options() { name, type, channel }: FeedbackTopicsCreateOptions
 	) {
 		this._logger.verbose(
-			`Adding feedback topic for ${interaction.guildId} - ${name}`,
+			`Adding feedback topic for ${interaction.guildId} - ${name}`
 		);
 
 		const referenceId = channel?.id;
@@ -157,7 +155,7 @@ export class FeedbackModeratorCommands {
 			interaction.guildId!,
 			name!,
 			type as FeedbackTopicsType,
-			referenceId,
+			referenceId
 		);
 
 		return interaction.reply({
@@ -172,15 +170,15 @@ export class FeedbackModeratorCommands {
 	})
 	public async remove(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { id }: FeedbackTopicRemoveOptions,
+		@Options() { id }: FeedbackTopicRemoveOptions
 	) {
 		this._logger.verbose(
-			`Removing feedback topic for ${interaction.guildId} - ${id}`,
+			`Removing feedback topic for ${interaction.guildId} - ${id}`
 		);
 
 		const topic = await this._feedback.removeFeedbackTopicById(
 			interaction.guildId!,
-			id!,
+			id!
 		);
 
 		if (!topic) {
@@ -198,13 +196,13 @@ export class FeedbackModeratorCommands {
 
 	private async _listTopics(
 		interaction: CommandInteraction | ButtonInteraction,
-		page = 1,
+		page = 1
 	) {
 		page = page ?? 1;
 
 		const { topics, total } = await this._feedback.getTopicsPerPage(
 			interaction.guildId!,
-			page,
+			page
 		);
 
 		if (!total) {
@@ -249,23 +247,21 @@ export class FeedbackModeratorCommands {
 			.addFields([
 				{
 					name: 'ID',
-					value: topics.map((t) => t.id).join('\n'),
+					value: topics.map(t => t.id).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Report',
 					value: topics
-						.map((t) =>
-							t.type === 'CHANNEL'
-								? `<#${t.referenceId}>`
-								: 'Google Sheet',
+						.map(t =>
+							t.type === 'CHANNEL' ? `<#${t.referenceId}>` : 'Google Sheet'
 						)
 						.join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Name',
-					value: topics.map((t) => t.name).join('\n'),
+					value: topics.map(t => t.name).join('\n'),
 					inline: true,
 				},
 			]);
@@ -284,7 +280,7 @@ export class FeedbackModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`FEEDBACK_TOPICS_LIST/${page - 1}`)
 					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
@@ -293,13 +289,13 @@ export class FeedbackModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`FEEDBACK_TOPICS_LIST/${page + 1}`)
 					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
 		if (buttons.length > 0) {
 			components.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 			);
 		}
 

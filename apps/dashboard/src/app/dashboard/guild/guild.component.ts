@@ -22,17 +22,17 @@ export class DashboardGuildComponent {
 		this._guild.guildsLoaded$
 			.pipe(
 				takeUntilDestroyed(),
-				filter((v) => !!v),
+				filter(v => !!v),
 				take(1),
 				switchMap(() =>
 					this._route.paramMap.pipe(
-						map((params) => params.get('guildId')),
-						filter((guildId) => !!guildId),
-						map((guildId) => guildId as string),
-					),
-				),
+						map(params => params.get('guildId')),
+						filter(guildId => !!guildId),
+						map(guildId => guildId as string)
+					)
+				)
 			)
-			.subscribe((guildId) => {
+			.subscribe(guildId => {
 				const result = this._guild.selectGuild(guildId);
 				if (!result) {
 					return this._router.navigate(['../'], {

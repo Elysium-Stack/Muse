@@ -5,7 +5,7 @@ import { BOOKWORM_EMBED_COLOR } from './constants';
 export const createQuestionEmbed = (
 	title: string,
 	description: string,
-	author: User,
+	author: User
 ) =>
 	new EmbedBuilder()
 		.setTitle(title)

@@ -16,7 +16,7 @@ export class MinecraftRequiredRoleGuard implements CanActivate {
 
 	constructor(
 		private readonly _minecraftSettings: MinecraftSettingsService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,15 +33,13 @@ export class MinecraftRequiredRoleGuard implements CanActivate {
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
-			PermissionsBitField.Flags.Administrator,
+			PermissionsBitField.Flags.Administrator
 		);
 		if (hasPermission) {
 			return true;
 		}
 
-		const settings = await this._minecraftSettings.get(
-			interaction.guildId!,
-		);
+		const settings = await this._minecraftSettings.get(interaction.guildId!);
 
 		if (!settings?.requiredRoleId) {
 			return true;

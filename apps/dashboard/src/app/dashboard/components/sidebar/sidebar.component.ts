@@ -71,10 +71,7 @@ export class DashboardSidebarComponent {
 			document.removeEventListener('click', checkFn);
 
 			if (this.show$()) {
-				setTimeout(
-					() => document.addEventListener('click', checkFn),
-					100,
-				);
+				setTimeout(() => document.addEventListener('click', checkFn), 100);
 				return;
 			}
 		});
@@ -82,7 +79,7 @@ export class DashboardSidebarComponent {
 		this._router.events
 			.pipe(
 				takeUntilDestroyed(),
-				filter((e) => e instanceof NavigationEnd),
+				filter(e => e instanceof NavigationEnd)
 			)
 			.subscribe(() => this._sidebar.hide());
 	}

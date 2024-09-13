@@ -1,84 +1,84 @@
 name: Build dashboard Image & Deploy to GitHub Pages
 
 on:
-    push:
-        branches: ['main']
-    workflow_dispatch:
+  push:
+    branches: ['main']
+  workflow_dispatch:
 
 permissions:
-    contents: read
-    pages: write
-    id-token: write
+  contents: read
+  pages: write
+  id-token: write
 
 env:
-    REGISTRY: ghcr.io
-    IMAGE_NAME: elysium-stack/dashboard
+  REGISTRY: ghcr.io
+  IMAGE_NAME: elysium-stack/dashboard
 
 concurrency:
-    group: 'pages'
-    cancel-in-progress: false
+  group: 'pages'
+  cancel-in-progress: false
 
 jobs:
-    pages:
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        steps:
-            - uses: actions/checkout@v3
+  pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v3
 
-            - name: Setup nodejs
-              uses: actions/setup-node@v3
-              env:
-                  FORCE_COLOR: 0
-              with:
-                  node-version: 18
-                  cache: 'yarn'
-            - name: create env file
-              run: |
-                  touch .env
-                  echo PUBLIC_INVITE_LINK="${{ vars.INVITE_LINK }}" >> .env
-            - run: yarn
-            - run: yarn dashboard:build
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        env:
+          FORCE_COLOR: 0
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - name: create env file
+        run: |
+          touch .env
+          echo PUBLIC_INVITE_LINK="${{ vars.INVITE_LINK }}" >> .env
+      - run: yarn
+      - run: yarn dashboard:build
 
-            - name: Setup Pages
-              uses: actions/configure-pages@v3
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v1
-              with:
-                  # Upload entire repository
-                  path: './dist/apps/dashboard'
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v2
-    docker:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './dist/apps/dashboard'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-            - name: Log in to the Container registry
-              uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-              with:
-                  registry: ${{ env.REGISTRY }}
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Extract metadata (tags, labels) for Docker
-              id: meta
-              uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-              with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-            - name: Build and push Docker image
-              uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-              with:
-                  file: ./Dockerfile.dashboard
-                  context: .
-                  push: true
-                  tags: ${{ steps.meta.outputs.tags }}
-                  labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Dockerfile.dashboard
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

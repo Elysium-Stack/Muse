@@ -12,7 +12,7 @@ export class MinecraftMemberEvents {
 
 	@On(Events.GuildMemberRemove)
 	public async onGuildMemberRemove(
-		@Context() [member]: ContextOf<Events.GuildMemberRemove>,
+		@Context() [member]: ContextOf<Events.GuildMemberRemove>
 	) {
 		const guildId = member.guild.id;
 

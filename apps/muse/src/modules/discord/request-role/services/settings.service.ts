@@ -30,7 +30,7 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 
@@ -43,9 +43,7 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 		const embed = new EmbedBuilder()
 			.setColor(REQUEST_ROLE_EMBED_COLOR)
 			.setTitle('Request role settings')
-			.setDescription(
-				`These are the settings for the request role module`,
-			)
+			.setDescription(`These are the settings for the request role module`)
 			.addFields(
 				{
 					name: 'Status',
@@ -56,7 +54,7 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 					name: 'Log channel',
 					value: logChannelId?.length ? `<#${logChannelId}>` : '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -64,7 +62,7 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 				.setCustomId(`REQUEST_ROLE_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -86,30 +84,30 @@ export class RequestRoleSettingsService extends BaseSettingsService<RequestRoleS
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('REQUEST_ROLE_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				REQUEST_ROLE_SETTINGS_CHOICES.map(
-					({ name, description, value }) =>
-						new StringSelectMenuOptionBuilder()
-							.setLabel(name)
-							.setDescription(description)
-							.setValue(value),
-				),
+				REQUEST_ROLE_SETTINGS_CHOICES.map(({ name, description, value }) =>
+					new StringSelectMenuOptionBuilder()
+						.setLabel(name)
+						.setDescription(description)
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`REQUEST_ROLE_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {

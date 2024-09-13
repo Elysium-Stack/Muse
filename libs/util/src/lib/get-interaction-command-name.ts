@@ -2,7 +2,7 @@ import { CacheType, Interaction } from 'discord.js';
 
 export const getInteractionCommandName = (
 	interaction: Interaction<CacheType>,
-	delimeter = ' ',
+	delimeter = ' '
 ) => {
 	if (
 		!interaction.isChatInputCommand() &&

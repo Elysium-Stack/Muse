@@ -4,7 +4,7 @@ import { emojiIsUnicode } from './emoji-is-unicode';
 
 export const resolveEmoji = (
 	emoji: string,
-	_client: Client,
+	_client: Client
 ): {
 	found: boolean;
 	unicode: boolean;

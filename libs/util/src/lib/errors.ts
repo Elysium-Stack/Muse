@@ -11,7 +11,7 @@ export class IncorrectChannelException extends ForbiddenException {
 		super(
 			`This is the incorrect channel${
 				channelId ? `, please use <#${channelId}>` : ''
-			}.`,
+			}.`
 		);
 	}
 }

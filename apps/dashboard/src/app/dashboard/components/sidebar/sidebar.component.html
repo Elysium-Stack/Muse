@@ -23,7 +23,10 @@
 				class="!hidden md:!inline-block"
 				name="cssChevronRight"
 			></ng-icon>
-			<ng-icon class="md:!hidden" name="cssChevronDown"></ng-icon>
+			<ng-icon
+				class="md:!hidden"
+				name="cssChevronDown"
+			></ng-icon>
 		</label>
 		<ng-template #guildsLoadingTemplate>
 			<div class="w-full flex items-center gap-4 h-16 px-2">
@@ -36,16 +39,17 @@
 			tabindex="0"
 			class="menu dropdown-content p-2 shadow bg-base-0 rounded-box max-w-[16rem] max-h-[80vh] md:max-h-[calc(100vh-2rem)] md:ml-4 md:-mt-2 overflow-y-auto flex flex-col flex-nowrap"
 		>
-			<li class="w-full" *ngFor="let guild of availableGuilds$()">
+			<li
+				class="w-full"
+				*ngFor="let guild of availableGuilds$()"
+			>
 				<a
 					class="flex gap-4 w-full"
 					[routerLink]="['../', guild.id]"
 					routerLinkActive="active"
 				>
 					<m-guild-icon [guild]="guild" />
-					<p
-						class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
-					>
+					<p class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
 						{{ guild.name }}
 					</p>
 				</a>
@@ -54,16 +58,17 @@
 			<li class="menu-title mt-4">
 				<span> Invite bot to server </span>
 			</li>
-			<li class="w-full" *ngFor="let guild of unavailableGuilds$()">
+			<li
+				class="w-full"
+				*ngFor="let guild of unavailableGuilds$()"
+			>
 				<a
 					class="flex gap-4 w-full"
 					[href]="inviteUrl"
 					target="_INVITE"
 				>
 					<m-guild-icon [guild]="guild" />
-					<p
-						class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
-					>
+					<p class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
 						{{ guild.name }}
 					</p>
 				</a>
@@ -78,7 +83,10 @@
 				routerLinkActive="active"
 				[routerLinkActiveOptions]="{ exact: true }"
 			>
-				<ng-icon class="text-success" name="cssCollage"></ng-icon>
+				<ng-icon
+					class="text-success"
+					name="cssCollage"
+				></ng-icon>
 				Dashboard
 			</a>
 		</li>
@@ -92,13 +100,22 @@
 				routerLinkActive="active"
 				[routerLinkActiveOptions]="{ exact: true }"
 			>
-				<ng-icon class="text-primary" name="cssMusic"></ng-icon>
+				<ng-icon
+					class="text-primary"
+					name="cssMusic"
+				></ng-icon>
 				Music
 			</a>
 		</li>
 		<li>
-			<a routerLink="./music/radio" routerLinkActive="active">
-				<ng-icon class="text-red-400" name="cssMusicSpeaker"></ng-icon>
+			<a
+				routerLink="./music/radio"
+				routerLinkActive="active"
+			>
+				<ng-icon
+					class="text-red-400"
+					name="cssMusicSpeaker"
+				></ng-icon>
 				Radio
 			</a>
 		</li>
@@ -107,26 +124,50 @@
 			<span> Modules </span>
 		</li>
 		<li>
-			<a routerLink="./module/bookworm" routerLinkActive="active">
-				<ng-icon class="text-emerald-500" name="cssBookmark"></ng-icon>
+			<a
+				routerLink="./module/bookworm"
+				routerLinkActive="active"
+			>
+				<ng-icon
+					class="text-emerald-500"
+					name="cssBookmark"
+				></ng-icon>
 				Bookworm
 			</a>
 		</li>
 		<li>
-			<a routerLink="./module/feedback" routerLinkActive="active">
-				<ng-icon class="text-red-400" name="cssInbox"></ng-icon>
+			<a
+				routerLink="./module/feedback"
+				routerLinkActive="active"
+			>
+				<ng-icon
+					class="text-red-400"
+					name="cssInbox"
+				></ng-icon>
 				Feedback
 			</a>
 		</li>
 		<li>
-			<a routerLink="./module/reaction-trigger" routerLinkActive="active">
-				<ng-icon class="text-indigo-400" name="cssFeed"></ng-icon>
+			<a
+				routerLink="./module/reaction-trigger"
+				routerLinkActive="active"
+			>
+				<ng-icon
+					class="text-indigo-400"
+					name="cssFeed"
+				></ng-icon>
 				Reaction Trigger
 			</a>
 		</li>
 		<li>
-			<a routerLink="./module/fun" routerLinkActive="active">
-				<ng-icon class="text-success" name="cssSmile"></ng-icon>
+			<a
+				routerLink="./module/fun"
+				routerLinkActive="active"
+			>
+				<ng-icon
+					class="text-success"
+					name="cssSmile"
+				></ng-icon>
 				Fun
 			</a>
 		</li>

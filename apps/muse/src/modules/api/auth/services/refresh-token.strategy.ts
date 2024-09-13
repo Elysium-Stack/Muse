@@ -8,7 +8,7 @@ import { JWT_REFRESh_SECRET } from '../util/constants';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
 	Strategy,
-	'jwt-refresh',
+	'jwt-refresh'
 ) {
 	constructor() {
 		super({

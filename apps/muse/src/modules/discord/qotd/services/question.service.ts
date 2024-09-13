@@ -514,16 +514,17 @@ export class QotDQuestionService {
 		'What are you a stickler for?',
 	];
 
-	constructor(private _prisma: PrismaService, private _client: Client) {}
+	constructor(
+		private _prisma: PrismaService,
+		private _client: Client
+	) {}
 
 	async get(getRandom = false, guildId?: string) {
 		if (getRandom) {
 			const min = 0;
 			const max = this.questions.length - 1;
 
-			return this.questions[
-				Math.floor(Math.random() * (max - min + 1)) + min
-			];
+			return this.questions[Math.floor(Math.random() * (max - min + 1)) + min];
 		}
 
 		if (!guildId) {
@@ -574,11 +575,7 @@ export class QotDQuestionService {
 			},
 		});
 
-		for (const {
-			guildId,
-			qotdDailyChannelId,
-			qotdPingRoleId,
-		} of settings) {
+		for (const { guildId, qotdDailyChannelId, qotdPingRoleId } of settings) {
 			if (!qotdDailyChannelId) {
 				continue;
 			}
@@ -595,7 +592,7 @@ export class QotDQuestionService {
 				const embed = createQuestionEmbed(
 					`${MESSAGE_PREFIX} Daily question of the day`,
 					question,
-					this._client.user!,
+					this._client.user!
 				);
 				const content = qotdPingRoleId ? `<@&${qotdPingRoleId}>` : '';
 				await channel.send({ embeds: [embed], content });

@@ -9,7 +9,7 @@ export class DeveloperLogService {
 		data: any,
 		message: string,
 		source: string,
-		guildId?: string,
+		guildId?: string
 	) {
 		const embed = new EmbedBuilder()
 			.setTitle('Error')
@@ -25,8 +25,8 @@ export class DeveloperLogService {
 								name: 'Guild ID',
 								value: guildId,
 							},
-					  ]
-					: []),
+						]
+					: [])
 			);
 
 		const errorEmbed = new EmbedBuilder()
@@ -34,14 +34,14 @@ export class DeveloperLogService {
 			.setDescription(`\`\`\`\n${JSON.stringify(data, null, 2)}\n\`\`\``);
 
 		const guild = await this._client.guilds.fetch(
-			process.env.DEVELOPMENT_SERVER_IDS,
+			process.env.DEVELOPMENT_SERVER_IDS
 		);
 		if (!guild) {
 			throw new Error('Could not find development server');
 		}
 
 		const channel = await guild.channels.fetch(
-			process.env.DEVELOPMENT_LOG_CHANNEL_ID,
+			process.env.DEVELOPMENT_LOG_CHANNEL_ID
 		);
 		if (!channel) {
 			throw new Error('Could not find development log channel');

@@ -12,7 +12,8 @@ $time-4: 200s;
 @function particles($max, $color-particle) {
 	$val: 0px 0px $color-particle;
 	@for $i from 1 through $max {
-		$val: #{$val},
+		$val:
+			#{$val},
 			random($spacing) + px random($spacing) + px $color-particle;
 	}
 	@return $val;

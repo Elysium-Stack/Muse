@@ -36,32 +36,27 @@ export const createLogger = (name: string) => {
 							interval: 5,
 							labels: {
 								app: `${name.toLowerCase().replaceAll(' ', '-')}${
-									process.env.NODE_ENV === 'production'
-										? ''
-										: '-development'
+									process.env.NODE_ENV === 'production' ? '' : '-development'
 								}`,
 							},
 							json: true,
 							format: format.json(),
 							replaceTimestamp: true,
 							gracefulShutdown: true,
-							onConnectionError: (err) => console.error(err),
-							level:
-								process.env.NODE_ENV === 'production'
-									? 'info'
-									: 'debug',
+							onConnectionError: err => console.error(err),
+							level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
 						}),
-				  ]
+					]
 				: []),
 			new transports.Console({
 				level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
 				format: format.printf(({ context, level, message }) => {
 					return getColor(level)(
 						`[${name}] ${process.pid} - ${colors.white(
-							new Date().toLocaleString(),
+							new Date().toLocaleString()
 						)}\t ${level.toUpperCase()} ${colors.yellow(
-							`[${context || 'App'}]`,
-						)}\t ${message}`,
+							`[${context || 'App'}]`
+						)}\t ${message}`
 					);
 				}),
 			}),

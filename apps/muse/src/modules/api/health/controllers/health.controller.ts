@@ -24,7 +24,7 @@ export class HealthController {
 		@Inject(LavalinkHealthService)
 		private lavalink: LavalinkHealthService,
 		private disk: DiskHealthIndicator,
-		private memory: MemoryHealthIndicator,
+		private memory: MemoryHealthIndicator
 	) {}
 
 	@Get()
@@ -38,7 +38,7 @@ export class HealthController {
 					'http://localhost:3000/api/health/ping',
 					{
 						timeout: 100,
-					},
+					}
 				),
 			() =>
 				this.disk.checkStorage('diskStorage', {

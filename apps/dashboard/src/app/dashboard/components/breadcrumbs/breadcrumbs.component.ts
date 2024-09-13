@@ -56,10 +56,10 @@ export class DashboardBreadcrumbsComponent {
 		this._router.events
 			.pipe(
 				takeUntilDestroyed(),
-				filter((e) => e instanceof NavigationEnd),
-				map((e) => (e as NavigationEnd).url),
+				filter(e => e instanceof NavigationEnd),
+				map(e => (e as NavigationEnd).url)
 			)
-			.subscribe((url) => this._setSegments(url));
+			.subscribe(url => this._setSegments(url));
 	}
 
 	private _setSegments(url: string) {
@@ -70,11 +70,8 @@ export class DashboardBreadcrumbsComponent {
 			this.segments$.set([]);
 		}
 
-		const segments = splitted.map((segment) => ({
-			link:
-				segment === 'music' && splitted.length > 1
-					? './music'
-					: undefined,
+		const segments = splitted.map(segment => ({
+			link: segment === 'music' && splitted.length > 1 ? './music' : undefined,
 			label: segment.replaceAll('-', ' '),
 		}));
 

@@ -30,7 +30,7 @@ export class AuthController {
 	@UseGuards(DiscordOAuthGuard)
 	callback(
 		@Request() req: AuthenticatedRequestDTO,
-		@Query('code') code: string,
+		@Query('code') code: string
 	): TokensResponseDTO {
 		return req.user as TokensResponseDTO;
 	}
@@ -58,9 +58,7 @@ export class AuthController {
 	 */
 	@Get('refresh')
 	@UseGuards(RefreshTokenGuard)
-	refresh(
-		@Request() req: AuthenticatedRequestDTO,
-	): Promise<TokensResponseDTO> {
+	refresh(@Request() req: AuthenticatedRequestDTO): Promise<TokensResponseDTO> {
 		const userId = req.user.sub;
 		const refreshToken = req.user.refreshToken!;
 		return this._authService.refreshTokens(userId, refreshToken);

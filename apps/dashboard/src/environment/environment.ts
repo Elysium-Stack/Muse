@@ -1,5 +1,1 @@
-
-
-
-
-export {baseEnvironment as environment} from './environment.base';
+export { baseEnvironment as environment } from './environment.base';

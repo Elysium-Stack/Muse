@@ -16,7 +16,7 @@ export class QotDChannelGuard implements CanActivate {
 
 	constructor(
 		private readonly _qotdSettings: QotDSettingsService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,7 +33,7 @@ export class QotDChannelGuard implements CanActivate {
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasPermission = member.permissions.has(
-			PermissionsBitField.Flags.Administrator,
+			PermissionsBitField.Flags.Administrator
 		);
 		if (hasPermission) {
 			return true;

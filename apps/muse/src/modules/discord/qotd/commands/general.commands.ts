@@ -21,7 +21,7 @@ export class QotDGeneralCommands {
 
 	constructor(
 		private _question: QotDQuestionService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	@UseGuards(QotDChannelGuard)
@@ -45,7 +45,7 @@ export class QotDGeneralCommands {
 		const embed = createQuestionEmbed(
 			`${MESSAGE_PREFIX} Random question`,
 			question,
-			this._client.user!,
+			this._client.user!
 		);
 		return interaction.reply({ content: '', embeds: [embed] });
 	}

@@ -20,7 +20,7 @@ export class MusicShuffleCommands {
 	@Button('MUSIC_SHUFFLE')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.shuffle(interaction.guildId);
 		return interaction.deferUpdate();

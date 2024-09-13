@@ -11,13 +11,13 @@ export class MusicController {
 	constructor(
 		private _player: MusicPlayerService,
 		@InjectMetric('discord_playing')
-		public playing: Gauge<string>,
+		public playing: Gauge<string>
 	) {}
 
 	@MessagePattern('MUSIC_STATUS')
 	status(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received status message for ${guildId}`);
 		const player = this._player.get(guildId);
@@ -48,7 +48,7 @@ export class MusicController {
 			voiceChannelId: string;
 			textChannelId: string;
 			author: User;
-		},
+		}
 	) {
 		this._logger.log(`Received start message for ${guildId}`);
 		const player = this._player.get(guildId);
@@ -70,7 +70,7 @@ export class MusicController {
 			voiceChannelId!,
 			textChannelId,
 			false,
-			author,
+			author
 		);
 		this.playing.labels('None').inc(1);
 
@@ -85,7 +85,7 @@ export class MusicController {
 		// });
 
 		if (data.data?.tracks) {
-			data.data.tracks = [...data.data?.tracks].map((track) => {
+			data.data.tracks = [...data.data?.tracks].map(track => {
 				delete track.kazagumo;
 				return track;
 			});
@@ -97,7 +97,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_STOP')
 	stop(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received stop message for ${guildId}`);
 		return this._player.stop(guildId);
@@ -106,7 +106,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_NEXT')
 	next(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received next message for ${guildId}`);
 		return this._player.next(guildId);
@@ -115,7 +115,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_PREVIOUS')
 	previous(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received previous message for ${guildId}`);
 		return this._player.previous(guildId);
@@ -124,7 +124,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_SHUFFLE')
 	shuffle(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received shuffle message for ${guildId}`);
 		return this._player.shuffle(guildId);
@@ -133,7 +133,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_LOOP')
 	loop(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received loop message for ${guildId}`);
 		return this._player.loop(guildId);
@@ -142,7 +142,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_PAUSE')
 	pause(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received pause message for ${guildId}`);
 		return this._player.pause(guildId);
@@ -151,7 +151,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_RESUME')
 	resume(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received resume message for ${guildId}`);
 		return this._player.resume(guildId);
@@ -168,7 +168,7 @@ export class MusicController {
 			guildId: string;
 			volume: number;
 			isMute?: boolean;
-		},
+		}
 	) {
 		this._logger.log(`Received setVolume message for ${guildId}`);
 		return this._player.setVolume(guildId, volume, isMute ?? false);
@@ -177,7 +177,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_GET_VOLUME')
 	getVolume(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received getVolume message for ${guildId}`);
 		return this._player.getVolume(guildId);
@@ -186,7 +186,7 @@ export class MusicController {
 	@MessagePattern('MUSIC_QUEUE')
 	getQueue(
 		@Payload()
-		{ guildId, page }: { guildId: string; page: number },
+		{ guildId, page }: { guildId: string; page: number }
 	) {
 		this._logger.log(`Received queue message for ${guildId}`);
 		return this._player.queue(guildId, page);

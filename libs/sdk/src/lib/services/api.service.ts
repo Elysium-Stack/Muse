@@ -9,66 +9,67 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class ApiService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
-    super(config, http);
-  }
+	constructor(config: ApiConfiguration, http: HttpClient) {
+		super(config, http);
+	}
 
-  /**
-   * Path part for operation prometheusControllerIndex
-   */
-  static readonly PrometheusControllerIndexPath = '/api/metrics';
+	/**
+	 * Path part for operation prometheusControllerIndex
+	 */
+	static readonly PrometheusControllerIndexPath = '/api/metrics';
 
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `prometheusControllerIndex()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  prometheusControllerIndex$Response(params?: {
-  },
-  context?: HttpContext
+	/**
+	 * This method provides access to the full `HttpResponse`, allowing access to response headers.
+	 * To access only the response body, use `prometheusControllerIndex()` instead.
+	 *
+	 * This method doesn't expect any request body.
+	 */
+	prometheusControllerIndex$Response(
+		params?: {},
+		context?: HttpContext
+	): Observable<StrictHttpResponse<void>> {
+		const rb = new RequestBuilder(
+			this.rootUrl,
+			ApiService.PrometheusControllerIndexPath,
+			'get'
+		);
+		if (params) {
+		}
 
-): Observable<StrictHttpResponse<void>> {
+		return this.http
+			.request(
+				rb.build({
+					responseType: 'text',
+					accept: '*/*',
+					context: context,
+				})
+			)
+			.pipe(
+				filter((r: any) => r instanceof HttpResponse),
+				map((r: HttpResponse<any>) => {
+					return (r as HttpResponse<any>).clone({
+						body: undefined,
+					}) as StrictHttpResponse<void>;
+				})
+			);
+	}
 
-    const rb = new RequestBuilder(this.rootUrl, ApiService.PrometheusControllerIndexPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `prometheusControllerIndex$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  prometheusControllerIndex(params?: {
-  },
-  context?: HttpContext
-
-): Observable<void> {
-
-    return this.prometheusControllerIndex$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
-  }
-
+	/**
+	 * This method provides access only to the response body.
+	 * To access the full response (for headers, for example), `prometheusControllerIndex$Response()` instead.
+	 *
+	 * This method doesn't expect any request body.
+	 */
+	prometheusControllerIndex(
+		params?: {},
+		context?: HttpContext
+	): Observable<void> {
+		return this.prometheusControllerIndex$Response(params, context).pipe(
+			map((r: StrictHttpResponse<void>) => r.body as void)
+		);
+	}
 }

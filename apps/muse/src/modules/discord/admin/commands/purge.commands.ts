@@ -86,7 +86,7 @@ export class AdminPurgeCommands {
 	})
 	public async list(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { months, userIdsOnly, userToken }: AdminPurgeListOptions,
+		@Options() { months, userIdsOnly, userToken }: AdminPurgeListOptions
 	) {
 		if (this._purge.checkGuild(interaction.guildId)) {
 			return interaction.reply({
@@ -109,7 +109,7 @@ export class AdminPurgeCommands {
 			interaction.channel,
 			userToken,
 			months ?? 6,
-			userIdsOnly ?? false,
+			userIdsOnly ?? false
 		);
 
 		return interaction.reply({
@@ -127,37 +127,31 @@ export class AdminPurgeCommands {
 			.setTitle('Uno yeet momento')
 			.setCustomId(`ADMIN_PURGE_YEET_MODAL`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-					[
-						new TextInputBuilder()
-							.setCustomId('reason')
-							.setLabel('Reason for kicking members')
-							.setRequired(true)
-							.setMaxLength(120)
-							.setStyle(TextInputStyle.Short),
-					],
-				),
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-					[
-						new TextInputBuilder()
-							.setCustomId('userids')
-							.setLabel("List of user id's. **COMMA SEPERATED**")
-							.setRequired(true)
-							.setStyle(TextInputStyle.Paragraph),
-					],
-				),
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-					[
-						new TextInputBuilder()
-							.setCustomId('message')
-							.setLabel('A kick message')
-							.setPlaceholder(
-								'You can use {username} to address them by their username.',
-							)
-							.setRequired(false)
-							.setStyle(TextInputStyle.Paragraph),
-					],
-				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
+					new TextInputBuilder()
+						.setCustomId('reason')
+						.setLabel('Reason for kicking members')
+						.setRequired(true)
+						.setMaxLength(120)
+						.setStyle(TextInputStyle.Short),
+				]),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
+					new TextInputBuilder()
+						.setCustomId('userids')
+						.setLabel("List of user id's. **COMMA SEPERATED**")
+						.setRequired(true)
+						.setStyle(TextInputStyle.Paragraph),
+				]),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
+					new TextInputBuilder()
+						.setCustomId('message')
+						.setLabel('A kick message')
+						.setPlaceholder(
+							'You can use {username} to address them by their username.'
+						)
+						.setRequired(false)
+						.setStyle(TextInputStyle.Paragraph),
+				]),
 			]);
 
 		return interaction.showModal(modal);
@@ -173,7 +167,7 @@ export class AdminPurgeCommands {
 			ephemeral: true,
 		});
 
-		const ids = userids.split(',').map((id) => id.trim());
+		const ids = userids.split(',').map(id => id.trim());
 		if (ids.length === 0) {
 			return interaction.editReply({
 				content: `${MESSAGE_PREFIX} No id's were supplied. Skipping yeet!`,
@@ -184,7 +178,7 @@ export class AdminPurgeCommands {
 			interaction.guild,
 			ids,
 			reason,
-			message,
+			message
 		);
 
 		return interaction.editReply({

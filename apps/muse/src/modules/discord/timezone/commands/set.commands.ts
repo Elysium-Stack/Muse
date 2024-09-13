@@ -39,7 +39,7 @@ export class TimezoneSetCommands {
 	})
 	public async set(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { timezone }: TimezoneSetOptions,
+		@Options() { timezone }: TimezoneSetOptions
 	) {
 		if (!timezone) {
 			return interaction.reply({
@@ -58,7 +58,7 @@ export class TimezoneSetCommands {
 		await this._timezone.setTimezone(
 			interaction.guildId,
 			interaction.user.id,
-			timezone,
+			timezone
 		);
 
 		return interaction.reply({

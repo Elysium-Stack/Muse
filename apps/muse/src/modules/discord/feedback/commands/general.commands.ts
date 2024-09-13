@@ -30,7 +30,10 @@ import { FeedbackService } from '../services';
 export class FeedbackGeneralCommands {
 	private readonly _logger = new Logger(FeedbackGeneralCommands.name);
 
-	constructor(private _feedback: FeedbackService, private _client: Client) {}
+	constructor(
+		private _feedback: FeedbackService,
+		private _client: Client
+	) {}
 
 	@Subcommand({
 		name: 'give',
@@ -46,12 +49,13 @@ export class FeedbackGeneralCommands {
 				topics.map(({ id, name }) =>
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
-						.setValue(id.toString()),
-				),
+						.setValue(id.toString())
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const data = {
 			content: `${MESSAGE_PREFIX} What topic would you give feedback to?`,
@@ -68,15 +72,15 @@ export class FeedbackGeneralCommands {
 	@StringSelect('FEEDBACK_GIVE_TOPIC_SELECT')
 	public async onTopicSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() [topicId]: string[],
+		@SelectedStrings() [topicId]: string[]
 	) {
 		this._logger.log(
-			`User ${interaction.user.id} wants to give feedback to ${topicId}`,
+			`User ${interaction.user.id} wants to give feedback to ${topicId}`
 		);
 
 		const topic = await this._feedback.getTopicById(
 			interaction.guildId!,
-			Number.parseInt(topicId, 10),
+			Number.parseInt(topicId, 10)
 		);
 
 		if (!topic) {
@@ -90,14 +94,12 @@ export class FeedbackGeneralCommands {
 			.setTitle(topic.name)
 			.setCustomId(`FEEDBACK_GIVE_MODAL_RESPONSE/${topicId}`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-					[
-						new TextInputBuilder()
-							.setCustomId('response')
-							.setLabel('Your feedback')
-							.setStyle(TextInputStyle.Paragraph),
-					],
-				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
+					new TextInputBuilder()
+						.setCustomId('response')
+						.setLabel('Your feedback')
+						.setStyle(TextInputStyle.Paragraph),
+				]),
 			]);
 
 		return interaction.showModal(modal);
@@ -106,7 +108,7 @@ export class FeedbackGeneralCommands {
 	@Modal('FEEDBACK_GIVE_MODAL_RESPONSE/:topicId')
 	public async onFeedbackModalResponse(
 		@Ctx() [interaction]: ModalContext,
-		@ModalParam('topicId') topicId: string,
+		@ModalParam('topicId') topicId: string
 	) {
 		const response = interaction.fields.getTextInputValue('response');
 
@@ -114,7 +116,7 @@ export class FeedbackGeneralCommands {
 			topicId,
 			interaction.guildId!,
 			interaction.user,
-			response,
+			response
 		);
 
 		return interaction.reply({

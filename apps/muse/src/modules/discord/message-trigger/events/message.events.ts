@@ -12,7 +12,7 @@ export class MessageTriggerMessageEvents {
 
 	@On(Events.MessageCreate)
 	public onMessageCreate(
-		@Context() [message]: ContextOf<Events.MessageCreate>,
+		@Context() [message]: ContextOf<Events.MessageCreate>
 	) {
 		this._messageTriggerService.checkForMessageTriggers(message);
 	}

@@ -106,10 +106,10 @@ export class ReactionTriggerGeneralCommands {
 	})
 	public async show(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: ReactionTriggerListOptions,
+		@Options() { page }: ReactionTriggerListOptions
 	) {
 		this._logger.verbose(
-			`Loaded reaction trigger settings for ${interaction.guildId}`,
+			`Loaded reaction trigger settings for ${interaction.guildId}`
 		);
 
 		return this._listTriggers(interaction, page);
@@ -119,7 +119,7 @@ export class ReactionTriggerGeneralCommands {
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string,
+		@ComponentParam('page') page: string
 	) {
 		const pageInt = Number.parseInt(page, 10);
 		return this._listTriggers(interaction, pageInt);
@@ -131,7 +131,7 @@ export class ReactionTriggerGeneralCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions,
+		@Options() { phrase, emoji, match }: ReactionTriggerAddOptions
 	) {
 		const {
 			emoji: parsedEmoji,
@@ -149,14 +149,14 @@ export class ReactionTriggerGeneralCommands {
 		this._logger.verbose(
 			`Adding reaction trigger for ${interaction.guildId} - ${phrase} ${
 				clientEmoji ? clientEmoji.id : emoji
-			}`,
+			}`
 		);
 
 		await this._general.addReactionTriggerByWord(
 			interaction.guildId!,
 			phrase!,
 			match ?? 'word',
-			clientEmoji ? clientEmoji.id : emoji,
+			clientEmoji ? clientEmoji.id : emoji
 		);
 
 		return interaction.reply({
@@ -173,15 +173,15 @@ export class ReactionTriggerGeneralCommands {
 	})
 	public async remove(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { id }: ReactionTriggerRemoveOptions,
+		@Options() { id }: ReactionTriggerRemoveOptions
 	) {
 		this._logger.verbose(
-			`Removing reaction trigger for ${interaction.guildId} - ${id}`,
+			`Removing reaction trigger for ${interaction.guildId} - ${id}`
 		);
 
 		const reactionTrigger = await this._general.removeReactionTriggerByID(
 			interaction.guildId!,
-			id!,
+			id!
 		);
 
 		return interaction.reply({
@@ -192,13 +192,13 @@ export class ReactionTriggerGeneralCommands {
 
 	private async _listTriggers(
 		interaction: CommandInteraction | ButtonInteraction,
-		page = 1,
+		page = 1
 	) {
 		page = page ?? 1;
 
 		const { triggers, total } = await this._general.getReactionTriggers(
 			interaction.guildId!,
-			page,
+			page
 		);
 
 		if (!total) {
@@ -238,30 +238,23 @@ export class ReactionTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(
-				`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`,
-			)
+			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`)
 			.setColor(REACTION_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{
 					name: 'ID',
-					value: triggers.map((t) => t.id).join('\n'),
+					value: triggers.map(t => t.id).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Emoji',
-					value: triggers.map((t) => t.emoji).join('\n'),
+					value: triggers.map(t => t.emoji).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Phrase',
 					value: triggers
-						.map(
-							(t) =>
-								`${t.match === 'any' ? '' : `[${t.match}] `}${
-									t.phrase
-								}`,
-						)
+						.map(t => `${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`)
 						.join('\n'),
 					inline: true,
 				},
@@ -281,7 +274,7 @@ export class ReactionTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`REACTION_TRIGGER_LIST/${page - 1}`)
 					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
@@ -290,13 +283,13 @@ export class ReactionTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`REACTION_TRIGGER_LIST/${page + 1}`)
 					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
 		if (buttons.length > 0) {
 			components.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 			);
 		}
 

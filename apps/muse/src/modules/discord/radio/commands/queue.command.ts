@@ -35,7 +35,7 @@ export class RadioQueueCommands {
 	})
 	public async stop(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: RadioQueueOptions,
+		@Options() { page }: RadioQueueOptions
 	) {
 		return this._radio.queue(interaction, page ?? 1);
 	}
@@ -44,7 +44,7 @@ export class RadioQueueCommands {
 	public async onIncreaseButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string | number,
+		@ComponentParam('page') page: string | number
 	) {
 		if (typeof page === 'string') {
 			page = Number.parseInt(page, 10);

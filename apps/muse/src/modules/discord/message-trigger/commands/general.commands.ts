@@ -113,15 +113,15 @@ export class MessageTriggerGeneralCommands {
 	})
 	public async view(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { id }: MessageTriggerViewOptions,
+		@Options() { id }: MessageTriggerViewOptions
 	) {
 		this._logger.verbose(
-			`Loaded message trigger settings for ${interaction.guildId}`,
+			`Loaded message trigger settings for ${interaction.guildId}`
 		);
 
 		const trigger = await this._general.getMessageTriggerById(
 			interaction.guildId,
-			id,
+			id
 		);
 
 		if (!trigger) {
@@ -164,10 +164,10 @@ export class MessageTriggerGeneralCommands {
 	})
 	public async show(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: MessageTriggerListOptions,
+		@Options() { page }: MessageTriggerListOptions
 	) {
 		this._logger.verbose(
-			`Loaded message trigger settings for ${interaction.guildId}`,
+			`Loaded message trigger settings for ${interaction.guildId}`
 		);
 
 		return this._listTriggers(interaction, page);
@@ -177,7 +177,7 @@ export class MessageTriggerGeneralCommands {
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string,
+		@ComponentParam('page') page: string
 	) {
 		const pageInt = Number.parseInt(page, 10);
 		return this._listTriggers(interaction, pageInt);
@@ -189,17 +189,17 @@ export class MessageTriggerGeneralCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { phrase, message, match }: MessageTriggerAddOptions,
+		@Options() { phrase, message, match }: MessageTriggerAddOptions
 	) {
 		this._logger.verbose(
-			`Adding message trigger for ${interaction.guildId} - ${phrase}\n"${message}"`,
+			`Adding message trigger for ${interaction.guildId} - ${phrase}\n"${message}"`
 		);
 
 		await this._general.addMessageTriggerByWord(
 			interaction.guildId!,
 			phrase!,
 			match ?? 'word',
-			message,
+			message
 		);
 
 		return interaction.reply({
@@ -214,15 +214,15 @@ export class MessageTriggerGeneralCommands {
 	})
 	public async remove(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { id }: MessageTriggerRemoveOptions,
+		@Options() { id }: MessageTriggerRemoveOptions
 	) {
 		this._logger.verbose(
-			`Removing message trigger for ${interaction.guildId} - ${id}`,
+			`Removing message trigger for ${interaction.guildId} - ${id}`
 		);
 
 		const messageTrigger = await this._general.removeMessageTriggerByID(
 			interaction.guildId!,
-			id!,
+			id!
 		);
 
 		return interaction.reply({
@@ -233,13 +233,13 @@ export class MessageTriggerGeneralCommands {
 
 	private async _listTriggers(
 		interaction: CommandInteraction | ButtonInteraction,
-		page = 1,
+		page = 1
 	) {
 		page = page ?? 1;
 
 		const { triggers, total } = await this._general.getMessageTriggers(
 			interaction.guildId!,
-			page,
+			page
 		);
 
 		if (!total) {
@@ -279,25 +279,18 @@ export class MessageTriggerGeneralCommands {
 		const maxPage = Math.ceil(total / 10);
 
 		let embed = new EmbedBuilder()
-			.setTitle(
-				`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`,
-			)
+			.setTitle(`${MESSAGE_PREFIX} Triggers for ${interaction.guild!.name}`)
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.addFields([
 				{
 					name: 'ID',
-					value: triggers.map((t) => t.id).join('\n'),
+					value: triggers.map(t => t.id).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Phrase',
 					value: triggers
-						.map(
-							(t) =>
-								`${t.match === 'any' ? '' : `[${t.match}] `}${
-									t.phrase
-								}`,
-						)
+						.map(t => `${t.match === 'any' ? '' : `[${t.match}] `}${t.phrase}`)
 						.join('\n'),
 					inline: true,
 				},
@@ -317,7 +310,7 @@ export class MessageTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`MESSAGE_TRIGGER_LIST/${page - 1}`)
 					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
@@ -326,13 +319,13 @@ export class MessageTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`MESSAGE_TRIGGER_LIST/${page + 1}`)
 					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
 		if (buttons.length > 0) {
 			components.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 			);
 		}
 

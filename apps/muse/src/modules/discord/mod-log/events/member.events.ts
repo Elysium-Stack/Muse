@@ -12,12 +12,12 @@ export class ModLogMemberEvents {
 
 	constructor(
 		private _settings: ModLogSettingsService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	@On(Events.GuildMemberAdd)
 	public async onGuildMemberAdd(
-		@Context() [member]: ContextOf<Events.GuildMemberAdd>,
+		@Context() [member]: ContextOf<Events.GuildMemberAdd>
 	) {
 		const guildId = member.guild.id;
 		const { enabled, joinChannelId } = await this._settings.get(guildId);
@@ -51,7 +51,7 @@ export class ModLogMemberEvents {
 				{
 					name: 'ID',
 					value: user.id,
-				},
+				}
 			)
 			.setAuthor({
 				name: getUsername(user),
@@ -71,7 +71,7 @@ export class ModLogMemberEvents {
 
 	@On(Events.GuildMemberRemove)
 	public async onGuildMemberRemove(
-		@Context() [member]: ContextOf<Events.GuildMemberRemove>,
+		@Context() [member]: ContextOf<Events.GuildMemberRemove>
 	) {
 		const guildId = member.guild.id;
 		const { enabled, leaveChannelId } = await this._settings.get(guildId);
@@ -85,8 +85,8 @@ export class ModLogMemberEvents {
 		this._logger.log(`Mod log member leave running for ${guildId}`);
 
 		const roles = await member.roles.cache
-			.filter((r) => r.name !== '@everyone')
-			.map((r) => r.id);
+			.filter(r => r.name !== '@everyone')
+			.map(r => r.id);
 
 		const embed = new EmbedBuilder()
 			.setTitle(`Member left`)
@@ -113,11 +113,10 @@ export class ModLogMemberEvents {
 				},
 				{
 					name: 'Roles',
-					value: roles.length > 0
-						? roles.map((id) => `<@&${id}>`).join(', ')
-						: 'None',
+					value:
+						roles.length > 0 ? roles.map(id => `<@&${id}>`).join(', ') : 'None',
 					inline: roles.length === 0,
-				},
+				}
 			)
 			.setAuthor({
 				name: getUsername(user),

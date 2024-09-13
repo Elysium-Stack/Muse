@@ -87,10 +87,10 @@ export class RequestRoleModeratorCommands {
 	})
 	public async list(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: FeedbackTopicsListOptions,
+		@Options() { page }: FeedbackTopicsListOptions
 	) {
 		this._logger.verbose(
-			`Listing request role entries for ${interaction.guildId}`,
+			`Listing request role entries for ${interaction.guildId}`
 		);
 
 		return this._listEntries(interaction, page);
@@ -100,7 +100,7 @@ export class RequestRoleModeratorCommands {
 	public onShowButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string,
+		@ComponentParam('page') page: string
 	) {
 		const pageInt = Number.parseInt(page, 10);
 		return this._listEntries(interaction, pageInt);
@@ -112,15 +112,15 @@ export class RequestRoleModeratorCommands {
 	})
 	public async add(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { role }: RequestRoleCreateOptions,
+		@Options() { role }: RequestRoleCreateOptions
 	) {
 		this._logger.verbose(
-			`Adding request role entry for ${interaction.guildId} - ${role.id}`,
+			`Adding request role entry for ${interaction.guildId} - ${role.id}`
 		);
 
 		const exists = await this._requestRole.getEntryByRoleId(
 			interaction.guildId,
-			role.id,
+			role.id
 		);
 
 		if (exists) {
@@ -134,16 +134,14 @@ export class RequestRoleModeratorCommands {
 			.setTitle(`Terms for request role`)
 			.setCustomId(`REQUEST_ROLE_SET_TERMS/${role.id}`)
 			.setComponents([
-				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-					[
-						new TextInputBuilder()
-							.setCustomId('tos')
-							.setLabel('tos (optional)')
-							.setPlaceholder('You must be a good person...')
-							.setRequired(false)
-							.setStyle(TextInputStyle.Paragraph),
-					],
-				),
+				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents([
+					new TextInputBuilder()
+						.setCustomId('tos')
+						.setLabel('tos (optional)')
+						.setPlaceholder('You must be a good person...')
+						.setRequired(false)
+						.setStyle(TextInputStyle.Paragraph),
+				]),
 			]);
 
 		return interaction.showModal(modal);
@@ -155,15 +153,15 @@ export class RequestRoleModeratorCommands {
 	})
 	public async remove(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { id }: RequestRoleRemoveOptions,
+		@Options() { id }: RequestRoleRemoveOptions
 	) {
 		this._logger.verbose(
-			`Removing request role entry for ${interaction.guildId} - ${id}`,
+			`Removing request role entry for ${interaction.guildId} - ${id}`
 		);
 
 		const topic = await this._requestRole.removeEntryById(
 			interaction.guildId!,
-			id!,
+			id!
 		);
 
 		if (!topic) {
@@ -182,14 +180,14 @@ export class RequestRoleModeratorCommands {
 	@Modal('REQUEST_ROLE_SET_TERMS/:roleId')
 	public async onRequestRoleAddModalResponse(
 		@Ctx() [interaction]: ModalContext,
-		@ModalParam('roleId') roleId: string,
+		@ModalParam('roleId') roleId: string
 	) {
 		const tos = interaction.fields.getTextInputValue('tos');
 
 		const entry = await this._requestRole.addEntry(
 			interaction.guildId,
 			roleId,
-			tos,
+			tos
 		);
 
 		return interaction.reply({
@@ -197,18 +195,16 @@ export class RequestRoleModeratorCommands {
 			components: [
 				new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 					new RoleSelectMenuBuilder()
-						.setCustomId(
-							`REQUEST_ROLE_SET_REQUIRED_ROLES/${entry.id}`,
-						)
+						.setCustomId(`REQUEST_ROLE_SET_REQUIRED_ROLES/${entry.id}`)
 						.setMinValues(1)
 						.setMaxValues(20)
-						.setPlaceholder('Select the required roles'),
+						.setPlaceholder('Select the required roles')
 				),
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder()
 						.setCustomId(`REQUEST_ROLE_CONTINUE`)
 						.setLabel('Skip')
-						.setStyle(ButtonStyle.Secondary),
+						.setStyle(ButtonStyle.Secondary)
 				),
 			],
 			ephemeral: true,
@@ -219,9 +215,9 @@ export class RequestRoleModeratorCommands {
 	public async onRequiredRolesChange(
 		@Context() [interaction]: RoleSelectContext,
 		@ComponentParam('id') id: string,
-		@SelectedRoles() [ids]: ISelectedRoles,
+		@SelectedRoles() [ids]: ISelectedRoles
 	) {
-		const parsedIds = ids.filter((i) => typeof i === 'string') as string[];
+		const parsedIds = ids.filter(i => typeof i === 'string') as string[];
 
 		if (parsedIds?.length) {
 			const parsedId = Number.parseInt(id, 10);
@@ -244,13 +240,13 @@ export class RequestRoleModeratorCommands {
 
 	private async _listEntries(
 		interaction: CommandInteraction | ButtonInteraction,
-		page = 1,
+		page = 1
 	) {
 		page = page ?? 1;
 
 		const { entries, total } = await this._requestRole.getEntriesPerPage(
 			interaction.guildId!,
-			page,
+			page
 		);
 
 		if (!total) {
@@ -291,28 +287,24 @@ export class RequestRoleModeratorCommands {
 
 		let embed = new EmbedBuilder()
 			.setTitle(
-				`${MESSAGE_PREFIX} Request role entries for ${
-					interaction.guild!.name
-				}`,
+				`${MESSAGE_PREFIX} Request role entries for ${interaction.guild!.name}`
 			)
 			.setColor(REQUEST_ROLE_EMBED_COLOR)
 			.addFields([
 				{
 					name: 'ID',
-					value: entries.map((e) => e.id).join('\n'),
+					value: entries.map(e => e.id).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Role',
-					value: entries.map((e) => `<@&${e.roleId}>`).join('\n'),
+					value: entries.map(e => `<@&${e.roleId}>`).join('\n'),
 					inline: true,
 				},
 				{
 					name: 'Required Roles',
 					value: entries
-						.map((e) =>
-							(e.requiredRoles as Prisma.JsonArray).join(', '),
-						)
+						.map(e => (e.requiredRoles as Prisma.JsonArray).join(', '))
 						.join('\n'),
 					inline: true,
 				},
@@ -332,7 +324,7 @@ export class RequestRoleModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`REQUEST_ROLE_LIST/${page - 1}`)
 					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
@@ -341,13 +333,13 @@ export class RequestRoleModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`REQUEST_ROLE_LIST/${page + 1}`)
 					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
+					.setStyle(ButtonStyle.Primary)
 			);
 		}
 
 		if (buttons.length > 0) {
 			components.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+				new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 			);
 		}
 

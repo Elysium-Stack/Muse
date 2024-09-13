@@ -30,7 +30,7 @@ export class RadioPreviousCommands {
 	@Button('RADIO_PREVIOUS')
 	public onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._radio.previous(interaction);
 	}

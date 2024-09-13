@@ -66,9 +66,7 @@ export class MusicSettingsCommands {
 		description: 'Show music settings',
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
-		this._logger.verbose(
-			`Loaded music settings for ${interaction.guildId}`,
-		);
+		this._logger.verbose(`Loaded music settings for ${interaction.guildId}`);
 
 		return this._settings.showSettings(interaction);
 	}
@@ -76,7 +74,7 @@ export class MusicSettingsCommands {
 	@Button('MUSIC_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.showSettings(interaction);
 	}
@@ -88,7 +86,7 @@ export class MusicSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: MusicSettingsChangeOptions,
+		@Options() { option }: MusicSettingsChangeOptions
 	) {
 		this._logger.verbose(`Change music settings, option: ${option}`);
 
@@ -102,7 +100,7 @@ export class MusicSettingsCommands {
 	@Button('MUSIC_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -110,7 +108,7 @@ export class MusicSettingsCommands {
 	@Button('MUSIC_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -118,7 +116,7 @@ export class MusicSettingsCommands {
 	@StringSelect('MUSIC_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: (keyof MusicSettingsInterface)[],
+		@SelectedStrings() selected: (keyof MusicSettingsInterface)[]
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -126,7 +124,7 @@ export class MusicSettingsCommands {
 	@Button('MUSIC_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
+		@ComponentParam('value') value: string
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
@@ -143,7 +141,7 @@ export class MusicSettingsCommands {
 	@ChannelSelect('MUSIC_SETTINGS_CHANGE_CHANNEL_ID')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() [[id]]: ISelectedChannels,
+		@SelectedChannels() [[id]]: ISelectedChannels
 	) {
 		await this._settings.set(interaction.guildId!, 'channelId', id);
 
@@ -156,7 +154,7 @@ export class MusicSettingsCommands {
 	@RoleSelect('MUSIC_SETTINGS_CHANGE_DJ_ROLE_ID')
 	public async onPingRoldChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedRoles() [[id]]: ISelectedRoles,
+		@SelectedRoles() [[id]]: ISelectedRoles
 	) {
 		await this._settings.set(interaction.guildId!, 'djRoleId', id);
 
@@ -168,7 +166,7 @@ export class MusicSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: keyof MusicSettingsInterface,
+		option: keyof MusicSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
@@ -185,8 +183,8 @@ export class MusicSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/true`,
+									option
+								).toUpperCase()}/true`
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
@@ -194,49 +192,45 @@ export class MusicSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/false`,
+									option
+								).toUpperCase()}/false`
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings?.[option] === false),
+							.setDisabled(settings?.[option] === false)
 					),
 				];
 				break;
 			}
 			case 'channelId': {
 				readableOption = 'Channel';
-				currentValue = settings?.[option]
-					? `<#${settings[option]}>`
-					: 'none';
+				currentValue = settings?.[option] ? `<#${settings[option]}>` : 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 						new ChannelSelectMenuBuilder()
 							.setCustomId(
 								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder('Select a channel'),
+							.setPlaceholder('Select a channel')
 					),
 				];
 				break;
 			}
 			case 'djRoleId': {
 				readableOption = 'DJ role';
-				currentValue = settings?.[option]
-					? `<@&${settings[option]}>`
-					: 'none';
+				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
 							.setCustomId(
 								`MUSIC_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
-							.setPlaceholder('Select a role'),
+							.setPlaceholder('Select a role')
 					),
 				];
 				break;
@@ -268,7 +262,7 @@ Current value: ${currentValue}`,
 			new ButtonBuilder()
 				.setCustomId(`MUSIC_SETTINGS_BACK`)
 				.setLabel(isCancel ? 'Cancel' : 'Back to music settings')
-				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
+				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary)
 		);
 	}
 }

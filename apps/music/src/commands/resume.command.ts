@@ -20,7 +20,7 @@ export class MusicResumeCommands {
 	@Button('MUSIC_RESUME')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.resume(interaction.guildId);
 		return interaction.deferUpdate();

@@ -26,7 +26,7 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 
@@ -55,7 +55,7 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 					name: 'DJ Role',
 					value: djRoleId ? `<@&${djRoleId}>` : '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -63,7 +63,7 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 				.setCustomId(`MUSIC_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -85,7 +85,7 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('MUSIC_SETTINGS_CHANGE_SELECT')
@@ -95,19 +95,20 @@ export class MusicSettingsService extends BaseSettingsService<MusicSettingsInter
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
-						.setValue(value),
-				),
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`MUSIC_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {

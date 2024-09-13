@@ -74,7 +74,7 @@ export class MinecraftSettingsCommands {
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Loaded minecraft settings for ${interaction.guildId}`,
+			`Loaded minecraft settings for ${interaction.guildId}`
 		);
 
 		return this._settings.showSettings(interaction);
@@ -83,7 +83,7 @@ export class MinecraftSettingsCommands {
 	@Button('MINECRAFT_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.showSettings(interaction);
 	}
@@ -95,7 +95,7 @@ export class MinecraftSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: MinecraftSettingsChangeOptions,
+		@Options() { option }: MinecraftSettingsChangeOptions
 	) {
 		this._logger.verbose(`Change minecraft settings, option: ${option}`);
 
@@ -109,7 +109,7 @@ export class MinecraftSettingsCommands {
 	@Button('MINECRAFT_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -117,7 +117,7 @@ export class MinecraftSettingsCommands {
 	@Button('MINECRAFT_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -125,7 +125,7 @@ export class MinecraftSettingsCommands {
 	@StringSelect('MINECRAFT_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: (keyof MinecraftSettingsInterface)[],
+		@SelectedStrings() selected: (keyof MinecraftSettingsInterface)[]
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -133,7 +133,7 @@ export class MinecraftSettingsCommands {
 	@Button('MINECRAFT_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
+		@ComponentParam('value') value: string
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
@@ -150,14 +150,14 @@ export class MinecraftSettingsCommands {
 	@Button('MINECRAFT_SETTINGS_CHANGE_BEDROCK_ENABLED/:value')
 	public async onBedrockEnabledButton(
 		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
+		@ComponentParam('value') value: string
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
 		await this._settings.set(
 			interaction.guildId!,
 			'bedrockEnabled',
-			parsedValue,
+			parsedValue
 		);
 
 		return interaction.update({
@@ -171,7 +171,7 @@ export class MinecraftSettingsCommands {
 	@RoleSelect('MINECRAFT_SETTINGS_CHANGE_REQUIRED_ROLE_ID')
 	public async onRequiredRoleChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedRoles() [[id]]: ISelectedRoles,
+		@SelectedRoles() [[id]]: ISelectedRoles
 	) {
 		await this._settings.set(interaction.guildId!, 'requiredRoleId', id);
 
@@ -183,7 +183,7 @@ export class MinecraftSettingsCommands {
 
 	@Modal('MINECRAFT_SETTINGS_CHANGE_CONNECTION_INFORMATION')
 	public async onConnectionUrlsModalResponse(
-		@Ctx() [interaction]: ModalContext,
+		@Ctx() [interaction]: ModalContext
 	) {
 		const connectUrl = interaction.fields.getTextInputValue('connectUrl');
 		const bedrockPort = interaction.fields.getTextInputValue('bedrockPort');
@@ -207,7 +207,7 @@ export class MinecraftSettingsCommands {
 
 	@Modal('MINECRAFT_SETTINGS_CHANGE_RCON_CONNECTION')
 	public async onRconConnectionModalResponse(
-		@Ctx() [interaction]: ModalContext,
+		@Ctx() [interaction]: ModalContext
 	) {
 		const rconPort = interaction.fields.getTextInputValue('rconPort');
 		if (isNaN(Number.parseInt(rconPort, 10))) {
@@ -235,7 +235,7 @@ export class MinecraftSettingsCommands {
 	@ChannelSelect('MINECRAFT_SETTINGS_CHANGE_CHAT_CHANNEL_ID')
 	public async onChatChannelChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() data: ISelectedChannels,
+		@SelectedChannels() data: ISelectedChannels
 	) {
 		const id = [...data.keys()][0];
 		await this._settings.set(interaction.guildId!, 'chatChannelId', id);
@@ -250,7 +250,7 @@ export class MinecraftSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: string,
+		option: string
 	) {
 		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
@@ -267,8 +267,8 @@ export class MinecraftSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/true`,
+									option
+								).toUpperCase()}/true`
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
@@ -276,12 +276,12 @@ export class MinecraftSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/false`,
+									option
+								).toUpperCase()}/false`
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings?.[option] === false),
+							.setDisabled(settings?.[option] === false)
 					),
 				];
 				break;
@@ -294,8 +294,8 @@ export class MinecraftSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/true`,
+									option
+								).toUpperCase()}/true`
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
@@ -303,30 +303,28 @@ export class MinecraftSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/false`,
+									option
+								).toUpperCase()}/false`
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings?.[option] === false),
+							.setDisabled(settings?.[option] === false)
 					),
 				];
 				break;
 			}
 			case 'requiredRoleId': {
 				readableOption = 'Required role';
-				currentValue = settings?.[option]
-					? `<@&${settings[option]}>`
-					: 'none';
+				currentValue = settings?.[option] ? `<@&${settings[option]}>` : 'none';
 				components = [
 					new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 						new RoleSelectMenuBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
-							.setPlaceholder('Select a role'),
+							.setPlaceholder('Select a role')
 					),
 				];
 				break;
@@ -341,13 +339,11 @@ export class MinecraftSettingsCommands {
 						new ChannelSelectMenuBuilder()
 							.setCustomId(
 								`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder(
-								'Select the channel to listen for chats',
-							),
+							.setPlaceholder('Select the channel to listen for chats')
 					),
 				];
 				break;
@@ -359,8 +355,8 @@ export class MinecraftSettingsCommands {
 					.setTitle('Change your onnection information')
 					.setCustomId(
 						`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-							option,
-						).toUpperCase()}`,
+							option
+						).toUpperCase()}`
 					)
 					.setComponents([
 						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
@@ -370,7 +366,7 @@ export class MinecraftSettingsCommands {
 									.setLabel('Connect url')
 									.setValue(settings.connectUrl ?? '')
 									.setStyle(TextInputStyle.Short),
-							],
+							]
 						),
 						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 							[
@@ -380,7 +376,7 @@ export class MinecraftSettingsCommands {
 									.setValue(settings.bedrockPort ?? '')
 									.setStyle(TextInputStyle.Short)
 									.setRequired(false),
-							],
+							]
 						),
 					]);
 				return interaction.showModal(modal);
@@ -392,8 +388,8 @@ export class MinecraftSettingsCommands {
 					.setTitle('Change RCON connection')
 					.setCustomId(
 						`MINECRAFT_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-							option,
-						).toUpperCase()}`,
+							option
+						).toUpperCase()}`
 					)
 					.setComponents([
 						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
@@ -403,7 +399,7 @@ export class MinecraftSettingsCommands {
 									.setLabel('Host')
 									.setValue(settings.rconHost ?? '')
 									.setStyle(TextInputStyle.Short),
-							],
+							]
 						),
 						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 							[
@@ -412,7 +408,7 @@ export class MinecraftSettingsCommands {
 									.setLabel('Port')
 									.setValue(settings.rconPort ?? '')
 									.setStyle(TextInputStyle.Short),
-							],
+							]
 						),
 						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 							[
@@ -421,7 +417,7 @@ export class MinecraftSettingsCommands {
 									.setLabel('Password')
 									.setStyle(TextInputStyle.Short)
 									.setRequired(false),
-							],
+							]
 						),
 					]);
 				return interaction.showModal(rconModal);
@@ -453,7 +449,7 @@ Current value: ${currentValue}`,
 			new ButtonBuilder()
 				.setCustomId(`MINECRAFT_SETTINGS_BACK`)
 				.setLabel(isCancel ? 'Cancel' : 'Back to minecraft settings')
-				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
+				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary)
 		);
 	}
 }

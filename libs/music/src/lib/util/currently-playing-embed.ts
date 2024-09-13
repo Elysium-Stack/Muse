@@ -5,7 +5,7 @@ import { KazagumoPlayer, KazagumoTrack } from 'kazagumo';
 
 export const createPlayingEmbed = (
 	player: KazagumoPlayer,
-	track: KazagumoTrack,
+	track: KazagumoTrack
 ) => {
 	const embed = new EmbedBuilder()
 		.setTitle(player.paused ? '🛑 Paused playing' : '🎶 Now Playing')
@@ -22,13 +22,13 @@ export const createPlayingEmbed = (
 							value: `<@${(track.requester as User).id}>`,
 							inline: true,
 						},
-				  ]
+					]
 				: []),
 			{
 				name: 'Duration',
 				value: `\`${readableTime(track.length!)}\``,
 				inline: true,
-			},
+			}
 		);
 	if (track.thumbnail) {
 		embed.setImage(track.thumbnail);
@@ -50,22 +50,18 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 		new ButtonBuilder()
 			.setCustomId(`MUSIC_NEXT`)
 			.setLabel('⏭️')
-			.setStyle(ButtonStyle.Secondary),
+			.setStyle(ButtonStyle.Secondary)
 	),
 	new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder()
 			.setCustomId(
 				`MUSIC_VOLUME_SET/${
-					player.volume === 0
-						? player.data.get('previousVolume') ?? 50
-						: 0
-				}/true`,
+					player.volume === 0 ? (player.data.get('previousVolume') ?? 50) : 0
+				}/true`
 			)
 			.setLabel('🔇')
 			.setStyle(
-				player.volume === 0
-					? ButtonStyle.Success
-					: ButtonStyle.Secondary,
+				player.volume === 0 ? ButtonStyle.Success : ButtonStyle.Secondary
 			),
 		new ButtonBuilder()
 			.setCustomId(`MUSIC_VOLUME_DECREASE/10`)
@@ -74,7 +70,7 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 		new ButtonBuilder()
 			.setCustomId(`MUSIC_VOLUME_INCREASE/10`)
 			.setLabel('🔊')
-			.setStyle(ButtonStyle.Secondary),
+			.setStyle(ButtonStyle.Secondary)
 	),
 	new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder()
@@ -83,7 +79,7 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 			.setStyle(
 				player.data.get('shuffled') === true
 					? ButtonStyle.Success
-					: ButtonStyle.Secondary,
+					: ButtonStyle.Secondary
 			),
 		new ButtonBuilder()
 			.setCustomId(`MUSIC_STOP`)
@@ -93,9 +89,7 @@ export const createPlayingComponents = (player: KazagumoPlayer) => [
 			.setCustomId(`MUSIC_LOOP`)
 			.setLabel('🔁')
 			.setStyle(
-				player.loop === 'none'
-					? ButtonStyle.Secondary
-					: ButtonStyle.Success,
-			),
+				player.loop === 'none' ? ButtonStyle.Secondary : ButtonStyle.Success
+			)
 	),
 ];

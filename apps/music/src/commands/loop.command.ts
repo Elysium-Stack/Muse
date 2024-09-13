@@ -20,7 +20,7 @@ export class MusicLoopCommands {
 	@Button('MUSIC_LOOP')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.loop(interaction.guildId);
 		return interaction.deferUpdate();

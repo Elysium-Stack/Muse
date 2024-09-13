@@ -13,8 +13,7 @@ export const MINECRAFT_SETTINGS_CHOICES = [
 	},
 	{
 		name: 'Chat Channel',
-		description:
-			'The channel to listen to for chats to send to the server.',
+		description: 'The channel to listen to for chats to send to the server.',
 		value: 'chatChannelId',
 	},
 	{

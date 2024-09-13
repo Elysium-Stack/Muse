@@ -30,7 +30,7 @@ export class RadioStopCommands {
 	@Button('RADIO_STOP')
 	public onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._stop(interaction);
 	}

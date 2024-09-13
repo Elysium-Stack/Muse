@@ -37,19 +37,17 @@ export class SettingsCommands {
 		return {
 			content: `${MESSAGE_PREFIX} What module settings would you like to view?`,
 			embeds: [],
-			components: modulesSets.map((set) =>
+			components: modulesSets.map(set =>
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
-					set.map((module) =>
+					set.map(module =>
 						new ButtonBuilder()
 							.setCustomId(
-								`${module
-									.toUpperCase()
-									.replaceAll(' ', '_')}_SETTINGS_SHOW`,
+								`${module.toUpperCase().replaceAll(' ', '_')}_SETTINGS_SHOW`
 							)
 							.setLabel(module)
-							.setStyle(ButtonStyle.Primary),
-					),
-				),
+							.setStyle(ButtonStyle.Primary)
+					)
+				)
 			),
 		};
 	}

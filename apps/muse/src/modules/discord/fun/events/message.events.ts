@@ -13,7 +13,7 @@ export class FunMessageEvents {
 
 	@On(Events.MessageCreate)
 	public onMessageCreate(
-		@Context() [message]: ContextOf<Events.MessageCreate>,
+		@Context() [message]: ContextOf<Events.MessageCreate>
 	) {
 		this._checkTableFlip(message);
 	}
@@ -22,10 +22,10 @@ export class FunMessageEvents {
 		for (const check of TABLE_FLIP_RECOGNIZERS) {
 			if (message.content.includes(check)) {
 				this._logger.log(
-					`Table flip recognized in message ${message.id}, using "${check}".`,
+					`Table flip recognized in message ${message.id}, using "${check}".`
 				);
 				const randomIndex = Math.floor(
-					Math.random() * TABLE_FLIP_RESPONSES.length,
+					Math.random() * TABLE_FLIP_RESPONSES.length
 				);
 				message.reply(TABLE_FLIP_RESPONSES[randomIndex]);
 				break;

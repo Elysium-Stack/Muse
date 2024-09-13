@@ -20,7 +20,7 @@ export class MusicPreviousCommands {
 	@Button('MUSIC_PREVIOUS')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.previous(interaction.guildId);
 		return interaction.deferUpdate();

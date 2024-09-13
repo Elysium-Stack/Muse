@@ -14,14 +14,11 @@ export class TimezoneAutocompleteInterceptor extends AutocompleteInterceptor {
 		}
 
 		return interaction.respond(
-			TIMEZONE_DATA.filter(
-				(choice) =>
-					choice
-						.toLowerCase()
-						.includes(focused.value.toString().toLowerCase()),
+			TIMEZONE_DATA.filter(choice =>
+				choice.toLowerCase().includes(focused.value.toString().toLowerCase())
 			)
 				.splice(0, 25)
-				.map((tz) => ({ name: tz, value: tz })),
+				.map(tz => ({ name: tz, value: tz }))
 		);
 	}
 }

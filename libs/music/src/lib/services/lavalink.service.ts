@@ -34,7 +34,7 @@ export class MusicLavalinkService extends Kazagumo {
 	constructor(
 		private _client: Client,
 		private _developerLog: DeveloperLogService,
-		private _eventEmitter: EventEmitter2,
+		private _eventEmitter: EventEmitter2
 	) {
 		super(
 			{
@@ -45,19 +45,17 @@ export class MusicLavalinkService extends Kazagumo {
 					if (guild) guild.shard.send(payload);
 				},
 				plugins: [
-					...(process.env.SPOTIFY_CLIENT_ID &&
-					process.env.SPOTIFY_CLIENT_SECRET
+					...(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET
 						? [
 								new Spotify({
 									clientId: process.env.SPOTIFY_CLIENT_ID,
-									clientSecret:
-										process.env.SPOTIFY_CLIENT_SECRET,
+									clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 									playlistPageLimit: 10,
 									albumPageLimit: 5,
 									searchLimit: 20,
 									searchMarket: 'US',
 								}),
-						  ]
+							]
 						: []),
 				],
 			},
@@ -69,10 +67,10 @@ export class MusicLavalinkService extends Kazagumo {
 					auth: process.env.LAVALINK_PASSWORD!,
 					secure: false,
 				},
-			],
+			]
 		);
 
-		this.shoukaku.on('ready', (name) => {
+		this.shoukaku.on('ready', name => {
 			this._logger.log(`Lavalink ${name} is ready!`);
 			this._initializeListeners();
 		});
@@ -85,7 +83,7 @@ export class MusicLavalinkService extends Kazagumo {
 				this._states[player.guildId] = player.state;
 				this._eventEmitter.emit(
 					'music.state',
-					new LavalinkMusicEvent(player, 'checkStates'),
+					new LavalinkMusicEvent(player, 'checkStates')
 				);
 			}
 		}
@@ -104,12 +102,12 @@ export class MusicLavalinkService extends Kazagumo {
 			this._logger.warn(
 				`Lavalink ${name}: Closed, Code ${code}, Reason ${
 					reason || 'No reason'
-				}`,
-			),
+				}`
+			)
 		);
 
 		this.shoukaku.on('debug', (name, info) =>
-			this._logger.debug(`Lavalink ${name}: Debug,`, info),
+			this._logger.debug(`Lavalink ${name}: Debug,`, info)
 		);
 
 		this.shoukaku.on('error', async (name, ...args) => {
@@ -117,7 +115,7 @@ export class MusicLavalinkService extends Kazagumo {
 			await this._developerLog.sendError(
 				{ args },
 				`Lavalink ${name}: Error`,
-				'MusicLavalinkService',
+				'MusicLavalinkService'
 			);
 		});
 
@@ -127,7 +125,7 @@ export class MusicLavalinkService extends Kazagumo {
 				await this._developerLog.sendError(
 					error,
 					`Lavalink ${name}: Error`,
-					'MusicLavalinkService',
+					'MusicLavalinkService'
 				);
 			});
 
@@ -136,7 +134,7 @@ export class MusicLavalinkService extends Kazagumo {
 			}
 
 			const players = [...this.players.keys()].map((key: string) =>
-				this.players.get(key),
+				this.players.get(key)
 			);
 			players.map((player: any) => player.connection.disconnect());
 			this._logger.warn(`Lavalink ${name}: Disconnected`);
@@ -146,29 +144,27 @@ export class MusicLavalinkService extends Kazagumo {
 
 		// Kazagumo
 		this.on('playerStart', (player, track) =>
-			this._onPlayerStart(player, track),
+			this._onPlayerStart(player, track)
 		);
-		this.on('playerEnd', (player) => this._onPlayerEnd(player));
-		this.on('playerEmpty', (player) => this._onPlayerEmpty(player));
-		this.on('playerDestroy', (player) => this._onPlayerDestroy(player));
+		this.on('playerEnd', player => this._onPlayerEnd(player));
+		this.on('playerEmpty', player => this._onPlayerEmpty(player));
+		this.on('playerDestroy', player => this._onPlayerDestroy(player));
 
 		// basic errors
 		this.on('playerClosed', (player, data) =>
-			this._onPlayerClose(player, data),
+			this._onPlayerClose(player, data)
 		);
 
 		this.on('playerResolveError', (_, __, message) =>
 			this._logger.error(
-				`Player resolve error\n ${JSON.stringify({ message })}`,
-			),
+				`Player resolve error\n ${JSON.stringify({ message })}`
+			)
 		);
 
-		this.on('playerStuck', (player, data) =>
-			this._onPlayerStuck(player, data),
-		);
+		this.on('playerStuck', (player, data) => this._onPlayerStuck(player, data));
 
 		this.on('playerException', (player, data) =>
-			this._onPlayerException(player, data),
+			this._onPlayerException(player, data)
 		);
 	}
 
@@ -177,7 +173,7 @@ export class MusicLavalinkService extends Kazagumo {
 		this.createPlayerMessage(player, track);
 		this._eventEmitter.emit(
 			'music.connected',
-			new LavalinkMusicEvent(player, 'playerStart', { track }),
+			new LavalinkMusicEvent(player, 'playerStart', { track })
 		);
 	}
 
@@ -194,7 +190,7 @@ export class MusicLavalinkService extends Kazagumo {
 
 		this._eventEmitter.emit(
 			'music.disconnected',
-			new LavalinkMusicEvent(player, 'playerDestroy'),
+			new LavalinkMusicEvent(player, 'playerDestroy')
 		);
 		player.data
 			.get('message')
@@ -204,17 +200,17 @@ export class MusicLavalinkService extends Kazagumo {
 
 	private async _onPlayerClose(
 		player: KazagumoPlayer,
-		data: WebSocketClosedEvent,
+		data: WebSocketClosedEvent
 	) {
 		this._logger.warn(
 			`Player closed for ${player.guildId} ${
 				player.textId
-			} ${JSON.stringify(data)}`,
+			} ${JSON.stringify(data)}`
 		);
 
 		this._eventEmitter.emit(
 			'music.disconnected',
-			new LavalinkMusicEvent(player, 'playerClosed', data),
+			new LavalinkMusicEvent(player, 'playerClosed', data)
 		);
 	}
 
@@ -238,10 +234,7 @@ export class MusicLavalinkService extends Kazagumo {
 		player.destroy();
 	}
 
-	private async _onPlayerStuck(
-		player: KazagumoPlayer,
-		data: TrackStuckEvent,
-	) {
+	private async _onPlayerStuck(player: KazagumoPlayer, data: TrackStuckEvent) {
 		this._logger.error(`Player stuck\n ${JSON.stringify({ data })}`);
 
 		const channel = await this._client.channels.fetch(player.textId!);
@@ -261,11 +254,9 @@ export class MusicLavalinkService extends Kazagumo {
 
 		await this._developerLog.sendError(
 			data,
-			`Player got stuck, ${
-				skipping ? 'Skipping song.' : 'please try again.'
-			}`,
+			`Player got stuck, ${skipping ? 'Skipping song.' : 'please try again.'}`,
 			'MusicLavalinkService',
-			player.guildId,
+			player.guildId
 		);
 
 		if (channel?.type !== ChannelType.GuildText) {
@@ -280,7 +271,7 @@ export class MusicLavalinkService extends Kazagumo {
 
 	private async _onPlayerException(
 		player: KazagumoPlayer,
-		data: TrackExceptionEvent,
+		data: TrackExceptionEvent
 	) {
 		this._logger.error(`Player exception\n ${JSON.stringify({ data })}`);
 
@@ -303,7 +294,7 @@ export class MusicLavalinkService extends Kazagumo {
 				skipping ? 'Skipping song' : 'please try again'
 			}.`,
 			'MusicLavalinkService',
-			player.guildId,
+			player.guildId
 		);
 	}
 
@@ -351,13 +342,13 @@ export class MusicLavalinkService extends Kazagumo {
 				}
 				player.destroy();
 				player.data.delete('disconnectTimeout');
-			}, 5000),
+			}, 5000)
 		);
 	}
 
 	async createPlayerMessage(
 		player: KazagumoPlayer,
-		track: KazagumoTrack | null | undefined,
+		track: KazagumoTrack | null | undefined
 	) {
 		player.data
 			.get('message')

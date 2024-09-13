@@ -11,7 +11,7 @@ export class MessageTriggerGeneralService {
 
 	constructor(
 		private _prisma: PrismaService,
-		private _settings: MessageTriggerSettingsService,
+		private _settings: MessageTriggerSettingsService
 	) {}
 
 	public async getMessageTriggers(guildId: string, page = 1) {
@@ -42,7 +42,7 @@ export class MessageTriggerGeneralService {
 		guildId: string,
 		phrase: string,
 		match: TriggerMatch,
-		message: string,
+		message: string
 	) {
 		return this._prisma.messageTriggers.create({
 			data: {
@@ -112,10 +112,7 @@ export class MessageTriggerGeneralService {
 
 			switch (match) {
 				case 'word': {
-					regexInstance = new RegExp(
-						`\\b${escapeRegExp(phrase)}\\b`,
-						'gim',
-					);
+					regexInstance = new RegExp(`\\b${escapeRegExp(phrase)}\\b`, 'gim');
 					test = regexInstance.test(message.cleanContent);
 					break;
 				}
@@ -135,7 +132,7 @@ export class MessageTriggerGeneralService {
 			}
 
 			this._logger.debug(
-				`Got a match for ${regexInstance} on ${message.guildId}, replying with message:\n"${msg}"`,
+				`Got a match for ${regexInstance} on ${message.guildId}, replying with message:\n"${msg}"`
 			);
 			message.channel.send(msg);
 		}

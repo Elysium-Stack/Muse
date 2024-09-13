@@ -16,12 +16,12 @@ export class MinecraftGeneralService {
 
 	constructor(
 		private _prisma: PrismaService,
-		private _settings: MinecraftSettingsService,
+		private _settings: MinecraftSettingsService
 	) {}
 
 	async fetchUserData(
 		username,
-		bedrock = false,
+		bedrock = false
 	): Promise<null | { id: string; uuid: string; name: string }> {
 		let data = bedrock
 			? this._getBedrockData(username)
@@ -31,7 +31,7 @@ export class MinecraftGeneralService {
 		this._logger.log(
 			`Received data for ${
 				bedrock ? ' [bedrock]' : ''
-			}${username}: ${JSON.stringify(data)}`,
+			}${username}: ${JSON.stringify(data)}`
 		);
 		return data;
 	}
@@ -39,7 +39,7 @@ export class MinecraftGeneralService {
 	async register(guildId, userId, uuid, username, bedrock = false) {
 		const response = await this._sendRcon(
 			guildId,
-			`vcl add ${username.replaceAll(' ', '')}`,
+			`vcl add ${username.replaceAll(' ', '')}`
 		);
 		await this._saveInDB(guildId, userId, uuid, username, bedrock);
 		return response;
@@ -60,7 +60,7 @@ export class MinecraftGeneralService {
 		for (const item of items) {
 			await this._sendRcon(
 				guildId,
-				`vcl remove ${item.username.replaceAll(' ', '')}`,
+				`vcl remove ${item.username.replaceAll(' ', '')}`
 			);
 			await this._prisma.minecraftMapping.delete({
 				where: {
@@ -101,7 +101,7 @@ export class MinecraftGeneralService {
 		}
 
 		this._logger.log(
-			`Sending message for ${member.displayName} ${member.displayHexColor}`,
+			`Sending message for ${member.displayName} ${member.displayHexColor}`
 		);
 
 		const mcMessage = `&${member.displayHexColor}& ${
@@ -112,19 +112,17 @@ export class MinecraftGeneralService {
 
 	private _getJavaData(username: string) {
 		return fetch(`${this._uuidUrl}/${username}`)
-			.then((res) => res.json())
-			.then((res) =>
-				res?.id ? { ...res, uuid: stringToUuid(res.id) } : null,
-			)
+			.then(res => res.json())
+			.then(res => (res?.id ? { ...res, uuid: stringToUuid(res.id) } : null))
 			.catch(() => null);
 	}
 
 	private _getBedrockData(username: string) {
 		return fetch(
-			this._xuidUrl.replace('{username}', username.replaceAll(' ', '')),
+			this._xuidUrl.replace('{username}', username.replaceAll(' ', ''))
 		)
-			.then((res) => res.text())
-			.then((res) => ({
+			.then(res => res.text())
+			.then(res => ({
 				id: res,
 				name: username,
 				uuid: stringToUuid(`00000000${res}`),
@@ -167,9 +165,7 @@ export class MinecraftGeneralService {
 	}
 
 	private async _sendRcon(guildId, command: string) {
-		const { rconHost, rconPort, rconPass } = await this._settings.get(
-			guildId,
-		);
+		const { rconHost, rconPort, rconPass } = await this._settings.get(guildId);
 
 		const client = new Rcon({
 			host: rconHost,
@@ -180,7 +176,7 @@ export class MinecraftGeneralService {
 
 		try {
 			this._logger.log(`Sending rcon command "${command}"`);
-			const response = await client.session((c) => c.send(command));
+			const response = await client.session(c => c.send(command));
 			return response;
 		} catch (error) {
 			this._logger.error(error);

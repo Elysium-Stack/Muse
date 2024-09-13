@@ -14,7 +14,7 @@ export class GuildsController {
 	constructor(
 		private _discord: DiscordApiService,
 		private _prisma: PrismaService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	/**
@@ -23,24 +23,21 @@ export class GuildsController {
 	@Get()
 	@UseGuards(AccessTokenGuard)
 	async guilds(
-		@Request() { user: { sub } }: AuthenticatedRequestDTO,
+		@Request() { user: { sub } }: AuthenticatedRequestDTO
 	): Promise<BotOAuth2GuildDTO[]> {
 		const guilds = await this._discord.request<OAuth2Guild[]>(
 			sub,
-			'/users/@me/guilds',
+			'/users/@me/guilds'
 		);
 		return guilds
-			.filter((g) =>
+			.filter(g =>
 				new PermissionsBitField((g as any).permissions_new).has(
-					PermissionsBitField.Flags.ManageGuild,
-				),
+					PermissionsBitField.Flags.ManageGuild
+				)
 			)
 			.map(
-				(guild) =>
-					new BotOAuth2GuildDTO(
-						this._client.guilds.cache.has(guild.id),
-						guild,
-					),
+				guild =>
+					new BotOAuth2GuildDTO(this._client.guilds.cache.has(guild.id), guild)
 			);
 	}
 	/**

@@ -41,7 +41,7 @@ export class MusicVolumeCommands {
 	})
 	public async pause(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { volume }: MusicVolumeOptions,
+		@Options() { volume }: MusicVolumeOptions
 	) {
 		return this._music.setVolume(interaction, volume!);
 	}

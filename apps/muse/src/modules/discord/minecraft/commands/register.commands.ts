@@ -45,7 +45,7 @@ export class MinecraftRegisterCommands {
 	constructor(
 		private _general: MinecraftGeneralService,
 		private _settings: MinecraftSettingsService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	@UseGuards(MinecraftRequiredRoleGuard)
@@ -56,7 +56,7 @@ export class MinecraftRegisterCommands {
 	})
 	public async register(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { username, bedrock }: MinecraftRegisterOptions,
+		@Options() { username, bedrock }: MinecraftRegisterOptions
 	) {
 		this._logger.verbose(`Register for the minecraft server`);
 
@@ -96,7 +96,7 @@ export class MinecraftRegisterCommands {
 			interaction.user.id,
 			userData.uuid,
 			userData.name,
-			bedrock,
+			bedrock
 		);
 		// if (response === null) {
 		// 	return interaction.reply({
@@ -112,7 +112,7 @@ export class MinecraftRegisterCommands {
 				connectUrl
 					? `\nJoin now at **${connectUrl}**${
 							bedrock ? ` with port **${bedrockPort}**` : ''
-					  }`
+						}`
 					: ''
 			}`,
 		});

@@ -80,7 +80,7 @@ export class FunAnimalCommands {
 	private async _runType(
 		interaction: ChatInputCommandInteraction,
 		type: AnimelType | 'frog',
-		friendlyName: string,
+		friendlyName: string
 	) {
 		this._logger.debug(`Sending a random ${type} image`);
 		await interaction.deferReply();

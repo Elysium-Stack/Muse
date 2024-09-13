@@ -29,7 +29,7 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 
@@ -42,9 +42,7 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 		const embed = new EmbedBuilder()
 			.setColor(MESSAGE_TRIGGER_EMBED_COLOR)
 			.setTitle('Message trigger settings')
-			.setDescription(
-				`These are the settings for the message trigger module`,
-			)
+			.setDescription(`These are the settings for the message trigger module`)
 			.addFields(
 				{
 					name: 'Status',
@@ -54,10 +52,10 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 				{
 					name: 'Ignored Channels',
 					value: ignoredChannelIds?.length
-						? ignoredChannelIds.map((id) => `<#${id}>`).join('\n')
+						? ignoredChannelIds.map(id => `<#${id}>`).join('\n')
 						: '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -65,7 +63,7 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 				.setCustomId(`MESSAGE_TRIGGER_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -87,30 +85,30 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('MESSAGE_TRIGGER_SETTINGS_CHANGE_SELECT')
 			.setPlaceholder('Select the option to change')
 			.setOptions(
-				MESSAGE_TRIGGER_SETTINGS_CHOICES.map(
-					({ name, description, value }) =>
-						new StringSelectMenuOptionBuilder()
-							.setLabel(name)
-							.setDescription(description)
-							.setValue(value),
-				),
+				MESSAGE_TRIGGER_SETTINGS_CHOICES.map(({ name, description, value }) =>
+					new StringSelectMenuOptionBuilder()
+						.setLabel(name)
+						.setDescription(description)
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`MESSAGE_TRIGGER_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -131,11 +129,7 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 		});
 	}
 
-	async ignoreChannel(
-		guildId: string,
-		channelId: string,
-		value = true,
-	) {
+	async ignoreChannel(guildId: string, channelId: string, value = true) {
 		const settings = await this.get(guildId);
 
 		if (!settings) {
@@ -146,12 +140,12 @@ export class MessageTriggerSettingsService extends BaseSettingsService<MessageTr
 		const index = ignoredChannelIds.indexOf(channelId);
 
 		if (!value && index >= 0) {
-				ignoredChannelIds.splice(index, 1);
-			}
+			ignoredChannelIds.splice(index, 1);
+		}
 
 		if (value && index === -1) {
-				ignoredChannelIds.push(channelId);
-			}
+			ignoredChannelIds.push(channelId);
+		}
 
 		return this.set(guildId, 'ignoredChannelIds', ignoredChannelIds);
 	}

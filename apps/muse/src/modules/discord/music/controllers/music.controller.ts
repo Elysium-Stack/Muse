@@ -13,7 +13,7 @@ export class MusicController {
 	@EventPattern('MUSIC_INSTANCE_BOOTED')
 	booted(
 		@Payload()
-		{ instance }: { instance: number },
+		{ instance }: { instance: number }
 	) {
 		this._logger.log(`Music instance booted up ${instance}`);
 		this._instances.clearInstance(instance);
@@ -30,7 +30,7 @@ export class MusicController {
 			instance: number;
 			guildId: string;
 			state: PlayerState;
-		},
+		}
 	) {
 		this._logger.log(`Music instance state changed ${instance} - ${state}`);
 		this._instances.updateState(instance, guildId, state);
@@ -47,7 +47,7 @@ export class MusicController {
 			instance: number;
 			guildId: string;
 			voiceChannelId: string;
-		},
+		}
 	) {
 		this._logger.log(`Received music connected message for ${instance}`);
 		this._instances.connect(instance, guildId, voiceChannelId);
@@ -56,7 +56,7 @@ export class MusicController {
 	@EventPattern('MUSIC_DISCONNECTED')
 	disconnected(
 		@Payload()
-		{ instance, guildId }: { instance: number; guildId: string },
+		{ instance, guildId }: { instance: number; guildId: string }
 	) {
 		this._logger.log(`Received music disconnected message for ${instance}`);
 		this._instances.disconnect(instance, guildId);

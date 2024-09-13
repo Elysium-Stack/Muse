@@ -11,7 +11,10 @@ export class MusicEvents {
 	private _startTimeout: NodeJS.Timer;
 	private _retryCount = 0;
 
-	constructor(private _radio: RadioService, private _client: Client) {}
+	constructor(
+		private _radio: RadioService,
+		private _client: Client
+	) {}
 
 	@OnEvent('music.disconnected')
 	handleMusicDisconnected({ player, source, data }: LavalinkMusicEvent) {
@@ -30,14 +33,10 @@ export class MusicEvents {
 
 		if (autoRestart) {
 			this._startTimeout = setTimeout(async () => {
-				const channel = await this._client.channels.fetch(
-					player.textId!,
-				);
+				const channel = await this._client.channels.fetch(player.textId!);
 
 				if (this._retryCount === 4) {
-					this._logger.warn(
-						"No longer resuming, we've tried 5 times",
-					);
+					this._logger.warn("No longer resuming, we've tried 5 times");
 
 					this._retryCount = 0;
 
@@ -51,9 +50,7 @@ export class MusicEvents {
 
 				this._retryCount += 1;
 
-				this._logger.warn(
-					"Resuming the closed player because it's the radio",
-				);
+				this._logger.warn("Resuming the closed player because it's the radio");
 
 				await this._radio.startWithoutConfig(player.guildId);
 

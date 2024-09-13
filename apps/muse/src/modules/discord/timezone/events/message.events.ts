@@ -11,12 +11,12 @@ export class TimezoneMessageEvents {
 
 	constructor(
 		private _timezone: TimezoneGeneralService,
-		private _settings: TimezoneSettingsService,
+		private _settings: TimezoneSettingsService
 	) {}
 
 	@On(Events.MessageCreate)
 	public async onMessageCreate(
-		@Context() [message]: ContextOf<Events.MessageCreate>,
+		@Context() [message]: ContextOf<Events.MessageCreate>
 	) {
 		if (!message.inGuild() || message.author.bot) {
 			return;
@@ -32,8 +32,7 @@ export class TimezoneMessageEvents {
 			return;
 		}
 
-		const hourRegex =
-			/(?:\W|^)(\d{1,2})\s*(a\.m\.|p\.m\.|am|pm)(?:\W|$)/gim;
+		const hourRegex = /(?:\W|^)(\d{1,2})\s*(a\.m\.|p\.m\.|am|pm)(?:\W|$)/gim;
 		const hourMinuteRegex =
 			/(?:\W|^)((?:[01]{0,1}\d)|(?:2[0-3]))[.:：]((?:[0-5]\d))(?:\s*(a\.m\.|p\.m\.|am|pm))?(?:\W|$)/gim;
 

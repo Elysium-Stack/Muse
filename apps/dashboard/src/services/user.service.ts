@@ -44,7 +44,7 @@ export class UserService {
 					this._loadUser();
 				},
 				error: () => this.signout(),
-			}),
+			})
 		);
 	}
 
@@ -57,7 +57,7 @@ export class UserService {
 					this.saveRefreshToken(refreshToken);
 				},
 				error: () => this.signout(),
-			}),
+			})
 		);
 	}
 

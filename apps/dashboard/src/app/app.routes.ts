@@ -7,15 +7,13 @@ export const appRoutes: Route[] = [
 	{
 		path: '',
 		loadComponent: () =>
-			import('./home/home.component').then((mod) => mod.HomeComponent),
+			import('./home/home.component').then(mod => mod.HomeComponent),
 	},
 	{
 		path: 'dashboard',
 		providers: [AuthenticatedGuard],
 		canActivate: [() => inject(AuthenticatedGuard).canActivate()],
 		loadChildren: () =>
-			import('./dashboard/dashboard.routes').then(
-				(mod) => mod.dashboardRoutes,
-			),
+			import('./dashboard/dashboard.routes').then(mod => mod.dashboardRoutes),
 	},
 ];

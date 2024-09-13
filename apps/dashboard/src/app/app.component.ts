@@ -21,13 +21,13 @@ export class AppComponent {
 		this._route.queryParamMap
 			.pipe(
 				takeUntilDestroyed(),
-				filter((params) => params.has('code')),
+				filter(params => params.has('code')),
 				take(1),
-				map((params) => params.get('code')!),
-				switchMap((code) => {
+				map(params => params.get('code')!),
+				switchMap(code => {
 					this._router.navigate([]);
 					return this._user.signin$(code).pipe(take(1));
-				}),
+				})
 			)
 			.subscribe(() => this._router.navigate(['/dashboard']));
 	}

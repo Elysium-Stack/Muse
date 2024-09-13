@@ -18,7 +18,7 @@ export class RadioService {
 
 	constructor(
 		private _prisma: PrismaService,
-		@Inject('RADIO_SERVICE') private _radio: ClientProxy,
+		@Inject('RADIO_SERVICE') private _radio: ClientProxy
 	) {}
 
 	async start(interaction: CommandInteraction | MessageComponentInteraction) {
@@ -31,9 +31,7 @@ export class RadioService {
 		});
 
 		if (
-			(!settings ||
-				!settings.radioPlaylist ||
-				!settings.radioVoiceChannelId) &&
+			(!settings || !settings.radioPlaylist || !settings.radioVoiceChannelId) &&
 			interaction
 		) {
 			const content = `${MESSAGE_PREFIX} Radio settings we're not configured correctly.`;
@@ -49,8 +47,7 @@ export class RadioService {
 			});
 		}
 
-		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } =
-			settings;
+		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } = settings;
 
 		const radio = await this._sendCommand('RADIO_START', {
 			guildId: interaction.guildId,
@@ -146,7 +143,7 @@ export class RadioService {
 	}
 
 	async previous(
-		interaction: CommandInteraction | MessageComponentInteraction,
+		interaction: CommandInteraction | MessageComponentInteraction
 	) {
 		const { result } = await this._sendCommand('RADIO_PREVIOUS', {
 			guildId: interaction.guildId,
@@ -176,7 +173,7 @@ export class RadioService {
 
 	async queue(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		page: number,
+		page: number
 	) {
 		const { result, ...rest } = await this._sendCommand<{
 			queue: KazagumoTrack[];
@@ -223,9 +220,7 @@ export class RadioService {
 				? queue
 						.map(
 							(track, index) =>
-								`${index + 2 + (page - 1) * 10}. [${
-									track.title
-								}](${track.uri})`,
+								`${index + 2 + (page - 1) * 10}. [${track.title}](${track.uri})`
 						)
 						.join('\n')
 				: 'No items in the queue',
@@ -243,7 +238,7 @@ export class RadioService {
 					.setCustomId(`RADIO_QUEUE/${page + 1}`)
 					.setLabel('▶️')
 					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(page === totalPages || totalPages === 1),
+					.setDisabled(page === totalPages || totalPages === 1)
 			),
 		];
 
@@ -261,7 +256,7 @@ export class RadioService {
 	private async _sendCommand<T = { data: any }>(command: string, data: any) {
 		try {
 			const result = await (firstValueFrom(
-				this._radio.send(command, data).pipe(take(1), timeout(5000)),
+				this._radio.send(command, data).pipe(take(1), timeout(5000))
 			) as Promise<T & { result: string }>);
 
 			return result;

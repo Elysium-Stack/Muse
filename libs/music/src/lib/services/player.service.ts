@@ -10,7 +10,7 @@ export class MusicPlayerService {
 
 	constructor(
 		protected _lavalink: MusicLavalinkService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	get(guildId: string) {
@@ -23,12 +23,10 @@ export class MusicPlayerService {
 		voiceChannelId: string,
 		textChannelId: string,
 		radio = false,
-		requester?: User,
+		requester?: User
 	) {
 		this._logger.verbose(
-			`Playing ${
-				radio ? 'radio' : 'song'
-			} for ${guildId}: ${songOrPlaylist}`,
+			`Playing ${radio ? 'radio' : 'song'} for ${guildId}: ${songOrPlaylist}`
 		);
 
 		const guild = await this._client.guilds.fetch(guildId);
@@ -277,10 +275,7 @@ export class MusicPlayerService {
 		player.setVolume(volume);
 
 		if (isMute) {
-			await this._lavalink.createPlayerMessage(
-				player,
-				player.queue.current,
-			);
+			await this._lavalink.createPlayerMessage(player, player.queue.current);
 		}
 
 		return {
@@ -334,10 +329,7 @@ export class MusicPlayerService {
 
 	private _transformTrack(track: KazagumoTrack) {
 		// @ts-ignore
-		const newTrack = new KazagumoTrack(
-			track.getRaw()._raw,
-			track.requester,
-		);
+		const newTrack = new KazagumoTrack(track.getRaw()._raw, track.requester);
 		newTrack.thumbnail = track.thumbnail;
 
 		return newTrack;

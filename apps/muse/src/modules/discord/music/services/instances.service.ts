@@ -21,7 +21,7 @@ export class MusicInstancesService implements OnModuleInit {
 		private _prisma: PrismaService,
 		@Optional() @Inject('MUSIC_SERVICE_1') private _music: ClientProxy,
 		@Optional() @Inject('MUSIC_SERVICE_2') private _music2: ClientProxy,
-		@Optional() @Inject('MUSIC_SERVICE_3') private _music3: ClientProxy,
+		@Optional() @Inject('MUSIC_SERVICE_3') private _music3: ClientProxy
 	) {
 		this._instances.push(this._music, this._music2, this._music3);
 	}
@@ -47,7 +47,7 @@ export class MusicInstancesService implements OnModuleInit {
 		}
 
 		const available: number[] = this._instances
-			.filter((i) => !!i)
+			.filter(i => !!i)
 			.map((_, i) => i + 1);
 		for (const entry of all) {
 			const index = available.indexOf(entry.instance);
@@ -92,7 +92,7 @@ export class MusicInstancesService implements OnModuleInit {
 			'MUSIC_STATUS',
 			{
 				guildId,
-			},
+			}
 		);
 
 		await this._prisma.musicServiceMap.create({
@@ -139,7 +139,7 @@ export class MusicInstancesService implements OnModuleInit {
 
 		try {
 			const result = await (firstValueFrom(
-				_instance.send(command, data).pipe(take(1), timeout(5000)),
+				_instance.send(command, data).pipe(take(1), timeout(5000))
 			) as Promise<T & { result: string }>);
 
 			return result;
@@ -182,7 +182,7 @@ export class MusicInstancesService implements OnModuleInit {
 				'MUSIC_STATUS',
 				{
 					guildId: entry.guildId,
-				},
+				}
 			).catch(() => null);
 
 			if (

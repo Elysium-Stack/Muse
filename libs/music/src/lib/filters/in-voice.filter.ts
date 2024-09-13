@@ -18,7 +18,7 @@ export class NotInVoiceExceptionFilter implements ExceptionFilter {
 					.setColor('Red')
 					.setTitle('Not in a voice channel')
 					.setDescription(
-						`Sorry, you have to be in a (or the same) voice channel to use this command!`,
+						`Sorry, you have to be in a (or the same) voice channel to use this command!`
 					),
 			],
 		};

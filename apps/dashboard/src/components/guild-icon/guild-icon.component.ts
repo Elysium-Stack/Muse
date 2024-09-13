@@ -34,15 +34,15 @@ export class GuildIconComponent {
 		() =>
 			(this.guild$()!.name as string)
 				.split(' ')
-				.map((chunk) => chunk.slice(0, 1).toUpperCase())
+				.map(chunk => chunk.slice(0, 1).toUpperCase())
 				.slice(0, 2)
-				.join('') ?? 'G',
+				.join('') ?? 'G'
 	);
 	public iconUrl$ = computed(() =>
 		this.type$() === 'icon'
 			? `https://cdn.discordapp.com/icons/${this.guild$()!.id}/${
 					this.guild$()!.icon
-			  }`
-			: undefined,
+				}`
+			: undefined
 	);
 }

@@ -22,7 +22,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
 	async validate(
 		accessToken: string,
 		refreshToken: string,
-		profile: any,
+		profile: any
 	): Promise<any> {
 		const { id, username, discriminator } = profile;
 		const payload: DiscordPayload = {

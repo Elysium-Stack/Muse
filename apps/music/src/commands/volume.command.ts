@@ -22,7 +22,7 @@ export class MusicVolumeCommands {
 		@Context()
 		[interaction]: ButtonContext,
 		@ComponentParam('volume') volume: string | number,
-		@ComponentParam('isMute') isMute: string,
+		@ComponentParam('isMute') isMute: string
 	) {
 		if (typeof volume === 'string') {
 			volume = Number.parseInt(volume, 10);
@@ -31,7 +31,7 @@ export class MusicVolumeCommands {
 		await this._player.setVolume(
 			interaction.guildId,
 			volume,
-			isMute === 'true' ? true : false,
+			isMute === 'true' ? true : false
 		);
 		return interaction.deferUpdate();
 	}
@@ -40,14 +40,14 @@ export class MusicVolumeCommands {
 	public async onIncreaseButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('amount') amount: string | number,
+		@ComponentParam('amount') amount: string | number
 	) {
 		if (typeof amount === 'string') {
 			amount = Number.parseInt(amount, 10);
 		}
 
 		const { result, volume } = await this._player.getVolume(
-			interaction.guildId,
+			interaction.guildId
 		);
 
 		if (result === 'NO_PLAYER') {
@@ -69,14 +69,14 @@ export class MusicVolumeCommands {
 	public async onDecreaseButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('amount') amount: string | number,
+		@ComponentParam('amount') amount: string | number
 	) {
 		if (typeof amount === 'string') {
 			amount = Number.parseInt(amount, 10);
 		}
 
 		const { result, volume } = await this._player.getVolume(
-			interaction.guildId,
+			interaction.guildId
 		);
 
 		if (result === 'NO_PLAYER') {

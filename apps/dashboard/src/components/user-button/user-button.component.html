@@ -8,7 +8,10 @@
 <ng-template #userTemplate>
 	<ng-container *ngIf="user$() as user; else signinButtonTemplate">
 		<div class="dropdown dropdown-end">
-			<label tabindex="0" class="btn btn-ghost flex gap-4 items-center">
+			<label
+				tabindex="0"
+				class="btn btn-ghost flex gap-4 items-center"
+			>
 				<img
 					[src]="user.avatar"
 					class="mask mask-squircle"
@@ -16,9 +19,7 @@
 					height="32"
 					[alt]="
 						user.username +
-						(user.discriminator === '0'
-							? ''
-							: '#' + user.discriminator)
+						(user.discriminator === '0' ? '' : '#' + user.discriminator)
 					"
 				/>
 				<span class="text-white">
@@ -38,7 +39,12 @@
 					<a routerLink="dashboard"> Dashboard </a>
 				</li>
 				<li>
-					<a class="text-error" (click)="signout()"> Sign out </a>
+					<a
+						class="text-error"
+						(click)="signout()"
+					>
+						Sign out
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -46,5 +52,10 @@
 </ng-template>
 
 <ng-template #signinButtonTemplate>
-	<a class="btn btn-primary rounded-full" [href]="signinUrl"> Sign in </a>
+	<a
+		class="btn btn-primary rounded-full"
+		[href]="signinUrl"
+	>
+		Sign in
+	</a>
 </ng-template>

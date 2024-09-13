@@ -25,7 +25,10 @@
 						*ngFor="let guild of availableGuilds$()"
 						[routerLink]="['./', guild.id]"
 					>
-						<m-guild-icon [guild]="guild" [size]="64" />
+						<m-guild-icon
+							[guild]="guild"
+							[size]="64"
+						/>
 					</a>
 				</div>
 			</ng-container>

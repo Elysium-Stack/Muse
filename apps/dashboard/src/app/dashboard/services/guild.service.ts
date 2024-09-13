@@ -17,20 +17,19 @@ export class DashboardGuildService {
 	public selectedGuildId$ = signal<string | null>(null);
 	public selectedGuild$ = computed(
 		() =>
-			this.availableGuilds$().find(
-				(g) => g.id === this.selectedGuildId$(),
-			) || null,
+			this.availableGuilds$().find(g => g.id === this.selectedGuildId$()) ||
+			null
 	);
 
 	public availableGuilds$ = computed(() =>
 		this.guilds$()
 			.filter(({ available }) => available)
-			.map((g) => g.guild),
+			.map(g => g.guild)
 	);
 	public unavailableGuilds$ = computed(() =>
 		this.guilds$()
 			.filter(({ available }) => !available)
-			.map((g) => g.guild),
+			.map(g => g.guild)
 	);
 
 	constructor() {
@@ -50,7 +49,7 @@ export class DashboardGuildService {
 			.guildsControllerGuilds()
 			.pipe(take(1))
 			.subscribe({
-				next: (guilds) => {
+				next: guilds => {
 					this.guilds$.set(guilds);
 					this.loadingGuilds$.set(false);
 					this.guildsLoaded$.next(true);
@@ -60,7 +59,7 @@ export class DashboardGuildService {
 	}
 
 	selectGuild(id: string) {
-		const guild = this.availableGuilds$().find((g) => g.id === id);
+		const guild = this.availableGuilds$().find(g => g.id === id);
 		if (!guild) {
 			return false;
 		}

@@ -20,7 +20,7 @@ export class MusicStopCommands {
 	@Button('MUSIC_STOP')
 	public async onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		await this._player.stop(interaction.guildId);
 		return interaction.deferUpdate();

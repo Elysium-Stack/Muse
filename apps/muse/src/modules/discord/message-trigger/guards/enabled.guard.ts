@@ -14,7 +14,7 @@ export class MessageTriggerEnabledGuard implements CanActivate {
 	private readonly _logger = new Logger(MessageTriggerEnabledGuard.name);
 
 	constructor(
-		private readonly _messageTriggerSettings: MessageTriggerSettingsService,
+		private readonly _messageTriggerSettings: MessageTriggerSettingsService
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,7 +28,7 @@ export class MessageTriggerEnabledGuard implements CanActivate {
 		}
 
 		const settings = await this._messageTriggerSettings.get(
-			interaction.guildId!,
+			interaction.guildId!
 		);
 
 		if (!settings?.enabled) {

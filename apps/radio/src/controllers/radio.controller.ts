@@ -21,21 +21,21 @@ export class RadioController {
 			radioPlaylist: string;
 			radioVoiceChannelId: string;
 			radioTextChannelId: string;
-		},
+		}
 	) {
 		this._logger.log(`Received start message for ${guildId}`);
 		return this._radio.start(
 			guildId,
 			radioPlaylist,
 			radioVoiceChannelId,
-			radioTextChannelId,
+			radioTextChannelId
 		);
 	}
 
 	@MessagePattern('RADIO_STOP')
 	stop(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received stop message for ${guildId}`);
 		return this._radio.stop(guildId);
@@ -44,7 +44,7 @@ export class RadioController {
 	@MessagePattern('RADIO_NEXT')
 	next(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received next message for ${guildId}`);
 		return this._radio.next(guildId);
@@ -53,7 +53,7 @@ export class RadioController {
 	@MessagePattern('RADIO_PREVIOUS')
 	previous(
 		@Payload()
-		{ guildId }: { guildId: string },
+		{ guildId }: { guildId: string }
 	) {
 		this._logger.log(`Received pervious message for ${guildId}`);
 		return this._radio.previous(guildId);
@@ -62,14 +62,7 @@ export class RadioController {
 	@MessagePattern('RADIO_QUEUE')
 	async getQueue(
 		@Payload()
-		{
-			guildId,
-			page,
-		}: {
-			guildId: string;
-			voiceChannelId: string;
-			page: number;
-		},
+		{ guildId, page }: { guildId: string; voiceChannelId: string; page: number }
 	) {
 		this._logger.log(`Received queue message for ${guildId}`);
 		const data = await this._radio.queue(guildId, page);

@@ -30,7 +30,7 @@ export class RadioStartCommands {
 	@Button('RADIO_START')
 	public onButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._play(interaction);
 	}

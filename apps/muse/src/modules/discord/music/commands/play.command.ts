@@ -39,7 +39,7 @@ export class MusicPlayCommands {
 	})
 	public async play(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { song }: MusicPlayOptions,
+		@Options() { song }: MusicPlayOptions
 	) {
 		return this._music.play(interaction, song!);
 	}

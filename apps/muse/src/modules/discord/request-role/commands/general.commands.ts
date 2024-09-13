@@ -39,15 +39,13 @@ export class RequestRoleGeneralCommands {
 		description: 'Request a role',
 	})
 	public async give(@Context() [interaction]: SlashCommandContext) {
-		const entries = await this._requestRole.getAllEntries(
-			interaction.guildId!,
-		);
+		const entries = await this._requestRole.getAllEntries(interaction.guildId!);
 
 		const entriesWithRole = (await Promise.all(
-			entries.map(async (e) => {
+			entries.map(async e => {
 				const role = await interaction.guild.roles
 					.fetch(e.roleId)
-					.catch((_) => null);
+					.catch(_ => null);
 				if (!role) {
 					return e;
 				}
@@ -56,7 +54,7 @@ export class RequestRoleGeneralCommands {
 					...e,
 					role,
 				};
-			}),
+			})
 		)) as (RequestRoleEntries & { role: Role })[];
 
 		const select = new StringSelectMenuBuilder()
@@ -64,16 +62,17 @@ export class RequestRoleGeneralCommands {
 			.setPlaceholder("Select the role you'd like to request.")
 			.setOptions(
 				entriesWithRole
-					.filter((e) => !!e.role)
+					.filter(e => !!e.role)
 					.map(({ id, role }) =>
 						new StringSelectMenuOptionBuilder()
 							.setLabel(`${role.name}`)
-							.setValue(id.toString()),
-					),
+							.setValue(id.toString())
+					)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const data = {
 			content: `${MESSAGE_PREFIX} What role would you like to request?`,
@@ -90,19 +89,17 @@ export class RequestRoleGeneralCommands {
 	@StringSelect('REQUEST_ROLE_SELECT')
 	public async onTopicSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() [entryId]: string[],
+		@SelectedStrings() [entryId]: string[]
 	) {
 		this._logger.log(
-			`User ${interaction.user.id} requested role for entry ${entryId}`,
+			`User ${interaction.user.id} requested role for entry ${entryId}`
 		);
 
 		const parsedEntryId = Number.parseInt(entryId, 10);
 		const entry = await this._requestRole.getEntryById(parsedEntryId);
 
 		if (
-			(entry.blacklistedUsers as Prisma.JsonArray).includes(
-				interaction.user.id,
-			)
+			(entry.blacklistedUsers as Prisma.JsonArray).includes(interaction.user.id)
 		) {
 			return interaction.update({
 				content: `${MESSAGE_PREFIX} Sorry, you've been blacklisted from requesting this role`,
@@ -112,17 +109,15 @@ export class RequestRoleGeneralCommands {
 
 		const requiredRoles = entry.requiredRoles as Prisma.JsonArray;
 		if (requiredRoles.length > 0) {
-			const member = await interaction.guild.members.fetch(
-				interaction.user.id,
-			);
-			const allowed = member.roles.cache.some((role) =>
-				requiredRoles.includes(role.id),
+			const member = await interaction.guild.members.fetch(interaction.user.id);
+			const allowed = member.roles.cache.some(role =>
+				requiredRoles.includes(role.id)
 			);
 
 			if (!allowed) {
 				return interaction.update({
 					content: `${MESSAGE_PREFIX} Sorry, You do not have one of the required roles: ${requiredRoles
-						.map((r) => `<@&${r}>`)
+						.map(r => `<@&${r}>`)
 						.join(', ')}`,
 					components: [],
 					allowedMentions: {
@@ -151,7 +146,7 @@ export class RequestRoleGeneralCommands {
 						new ButtonBuilder()
 							.setCustomId(`REQUEST_ROLE_DECLINE`)
 							.setLabel('❌')
-							.setStyle(ButtonStyle.Secondary),
+							.setStyle(ButtonStyle.Secondary)
 					),
 				],
 			});
@@ -164,7 +159,7 @@ export class RequestRoleGeneralCommands {
 	public onAcceptButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('entryId') entryId: string,
+		@ComponentParam('entryId') entryId: string
 	) {
 		const parsedEntryId = Number.parseInt(entryId, 10);
 
@@ -174,7 +169,7 @@ export class RequestRoleGeneralCommands {
 	@Button('REQUEST_ROLE_DECLINE')
 	public onDeclineButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} That's alright, try again later!`,
@@ -185,12 +180,12 @@ export class RequestRoleGeneralCommands {
 
 	private async _setRole(
 		interaction: MessageComponentInteraction,
-		entryId: number,
+		entryId: number
 	) {
 		const { success, role } = await this._requestRole.giveRole(
 			interaction.guildId,
 			interaction.user.id,
-			entryId,
+			entryId
 		);
 
 		const baseData = {

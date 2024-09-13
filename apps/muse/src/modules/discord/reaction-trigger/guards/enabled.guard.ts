@@ -14,7 +14,7 @@ export class ReactionTriggerEnabledGuard implements CanActivate {
 	private readonly _logger = new Logger(ReactionTriggerEnabledGuard.name);
 
 	constructor(
-		private readonly _reactionTriggerSettings: ReactionTriggerSettingsService,
+		private readonly _reactionTriggerSettings: ReactionTriggerSettingsService
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,7 +28,7 @@ export class ReactionTriggerEnabledGuard implements CanActivate {
 		}
 
 		const settings = await this._reactionTriggerSettings.get(
-			interaction.guildId!,
+			interaction.guildId!
 		);
 
 		if (!settings?.enabled) {

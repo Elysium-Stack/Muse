@@ -21,7 +21,7 @@ export class MusicService {
 
 	async play(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		song: string,
+		song: string
 	) {
 		await interaction.deferReply({ ephemeral: true });
 
@@ -110,7 +110,7 @@ export class MusicService {
 
 	async next(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -153,7 +153,7 @@ export class MusicService {
 
 	async previous(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -196,7 +196,7 @@ export class MusicService {
 
 	async shuffle(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -230,7 +230,7 @@ export class MusicService {
 
 	async loop(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -243,7 +243,7 @@ export class MusicService {
 			{
 				guildId: interaction.guildId,
 				voiceChannelId: channel.id,
-			},
+			}
 		);
 
 		if (!music) {
@@ -272,7 +272,7 @@ export class MusicService {
 
 	async pause(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -315,7 +315,7 @@ export class MusicService {
 
 	async resume(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -360,7 +360,7 @@ export class MusicService {
 		interaction: CommandInteraction | MessageComponentInteraction,
 		setVolume: number,
 		setIsMute = false,
-		sendMessage = true,
+		sendMessage = true
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -375,7 +375,7 @@ export class MusicService {
 				voiceChannelId: channel.id,
 				volume: setVolume,
 				isMute: setIsMute,
-			},
+			}
 		);
 
 		if (!music) {
@@ -403,7 +403,7 @@ export class MusicService {
 	}
 
 	async getVolume(
-		interaction: CommandInteraction | MessageComponentInteraction,
+		interaction: CommandInteraction | MessageComponentInteraction
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -416,7 +416,7 @@ export class MusicService {
 			{
 				guildId: interaction.guildId,
 				voiceChannelId: channel.id,
-			},
+			}
 		);
 
 		if (!music) {
@@ -429,7 +429,7 @@ export class MusicService {
 
 	async queue(
 		interaction: CommandInteraction | MessageComponentInteraction,
-		page: number,
+		page: number
 	) {
 		const channel = await getVoiceChannelFromInteraction(interaction);
 		if (!channel) {
@@ -473,9 +473,7 @@ export class MusicService {
 				? queue
 						.map(
 							(track, index) =>
-								`${index + 2 + (page - 1) * 10}. [${
-									track.title
-								}](${track.uri})`,
+								`${index + 2 + (page - 1) * 10}. [${track.title}](${track.uri})`
 						)
 						.join('\n')
 				: 'No items in the queue',
@@ -493,7 +491,7 @@ export class MusicService {
 					.setCustomId(`MUSIC_QUEUE/${page + 1}`)
 					.setLabel('▶️')
 					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(page === totalPages || totalPages === 1),
+					.setDisabled(page === totalPages || totalPages === 1)
 			),
 		];
 
@@ -511,12 +509,12 @@ export class MusicService {
 	private async _send<T>(
 		interaction: CommandInteraction | MessageComponentInteraction,
 		command: string,
-		data: any,
+		data: any
 	) {
 		const voiceChannel = await getVoiceChannelFromInteraction(interaction);
 		const instance = await this._instances.getAvailableOrExisting(
 			interaction.guildId,
-			voiceChannel.id,
+			voiceChannel.id
 		);
 
 		if (!instance) {
@@ -532,16 +530,12 @@ export class MusicService {
 			interaction.deferred
 				? interaction.editReply({
 						content,
-				  })
+					})
 				: interaction.reply({ content });
 			return null;
 		}
 
-		const music = await this._instances.sendCommand(
-			instance,
-			command,
-			data,
-		);
+		const music = await this._instances.sendCommand(instance, command, data);
 
 		if (!music) {
 			const content = `${MESSAGE_PREFIX} Something wen't wrong, try again later!`;
@@ -556,7 +550,7 @@ export class MusicService {
 			interaction.deferred
 				? interaction.editReply({
 						content,
-				  })
+					})
 				: interaction.reply({ content });
 			return null;
 		}
@@ -574,7 +568,7 @@ export class MusicService {
 			interaction.deferred
 				? interaction.editReply({
 						content,
-				  })
+					})
 				: interaction.reply({ content });
 			return null;
 		}

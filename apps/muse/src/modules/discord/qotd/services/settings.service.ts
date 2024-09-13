@@ -27,7 +27,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 		if (!settings) {
@@ -43,7 +43,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 			pingRoleId,
 		} = settings;
 
-		const hourOption = HOUR_OPTIONS.find((h) => h.value === dailyHour);
+		const hourOption = HOUR_OPTIONS.find(h => h.value === dailyHour);
 		const embed = new EmbedBuilder()
 			.setColor(QOTD_EMBED_COLOR)
 			.setTitle('QotD settings')
@@ -78,7 +78,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 					name: 'Ping role',
 					value: pingRoleId ? `<@&${pingRoleId}>` : '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -86,7 +86,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 				.setCustomId(`QOTD_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -108,7 +108,7 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('QOTD_SETTINGS_CHANGE_SELECT')
@@ -118,19 +118,20 @@ export class QotDSettingsService extends BaseSettingsService<QotDSettingsInterfa
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
-						.setValue(value),
-				),
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`QOTD_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {

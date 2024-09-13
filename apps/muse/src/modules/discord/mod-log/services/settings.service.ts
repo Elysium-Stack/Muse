@@ -30,7 +30,7 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 
@@ -58,9 +58,7 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				},
 				{
 					name: 'Message delete',
-					value: deleteChannelId?.length
-						? `<#${deleteChannelId}>`
-						: '-',
+					value: deleteChannelId?.length ? `<#${deleteChannelId}>` : '-',
 					inline: true,
 				},
 				{
@@ -75,11 +73,9 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				},
 				{
 					name: 'Member leave',
-					value: leaveChannelId?.length
-						? `<#${leaveChannelId}>`
-						: '-',
+					value: leaveChannelId?.length ? `<#${leaveChannelId}>` : '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -87,7 +83,7 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 				.setCustomId(`MOD_LOG_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -109,7 +105,7 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('MOD_LOG_SETTINGS_CHANGE_SELECT')
@@ -119,19 +115,20 @@ export class ModLogSettingsService extends BaseSettingsService<ModLogSettingsInt
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
-						.setValue(value),
-				),
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`MOD_LOG_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {

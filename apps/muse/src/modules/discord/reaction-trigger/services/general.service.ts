@@ -12,7 +12,7 @@ export class ReactionTriggerGeneralService {
 	constructor(
 		private _prisma: PrismaService,
 		private _settings: ReactionTriggerSettingsService,
-		private _client: Client,
+		private _client: Client
 	) {}
 
 	public async getReactionTriggers(guildId: string, page = 1) {
@@ -25,22 +25,18 @@ export class ReactionTriggerGeneralService {
 		});
 
 		const resolvedTriggers = triggers
-			.map((trigger) => {
+			.map(trigger => {
 				const { clientEmoji, unicode } = resolveEmoji(
 					trigger.emojiId,
-					this._client,
+					this._client
 				);
 
 				return {
 					...trigger,
-					emoji: clientEmoji
-						? clientEmoji
-						: unicode
-						? trigger.emojiId
-						: null,
+					emoji: clientEmoji ? clientEmoji : unicode ? trigger.emojiId : null,
 				};
 			})
-			.filter((trigger) => !!trigger.emoji);
+			.filter(trigger => !!trigger.emoji);
 
 		return {
 			triggers: resolvedTriggers.slice(10 * (page - 1), 10 * page),
@@ -52,7 +48,7 @@ export class ReactionTriggerGeneralService {
 		guildId: string,
 		phrase: string,
 		match: TriggerMatch,
-		emojiId: string,
+		emojiId: string
 	) {
 		return this._prisma.reactionTriggers.create({
 			data: {
@@ -122,10 +118,7 @@ export class ReactionTriggerGeneralService {
 
 			switch (match) {
 				case 'word': {
-					regexInstance = new RegExp(
-						`\\b${escapeRegExp(phrase)}\\b`,
-						'gim',
-					);
+					regexInstance = new RegExp(`\\b${escapeRegExp(phrase)}\\b`, 'gim');
 					test = regexInstance.test(message.cleanContent);
 					break;
 				}
@@ -145,12 +138,12 @@ export class ReactionTriggerGeneralService {
 			}
 
 			this._logger.debug(
-				`Got a match for ${regexInstance} on ${message.guildId}, adding emote with id ${emojiId}`,
+				`Got a match for ${regexInstance} on ${message.guildId}, adding emote with id ${emojiId}`
 			);
-			await message.react(emojiId).catch((error) => {
+			await message.react(emojiId).catch(error => {
 				if (error.message === 'Unknown Emoji') {
 					return this._logger.warn(
-						`Found a stray reaction trigger with id "${id}" for emoji ${emojiId}`,
+						`Found a stray reaction trigger with id "${id}" for emoji ${emojiId}`
 					);
 				}
 

@@ -14,7 +14,7 @@ export class ModLogMessageEvents {
 
 	@On(Events.MessageDelete)
 	public async onMessageDelete(
-		@Context() [message]: ContextOf<Events.MessageDelete>,
+		@Context() [message]: ContextOf<Events.MessageDelete>
 	) {
 		const { guildId } = message;
 		const { enabled, deleteChannelId } = await this._settings.get(guildId);
@@ -28,7 +28,7 @@ export class ModLogMessageEvents {
 		}
 
 		this._logger.log(
-			`Mod log message delete running for ${guildId}\nMessage ID: ${message.id}\nAuthor ID:${message.author.id}`,
+			`Mod log message delete running for ${guildId}\nMessage ID: ${message.id}\nAuthor ID:${message.author.id}`
 		);
 
 		const channel = await message.channel.fetch();
@@ -43,39 +43,35 @@ export class ModLogMessageEvents {
 			const embed = new EmbedBuilder()
 				.setTitle(`Message delete in ${channel.name}`)
 				.setDescription(
-					`https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`,
+					`https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`
 				)
 				.addFields(
 					...(content?.length
 						? content.map((part, i) => ({
 								name: i === 0 ? 'Content' : ' ',
 								value: part,
-						  }))
+							}))
 						: []),
 					...(message.attachments.size > 0
 						? [
 								{
 									name: 'Attachments',
 									value: message.attachments
-										.map((a) => `[${a.name}](${a.url})`)
+										.map(a => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
-						  ]
-						: []),
+							]
+						: [])
 				)
 				.setAuthor({
-					name: `${getUsername(message.author)} | ${
-						message.author.id
-					}`,
+					name: `${getUsername(message.author)} | ${message.author.id}`,
 					iconURL: message.author.displayAvatarURL() || undefined,
 				})
 				.setImage(message.attachments.first()?.url || undefined)
 				.setColor(EMBED_STATUS_COLORS.danger)
 				.setTimestamp();
 
-			const deleteChannel = await message.guild.channels.fetch(
-				deleteChannelId,
-			);
+			const deleteChannel = await message.guild.channels.fetch(deleteChannelId);
 
 			if (!deleteChannel.isTextBased()) {
 				return;
@@ -92,7 +88,7 @@ export class ModLogMessageEvents {
 
 	@On(Events.MessageUpdate)
 	public async onMessageUpdate(
-		@Context() [original, updated]: ContextOf<Events.MessageUpdate>,
+		@Context() [original, updated]: ContextOf<Events.MessageUpdate>
 	) {
 		const { guildId } = original;
 		const { enabled, editChannelId } = await this._settings.get(guildId);
@@ -110,7 +106,7 @@ export class ModLogMessageEvents {
 		}
 
 		this._logger.log(
-			`Mod log message edit running for ${guildId}\nMessage ID: ${updated.id}\nAuthor ID:${updated.author.id}`,
+			`Mod log message edit running for ${guildId}\nMessage ID: ${updated.id}\nAuthor ID:${updated.author.id}`
 		);
 
 		const channel = await updated.channel.fetch();
@@ -120,8 +116,7 @@ export class ModLogMessageEvents {
 		}
 
 		try {
-			const originalContent =
-				original.content.match(/(.|[\n\r]){1,1024}/g);
+			const originalContent = original.content.match(/(.|[\n\r]){1,1024}/g);
 			const updatedContent = updated.content.match(/(.|[\n\r]){1,1024}/g);
 
 			const embeds = [];
@@ -129,52 +124,48 @@ export class ModLogMessageEvents {
 			const embed = new EmbedBuilder()
 				.setTitle(`Message edited in ${channel.name}`)
 				.setDescription(
-					`https://discord.com/channels/${updated.guildId}/${updated.channelId}/${updated.id}`,
+					`https://discord.com/channels/${updated.guildId}/${updated.channelId}/${updated.id}`
 				)
 				.addFields(
-					...(originalContent?.length === 1 &&
-					updatedContent?.length === 1
+					...(originalContent?.length === 1 && updatedContent?.length === 1
 						? [
 								{
 									name: 'Original content',
 									value: originalContent[0],
 								},
-						  ]
+							]
 						: []),
-					...(originalContent?.length === 1 &&
-					updatedContent?.length === 1
+					...(originalContent?.length === 1 && updatedContent?.length === 1
 						? [
 								{
 									name: 'Edited content',
 									value: updatedContent[0],
 								},
-						  ]
+							]
 						: []),
 					...(original.attachments.size > 0
 						? [
 								{
 									name: 'Original attachments',
 									value: original.attachments
-										.map((a) => `[${a.name}](${a.url})`)
+										.map(a => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
-						  ]
+							]
 						: []),
 					...(updated.attachments.size > 0
 						? [
 								{
 									name: 'Edited attachments',
 									value: updated.attachments
-										.map((a) => `[${a.name}](${a.url})`)
+										.map(a => `[${a.name}](${a.url})`)
 										.join('\n'),
 								},
-						  ]
-						: []),
+							]
+						: [])
 				)
 				.setAuthor({
-					name: `${getUsername(original.author)} | ${
-						original.author.id
-					}`,
+					name: `${getUsername(original.author)} | ${original.author.id}`,
 					iconURL: original.author.displayAvatarURL() || undefined,
 				})
 				.setColor(EMBED_STATUS_COLORS.warning)
@@ -191,7 +182,7 @@ export class ModLogMessageEvents {
 							`https://discord.com/channels/${original.guildId}/${
 								original.channelId
 							}/${original.id}\n
-							${originalContent.join('')}`,
+							${originalContent.join('')}`
 						)
 						// .addFields(
 						// 	...originalContent.map((part, i) => ({
@@ -200,14 +191,11 @@ export class ModLogMessageEvents {
 						// 	})),
 						// )
 						.setAuthor({
-							name: `${getUsername(original.author)} | ${
-								original.author.id
-							}`,
-							iconURL:
-								original.author.displayAvatarURL() || undefined,
+							name: `${getUsername(original.author)} | ${original.author.id}`,
+							iconURL: original.author.displayAvatarURL() || undefined,
 						})
 						.setColor(EMBED_STATUS_COLORS.warning)
-						.setTimestamp(),
+						.setTimestamp()
 				);
 			}
 
@@ -219,7 +207,7 @@ export class ModLogMessageEvents {
 							`https://discord.com/channels/${updated.guildId}/${
 								updated.channelId
 							}/${updated.id}\n
-							${updatedContent.join('')}`,
+							${updatedContent.join('')}`
 						)
 						// .addFields(
 						// 	...updatedContent.map((part, i) => ({
@@ -228,20 +216,15 @@ export class ModLogMessageEvents {
 						// 	})),
 						// )
 						.setAuthor({
-							name: `${getUsername(updated.author)} | ${
-								updated.author.id
-							}`,
-							iconURL:
-								updated.author.displayAvatarURL() || undefined,
+							name: `${getUsername(updated.author)} | ${updated.author.id}`,
+							iconURL: updated.author.displayAvatarURL() || undefined,
 						})
 						.setColor(EMBED_STATUS_COLORS.warning)
-						.setTimestamp(),
+						.setTimestamp()
 				);
 			}
 
-			const editChannel = await original.guild.channels.fetch(
-				editChannelId,
-			);
+			const editChannel = await original.guild.channels.fetch(editChannelId);
 
 			if (!editChannel.isTextBased()) {
 				return;

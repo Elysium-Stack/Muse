@@ -1,7 +1,7 @@
 import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
 
 export const getVoiceChannelFromInteraction = async (
-	interaction: CommandInteraction | MessageComponentInteraction,
+	interaction: CommandInteraction | MessageComponentInteraction
 ) => {
 	const member = await interaction.guild!.members.fetch(interaction.user.id);
 	const { channel } = member.voice;

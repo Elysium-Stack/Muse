@@ -36,14 +36,14 @@ export class GuildModeratorGuard implements CanActivate {
 		const member = await guild.members.fetch(interaction.user.id);
 
 		const hasAdminPermissions = member.permissions.has(
-			PermissionsBitField.Flags.Administrator,
+			PermissionsBitField.Flags.Administrator
 		);
 		if (hasAdminPermissions) {
 			return true;
 		}
 
 		const hasPermission = member.permissions.has(
-			PermissionsBitField.Flags.BanMembers,
+			PermissionsBitField.Flags.BanMembers
 		);
 		if (hasPermission) {
 			return true;

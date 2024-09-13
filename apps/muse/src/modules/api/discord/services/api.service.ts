@@ -10,12 +10,12 @@ import { DISCORD_API_URL } from '../utils/constants';
 export class DiscordApiService {
 	constructor(
 		private readonly _http: HttpService,
-		private readonly _prisma: PrismaService,
+		private readonly _prisma: PrismaService
 	) {}
 
 	async request<T>(
 		userId: number,
-		request: AxiosRequestConfig | string,
+		request: AxiosRequestConfig | string
 	): Promise<T> {
 		const { accessToken, refreshToken } = await this._getTokens(userId);
 
@@ -42,8 +42,8 @@ export class DiscordApiService {
 					Authorization: `Bearer ${accessToken}`,
 					Accept: 'application/json',
 				},
-			}),
-		).catch((error) => this._handleFourOhOne(error));
+			})
+		).catch(error => this._handleFourOhOne(error));
 
 		if (status === 401) {
 			await this._refreshTokens(userId, refreshToken);
@@ -73,10 +73,7 @@ export class DiscordApiService {
 	private async _refreshTokens(userId: number, refreshToken: string) {
 		const formData = new FormData();
 		formData.append('client_id', process.env.DISCORD_OAUTH_CLIENT_ID!);
-		formData.append(
-			'client_secret',
-			process.env.DISCORD_OAUTH_CLIENT_SECRET!,
-		);
+		formData.append('client_secret', process.env.DISCORD_OAUTH_CLIENT_SECRET!);
 		formData.append('refresh_token', refreshToken);
 		formData.append('grant_type', 'refresh_token');
 
@@ -87,8 +84,8 @@ export class DiscordApiService {
 				responseType: 'json',
 				headers: { 'Content-Type': 'multipart/form-data' },
 				data: formData,
-			}),
-		).catch((error) => this._handleFourOhOne(error));
+			})
+		).catch(error => this._handleFourOhOne(error));
 
 		if (status === 401) {
 			throw new ForbiddenException('Access Denied');

@@ -16,10 +16,7 @@
 				"main": "apps/dashboard/src/main.ts",
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/dashboard/tsconfig.app.json",
-				"assets": [
-					"apps/dashboard/src/404.html",
-					"apps/dashboard/src/assets"
-				],
+				"assets": ["apps/dashboard/src/404.html", "apps/dashboard/src/assets"],
 				"styles": ["apps/dashboard/src/style/index.scss"],
 				"scripts": []
 			},

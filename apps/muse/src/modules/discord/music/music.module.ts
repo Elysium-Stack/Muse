@@ -29,7 +29,7 @@ const musicBotHosts = process.env.MUSIC_BOT_HOSTS.split(',');
 					host,
 					port: 1337,
 				},
-			})),
+			}))
 		),
 		SharedModule,
 	],

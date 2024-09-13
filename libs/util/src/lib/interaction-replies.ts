@@ -7,7 +7,7 @@ import {
 export const interactionReply = async (
 	interaction: CommandInteraction | MessageComponentInteraction | null,
 	data: BaseMessageOptions,
-	ephemeral = true,
+	ephemeral = true
 ) => {
 	if (!interaction) {
 		return;

@@ -14,19 +14,19 @@ export class FunAnimalService {
 
 	async getRandom(type: AnimelType) {
 		const data = await fetch(`${RANDOM_ANIMAL_BASE_URL}/${type}`)
-			.then((d) => {
+			.then(d => {
 				if (d.status !== 200) {
-					return new Promise((resolve) =>
+					return new Promise(resolve =>
 						setTimeout(async () => {
 							const data = await this.getRandom(type);
 							resolve(data);
-						}, 300),
+						}, 300)
 					);
 				}
 
 				return d?.json();
 			})
-			.catch((error) => {
+			.catch(error => {
 				this._logger.error(error);
 				return null;
 			});
@@ -36,24 +36,24 @@ export class FunAnimalService {
 
 	async getRandomFrog() {
 		const data = await fetch(FROAG_GITHUB_DATASET_URL)
-			.then((d) => {
+			.then(d => {
 				if (d.status !== 200) {
-					return new Promise((resolve) =>
+					return new Promise(resolve =>
 						setTimeout(async () => {
 							const data = await this.getRandomFrog();
 							resolve(data);
-						}, 300),
+						}, 300)
 					);
 				}
 
 				return d?.json();
 			})
-			.catch((error) => {
+			.catch(error => {
 				this._logger.error(error);
 				return null;
 			});
 
-		const filtered = data.filter((f) => f.type === 'file');
+		const filtered = data.filter(f => f.type === 'file');
 
 		const dataLength = filtered.length;
 		const randIndex = Math.floor(Math.random() * dataLength);

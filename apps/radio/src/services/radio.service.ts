@@ -13,7 +13,7 @@ export class RadioService {
 		private _player: MusicPlayerService,
 
 		@InjectMetric('discord_playing')
-		public playing: Gauge<string>,
+		public playing: Gauge<string>
 	) {}
 
 	async startWithoutConfig(guildId: string) {
@@ -23,22 +23,17 @@ export class RadioService {
 			},
 		});
 
-		if (
-			!settings ||
-			!settings.radioPlaylist ||
-			!settings.radioVoiceChannelId
-		) {
+		if (!settings || !settings.radioPlaylist || !settings.radioVoiceChannelId) {
 			return;
 		}
 
-		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } =
-			settings;
+		const { radioPlaylist, radioVoiceChannelId, radioTextChannelId } = settings;
 
 		return this.start(
 			guildId,
 			radioPlaylist,
 			radioVoiceChannelId,
-			radioTextChannelId,
+			radioTextChannelId
 		);
 	}
 
@@ -46,7 +41,7 @@ export class RadioService {
 		guildId: string,
 		radioPlaylist: string,
 		radioVoiceChannelId: string,
-		radioTextChannelId: string,
+		radioTextChannelId: string
 	) {
 		const player = this._player.get(guildId);
 		if (player) {
@@ -65,7 +60,7 @@ export class RadioService {
 			radioPlaylist!,
 			radioVoiceChannelId!,
 			radioTextChannelId,
-			true,
+			true
 		);
 		this.playing.labels('None').inc(1);
 
@@ -80,7 +75,7 @@ export class RadioService {
 		});
 
 		if (data.data?.tracks) {
-			data.data.tracks = [...data.data?.tracks].map((track) => {
+			data.data.tracks = [...data.data?.tracks].map(track => {
 				delete track.kazagumo;
 				return track;
 			});

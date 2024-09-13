@@ -153,16 +153,17 @@ export class BookwormQuestionService {
 		"What's the quickest you've ever read a book and what book was it?",
 	];
 
-	constructor(private _prisma: PrismaService, private _client: Client) {}
+	constructor(
+		private _prisma: PrismaService,
+		private _client: Client
+	) {}
 
 	async get(getRandom = false, guildId?: string) {
 		if (getRandom) {
 			const min = 0;
 			const max = this.questions.length - 1;
 
-			return this.questions[
-				Math.floor(Math.random() * (max - min + 1)) + min
-			];
+			return this.questions[Math.floor(Math.random() * (max - min + 1)) + min];
 		}
 
 		if (!guildId) {
@@ -234,11 +235,9 @@ export class BookwormQuestionService {
 				const embed = createQuestionEmbed(
 					`${MESSAGE_PREFIX} Daily bookworm question`,
 					question,
-					this._client.user!,
+					this._client.user!
 				);
-				const content = bookwormPingRoleId
-					? `<@&${bookwormPingRoleId}>`
-					: '';
+				const content = bookwormPingRoleId ? `<@&${bookwormPingRoleId}>` : '';
 				await channel.send({ embeds: [embed], content });
 			}
 		}

@@ -23,7 +23,7 @@ export class AppEvents {
 		@InjectMetric('discord_latency')
 		public latency: Gauge<string>,
 		@InjectMetric('discord_playing')
-		public playing: Gauge<string>,
+		public playing: Gauge<string>
 	) {}
 
 	@Cron('*/5 * * * * *')

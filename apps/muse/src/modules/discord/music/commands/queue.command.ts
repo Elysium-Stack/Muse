@@ -43,7 +43,7 @@ export class MusicQueueCommands {
 	})
 	public async stop(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { page }: MusicQueueOptions,
+		@Options() { page }: MusicQueueOptions
 	) {
 		return this._music.queue(interaction, page ?? 1);
 	}
@@ -52,7 +52,7 @@ export class MusicQueueCommands {
 	public async onIncreaseButton(
 		@Context()
 		[interaction]: ButtonContext,
-		@ComponentParam('page') page: string | number,
+		@ComponentParam('page') page: string | number
 	) {
 		if (typeof page === 'string') {
 			page = Number.parseInt(page, 10);

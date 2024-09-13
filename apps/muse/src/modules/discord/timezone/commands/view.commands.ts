@@ -21,7 +21,7 @@ export class TimezoneViewCommands {
 	public async view(@Context() [interaction]: SlashCommandContext) {
 		const data = await this._timezone.getTimezone(
 			interaction.guildId,
-			interaction.user.id,
+			interaction.user.id
 		);
 
 		if (!data) {

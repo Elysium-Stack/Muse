@@ -17,12 +17,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
 	private isRefreshing = false;
 	private accessTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
-		null,
+		null
 	);
 
 	intercept(
 		req: HttpRequest<any>,
-		next: HttpHandler,
+		next: HttpHandler
 	): Observable<HttpEvent<Object>> {
 		let authReq = req;
 		const accessToken = this._user.accessToken$();
@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
 		}
 
 		return next.handle(authReq).pipe(
-			catchError((error) => {
+			catchError(error => {
 				if (
 					error instanceof HttpErrorResponse &&
 					!authReq.url.endsWith('auth') &&
@@ -47,7 +47,7 @@ export class AuthInterceptor implements HttpInterceptor {
 				}
 
 				return throwError(error);
-			}),
+			})
 		);
 	}
 
@@ -63,26 +63,22 @@ export class AuthInterceptor implements HttpInterceptor {
 					switchMap((token: any) => {
 						this.isRefreshing = false;
 
-						return next.handle(
-							this.addTokenHeader(request, token.accessToken),
-						);
+						return next.handle(this.addTokenHeader(request, token.accessToken));
 					}),
-					catchError((err) => {
+					catchError(err => {
 						this.isRefreshing = false;
 
 						this._user.signout();
 						return throwError(err);
-					}),
+					})
 				);
 			}
 		}
 
 		return this.accessTokenSubject.pipe(
-			filter((token) => token !== null),
+			filter(token => token !== null),
 			take(1),
-			switchMap((token) =>
-				next.handle(this.addTokenHeader(request, token)),
-			),
+			switchMap(token => next.handle(this.addTokenHeader(request, token)))
 		);
 	}
 

@@ -74,7 +74,7 @@ export class ReactionTriggerSettingsCommands {
 	})
 	public async show(@Context() [interaction]: SlashCommandContext) {
 		this._logger.verbose(
-			`Loaded reaction trigger settings for ${interaction.guildId}`,
+			`Loaded reaction trigger settings for ${interaction.guildId}`
 		);
 
 		return this._settings.showSettings(interaction);
@@ -87,18 +87,18 @@ export class ReactionTriggerSettingsCommands {
 	})
 	public async ignore(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { channel }: ReactionTriggerIgnoreOptions,
+		@Options() { channel }: ReactionTriggerIgnoreOptions
 	) {
 		this._logger.verbose(
 			`Ignoring reaction trigger channel for ${interaction.guildId} - ${
 				channel?.id ?? interaction.channelId
-			}`,
+			}`
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
 			channel?.id ?? interaction.channelId,
-			true,
+			true
 		);
 
 		return interaction.reply({
@@ -116,18 +116,18 @@ export class ReactionTriggerSettingsCommands {
 	})
 	public async unignore(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { channel }: ReactionTriggerIgnoreOptions,
+		@Options() { channel }: ReactionTriggerIgnoreOptions
 	) {
 		this._logger.verbose(
 			`Unignoring reaction trigger channel for ${interaction.guildId} - ${
 				channel?.id ?? interaction.channelId
-			}`,
+			}`
 		);
 
 		await this._settings.ignoreChannel(
 			interaction.guildId,
 			channel?.id ?? interaction.channelId,
-			false,
+			false
 		);
 
 		return interaction.reply({
@@ -142,7 +142,7 @@ export class ReactionTriggerSettingsCommands {
 	@Button('REACTION_TRIGGER_SETTINGS_SHOW')
 	public onShowButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.showSettings(interaction);
 	}
@@ -155,11 +155,9 @@ export class ReactionTriggerSettingsCommands {
 	})
 	public async changeSettings(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { option }: ReactionTriggerSettingsChangeOptions,
+		@Options() { option }: ReactionTriggerSettingsChangeOptions
 	) {
-		this._logger.verbose(
-			`Change reaction trigger settings, option: ${option}`,
-		);
+		this._logger.verbose(`Change reaction trigger settings, option: ${option}`);
 
 		if (!option) {
 			return this._settings.promptSettings(interaction);
@@ -172,7 +170,7 @@ export class ReactionTriggerSettingsCommands {
 	@Button('REACTION_TRIGGER_SETTINGS_PROMPT')
 	public onPromptButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -181,7 +179,7 @@ export class ReactionTriggerSettingsCommands {
 	@Button('REACTION_TRIGGER_SETTINGS_BACK')
 	public onBackButton(
 		@Context()
-		[interaction]: ButtonContext,
+		[interaction]: ButtonContext
 	) {
 		return this._settings.promptSettings(interaction);
 	}
@@ -189,7 +187,7 @@ export class ReactionTriggerSettingsCommands {
 	@StringSelect('REACTION_TRIGGER_SETTINGS_CHANGE_SELECT')
 	public onStringSelect(
 		@Context() [interaction]: StringSelectContext,
-		@SelectedStrings() selected: (keyof ReactionTriggerSettingsInterface)[],
+		@SelectedStrings() selected: (keyof ReactionTriggerSettingsInterface)[]
 	) {
 		return this._askSettingValue(interaction, selected[0]);
 	}
@@ -198,7 +196,7 @@ export class ReactionTriggerSettingsCommands {
 	@Button('REACTION_TRIGGER_SETTINGS_CHANGE_ENABLED/:value')
 	public async onEnabledButton(
 		@Context() [interaction]: ButtonContext,
-		@ComponentParam('value') value: string,
+		@ComponentParam('value') value: string
 	) {
 		const parsedValue = value === 'true' ? true : false;
 
@@ -216,20 +214,14 @@ export class ReactionTriggerSettingsCommands {
 	@ChannelSelect('REACTION_TRIGGER_SETTINGS_CHANGE_IGNORED_CHANNEL_IDS')
 	public async onChannelChange(
 		@Context() [interaction]: ButtonContext,
-		@SelectedChannels() data: ISelectedChannels,
+		@SelectedChannels() data: ISelectedChannels
 	) {
 		const ids = [...data.keys()];
-		await this._settings.set(
-			interaction.guildId!,
-			'ignoredChannelIds',
-			ids,
-		);
+		await this._settings.set(interaction.guildId!, 'ignoredChannelIds', ids);
 
 		return interaction.update({
 			content: `${MESSAGE_PREFIX} Reaction trigger ignored channels has been changed to:${
-				ids.length > 0
-					? `\n${ids.map((id) => `<#${id}>`).join(', ')}`
-					: ' None'
+				ids.length > 0 ? `\n${ids.map(id => `<#${id}>`).join(', ')}` : ' None'
 			}`,
 			components: [this._getBackButtonRow()],
 		});
@@ -237,7 +229,7 @@ export class ReactionTriggerSettingsCommands {
 
 	private async _askSettingValue(
 		interaction: MessageComponentInteraction | CommandInteraction,
-		option: keyof ReactionTriggerSettingsInterface,
+		option: keyof ReactionTriggerSettingsInterface
 	) {
 		let components: DiscordComponentsArrayDTO = [];
 		const settings = await this._settings.get(interaction.guildId!);
@@ -255,8 +247,8 @@ export class ReactionTriggerSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/true`,
+									option
+								).toUpperCase()}/true`
 							)
 							.setLabel('Enable')
 							.setStyle(ButtonStyle.Primary)
@@ -264,12 +256,12 @@ export class ReactionTriggerSettingsCommands {
 						new ButtonBuilder()
 							.setCustomId(
 								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}/false`,
+									option
+								).toUpperCase()}/false`
 							)
 							.setLabel('Disable')
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(settings?.[option] === false),
+							.setDisabled(settings?.[option] === false)
 					),
 				];
 				break;
@@ -277,7 +269,7 @@ export class ReactionTriggerSettingsCommands {
 			case 'ignoredChannelIds': {
 				readableOption = 'Ignored channels';
 				currentValue = settings?.[option]?.length
-					? `\n${settings[option].map((id) => `<#${id}>`).join(', ')}`
+					? `\n${settings[option].map(id => `<#${id}>`).join(', ')}`
 					: 'none';
 				components = [
 					new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
@@ -286,13 +278,11 @@ export class ReactionTriggerSettingsCommands {
 							.setMaxValues(25) // 25 is the max currently..
 							.setCustomId(
 								`REACTION_TRIGGER_SETTINGS_CHANGE_${camelCaseToSnakeCase(
-									option,
-								).toUpperCase()}`,
+									option
+								).toUpperCase()}`
 							)
 							.addChannelTypes(ChannelType.GuildText)
-							.setPlaceholder(
-								'Select the channels to ignore (max 25)',
-							),
+							.setPlaceholder('Select the channels to ignore (max 25)')
 					),
 				];
 				break;
@@ -323,10 +313,8 @@ Current value: ${currentValue}`,
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`REACTION_TRIGGER_SETTINGS_BACK`)
-				.setLabel(
-					isCancel ? 'Cancel' : 'Back to reaction trigger settings',
-				)
-				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary),
+				.setLabel(isCancel ? 'Cancel' : 'Back to reaction trigger settings')
+				.setStyle(isCancel ? ButtonStyle.Danger : ButtonStyle.Primary)
 		);
 	}
 }

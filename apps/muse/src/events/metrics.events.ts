@@ -24,7 +24,7 @@ export class MetricsEvents {
 		@InjectMetric('discord_stat_total_interactions')
 		public totalInteractions: Gauge<string>,
 		@InjectMetric('discord_event_on_interaction_total')
-		public onInteractionTotal: Counter<string>,
+		public onInteractionTotal: Counter<string>
 	) {}
 
 	@Cron('*/5 * * * * *')
@@ -48,7 +48,7 @@ export class MetricsEvents {
 
 	@On(Events.InteractionCreate)
 	public onInteractionCreate(
-		@Context() [interaction]: ContextOf<Events.InteractionCreate>,
+		@Context() [interaction]: ContextOf<Events.InteractionCreate>
 	) {
 		const shardId = interaction.guild?.shardId
 			? interaction.guild.shardId.toString()
@@ -62,7 +62,7 @@ export class MetricsEvents {
 	@On(Events.ShardResume)
 	public onShardResume(
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		@Context() [_, shardId]: ContextOf<Events.ShardResume>,
+		@Context() [_, shardId]: ContextOf<Events.ShardResume>
 	) {
 		this.connected.labels(shardId ? shardId.toString() : 'None').set(1);
 	}
@@ -70,7 +70,7 @@ export class MetricsEvents {
 	@On(Events.ShardReady)
 	public onShardReady(
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		@Context() [_, shardId]: ContextOf<Events.ShardReady>,
+		@Context() [_, shardId]: ContextOf<Events.ShardReady>
 	) {
 		this.connected.labels(shardId ? shardId.toString() : 'None').set(1);
 	}
@@ -78,7 +78,7 @@ export class MetricsEvents {
 	@On(Events.ShardDisconnect)
 	public onShardDisconnect(
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		@Context() [_, shardId]: ContextOf<Events.ShardDisconnect>,
+		@Context() [_, shardId]: ContextOf<Events.ShardDisconnect>
 	) {
 		this.connected.labels(shardId ? shardId.toString() : 'None').set(0);
 	}
@@ -132,9 +132,9 @@ export class MetricsEvents {
 		const totalUsers = await client.guilds.cache.reduce(
 			async (total, guild) => {
 				const members = guild.members.cache;
-				return (await total) + members.filter((m) => !m.user.bot).size;
+				return (await total) + members.filter(m => !m.user.bot).size;
 			},
-			Promise.resolve(0),
+			Promise.resolve(0)
 		);
 		this.totalUsers.set(totalUsers);
 
@@ -142,9 +142,7 @@ export class MetricsEvents {
 	}
 
 	private async _loadMembers(client = this._client) {
-		const promises = client.guilds.cache.map((guild) =>
-			guild.members.fetch(),
-		);
+		const promises = client.guilds.cache.map(guild => guild.members.fetch());
 		return Promise.allSettled(promises);
 	}
 }

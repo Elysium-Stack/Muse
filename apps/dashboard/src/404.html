@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
 		<meta charset="utf-8" />
@@ -41,10 +41,8 @@
 						.slice(pathSegmentsToKeep)
 						.join('/')
 						.replace(/&/g, '~and~') +
-					(l.search
-						? '&' + l.search.slice(1).replace(/&/g, '~and~')
-						: '') +
-					l.hash,
+					(l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+					l.hash
 			);
 		</script>
 	</head>

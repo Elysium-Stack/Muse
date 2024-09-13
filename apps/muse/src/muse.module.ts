@@ -53,9 +53,7 @@ import { SharedModule } from './shared.module';
 			dsn: process.env.SENTRY_DNS,
 			debug: process.env.NODE_ENV !== 'production',
 			environment:
-				process.env.NODE_ENV === 'production'
-					? 'production'
-					: 'development',
+				process.env.NODE_ENV === 'production' ? 'production' : 'development',
 			logLevels: ['error'],
 			sampleRate: 1,
 			close: {

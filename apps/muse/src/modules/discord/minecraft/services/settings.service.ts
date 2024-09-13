@@ -29,7 +29,7 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 		if (!settings) {
@@ -112,7 +112,7 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 					name: 'RCON Pass',
 					value: rconPass ? `✶✶✶✶✶✶✶` : '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -120,7 +120,7 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 				.setCustomId(`MINECRAFT_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -142,7 +142,7 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('MINECRAFT_SETTINGS_CHANGE_SELECT')
@@ -152,19 +152,20 @@ export class MinecraftSettingsService extends BaseSettingsService<MinecraftSetti
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
-						.setValue(value),
-				),
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`MINECRAFT_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {

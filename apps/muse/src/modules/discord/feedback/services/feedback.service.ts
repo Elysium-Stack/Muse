@@ -9,7 +9,10 @@ import { FEEDBACK_EMBED_COLOR } from '../util/constants';
 export class FeedbackService {
 	private readonly _logger = new Logger(FeedbackService.name);
 
-	constructor(private _prisma: PrismaService, private _client: Client) {}
+	constructor(
+		private _prisma: PrismaService,
+		private _client: Client
+	) {}
 
 	public getTopicById(guildId: string, id: number) {
 		return this._prisma.feedbackTopics.findFirst({
@@ -53,7 +56,7 @@ export class FeedbackService {
 		guildId: string,
 		name: string,
 		type: FeedbackTopicsType,
-		referenceId: string,
+		referenceId: string
 	) {
 		return this._prisma.feedbackTopics.create({
 			data: {
@@ -90,9 +93,12 @@ export class FeedbackService {
 		topicId: string,
 		guildId: string,
 		user: User,
-		content: string,
+		content: string
 	) {
-		const topic = await this.getTopicById(guildId, Number.parseInt(topicId, 10));
+		const topic = await this.getTopicById(
+			guildId,
+			Number.parseInt(topicId, 10)
+		);
 
 		if (!topic) {
 			return;
@@ -109,7 +115,7 @@ export class FeedbackService {
 		topic: FeedbackTopics,
 		guildId: string,
 		user: User,
-		content: string,
+		content: string
 	) {
 		const embed = new EmbedBuilder()
 			.setTitle(`${MESSAGE_PREFIX} Feedback response`)
@@ -127,7 +133,7 @@ export class FeedbackService {
 				{
 					name: 'Feedback',
 					value: content,
-				},
+				}
 			)
 			.setColor(FEEDBACK_EMBED_COLOR);
 
@@ -147,10 +153,10 @@ export class FeedbackService {
 		topic: FeedbackTopics,
 		guildId: string,
 		user: User,
-		content: string,
+		content: string
 	) {
 		this._logger.warn(
-			`Google sheet feedback is not implemented yet ${topic.name} ${guildId} ${user.id} ${content}`,
+			`Google sheet feedback is not implemented yet ${topic.name} ${guildId} ${user.id} ${content}`
 		);
 	}
 }

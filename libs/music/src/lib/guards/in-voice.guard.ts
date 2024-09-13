@@ -22,9 +22,7 @@ export class MusicInVoiceGuard implements CanActivate {
 			return false;
 		}
 
-		const member = await interaction.guild!.members.fetch(
-			interaction.user.id,
-		);
+		const member = await interaction.guild!.members.fetch(interaction.user.id);
 		const { channel } = member.voice;
 		if (!channel) {
 			throw new NotInVoiceException();

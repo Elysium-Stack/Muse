@@ -13,7 +13,7 @@ export class RequestRoleGeneralService {
 	constructor(
 		private _prisma: PrismaService,
 		private _client: Client,
-		private _settings: RequestRoleSettingsService,
+		private _settings: RequestRoleSettingsService
 	) {}
 
 	public getEntryById(id: number) {
@@ -122,9 +122,9 @@ export class RequestRoleGeneralService {
 		const success = await member.roles
 			.add(role)
 			.then(() => true)
-			.catch((error) => {
+			.catch(error => {
 				this._logger.warn(
-					`Could not set role ${entry.roleId} on ${userId} in ${guildId}`,
+					`Could not set role ${entry.roleId} on ${userId} in ${guildId}`
 				);
 				return false;
 			});
@@ -145,7 +145,7 @@ export class RequestRoleGeneralService {
 							name: 'Role',
 							value: `<@&${entry.roleId}>`,
 							inline: true,
-						},
+						}
 					)
 					.setAuthor({
 						name: getUsername(user),

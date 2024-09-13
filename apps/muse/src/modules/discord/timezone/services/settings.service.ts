@@ -30,7 +30,7 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 	}
 
 	async showSettings(
-		interaction: MessageComponentInteraction | CommandInteraction,
+		interaction: MessageComponentInteraction | CommandInteraction
 	) {
 		const settings = await this.get(interaction.guildId!);
 
@@ -53,10 +53,10 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 				{
 					name: 'Ignored Channels',
 					value: ignoredChannelIds?.length
-						? ignoredChannelIds.map((id) => `<#${id}>`).join('\n')
+						? ignoredChannelIds.map(id => `<#${id}>`).join('\n')
 						: '-',
 					inline: true,
-				},
+				}
 			);
 
 		const promptRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -64,7 +64,7 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 				.setCustomId(`TIMEZONE_SETTINGS_PROMPT`)
 				.setLabel('Change settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -86,7 +86,7 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 	public promptSettings(
 		interaction: MessageComponentInteraction | CommandInteraction,
 		isFollowUp = false,
-		message?: string,
+		message?: string
 	) {
 		const select = new StringSelectMenuBuilder()
 			.setCustomId('TIMEZONE_SETTINGS_CHANGE_SELECT')
@@ -96,19 +96,20 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 					new StringSelectMenuOptionBuilder()
 						.setLabel(name)
 						.setDescription(description)
-						.setValue(value),
-				),
+						.setValue(value)
+				)
 			);
 
-		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+		const selectRow = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			select
+		);
 
 		const showRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`TIMEZONE_SETTINGS_SHOW`)
 				.setLabel('Show settings')
 				.setStyle(ButtonStyle.Primary),
-			ALL_SETTINGS_BUTTON,
+			ALL_SETTINGS_BUTTON
 		);
 
 		const data = {
@@ -129,11 +130,7 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 		});
 	}
 
-	async ignoreChannel(
-		guildId: string,
-		channelId: string,
-		value = true,
-	) {
+	async ignoreChannel(guildId: string, channelId: string, value = true) {
 		const settings = await this.get(guildId);
 
 		if (!settings) {
@@ -144,12 +141,12 @@ export class TimezoneSettingsService extends BaseSettingsService<TimezoneSetting
 		const index = ignoredChannelIds.indexOf(channelId);
 
 		if (!value && index >= 0) {
-				ignoredChannelIds.splice(index, 1);
-			}
+			ignoredChannelIds.splice(index, 1);
+		}
 
 		if (value && index === -1) {
-				ignoredChannelIds.push(channelId);
-			}
+			ignoredChannelIds.push(channelId);
+		}
 
 		return this.set(guildId, 'ignoredChannelIds', ignoredChannelIds);
 	}

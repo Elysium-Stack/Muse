@@ -38,14 +38,14 @@ export class FunSayCommands {
 					new TextInputBuilder()
 						.setCustomId('message')
 						.setLabel('Message')
-						.setStyle(TextInputStyle.Paragraph),
+						.setStyle(TextInputStyle.Paragraph)
 				),
 				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 					new TextInputBuilder()
 						.setCustomId('channelId')
 						.setLabel('Channel ID')
 						.setStyle(TextInputStyle.Short)
-						.setValue(interaction.channelId),
+						.setValue(interaction.channelId)
 				),
 				new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 					new TextInputBuilder()
@@ -53,7 +53,7 @@ export class FunSayCommands {
 						.setLabel('Reply to message ID')
 						.setStyle(TextInputStyle.Short)
 						.setRequired(false)
-						.setValue(''),
+						.setValue('')
 				),
 			]);
 
@@ -79,7 +79,7 @@ export class FunSayCommands {
 
 		const channel = await interaction.guild.channels
 			.fetch(channelId)
-			.catch((error) => null);
+			.catch(error => null);
 
 		if (!channel) {
 			return interaction.reply({
@@ -107,7 +107,7 @@ export class FunSayCommands {
 
 		const replyMessage = await channel.messages
 			.fetch(replyId)
-			.catch((error) => null);
+			.catch(error => null);
 
 		if (!replyMessage) {
 			return interaction.reply({
