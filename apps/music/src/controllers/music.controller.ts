@@ -52,18 +52,6 @@ export class MusicController {
 		}
 	) {
 		this._logger.log(`Received start message for ${guildId}`);
-		const player = this._player.get(guildId);
-
-		if (player) {
-			this.playing.labels('None').dec(1);
-			player.destroy();
-		}
-
-		// await this._prisma.musicLog.deleteMany({
-		// 	where: {
-		// 		guildId,
-		// 	},
-		// });
 
 		const data = await this._player.play(
 			guildId,
@@ -78,12 +66,6 @@ export class MusicController {
 		if (!data?.result || data.result !== 'PLAYING') {
 			return data;
 		}
-
-		// await this._prisma.musicLog.create({
-		// 	data: {
-		// 		guildId,
-		// 	},
-		// });
 
 		if (data.data?.tracks) {
 			data.data.tracks = [...data.data.tracks].map(track => {

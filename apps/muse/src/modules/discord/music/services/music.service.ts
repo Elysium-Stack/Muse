@@ -33,7 +33,7 @@ export class MusicService {
 		}
 
 		const music = await this._send<{
-			data: KazagumoSearchResult;
+			data: KazagumoSearchResult & { existing: boolean };
 		}>(interaction, 'MUSIC_PLAY', {
 			guildId: interaction.guildId,
 			song,
@@ -66,10 +66,19 @@ export class MusicService {
 		}
 
 		if (result === 'PLAYING') {
-			content =
-				data.type === 'PLAYLIST'
-					? `Queued ${data.tracks.length} tracks from \`${data.playlistName}\``
-					: `Queued \`${data.tracks[0].title}\``;
+			if (!data.existing) {
+				content =
+					data.type === 'PLAYLIST'
+						? `Playing ${data.tracks.length} tracks from \`${data.playlistName}\``
+						: `Playing \`${data.tracks[0].title}\``;
+			}
+
+			if (data.existing) {
+				content =
+					data.type === 'PLAYLIST'
+						? `Added ${data.tracks.length} tracks to the queue from \`${data.playlistName}\``
+						: `Added \`${data.tracks[0].title}\` to the queue`;
+			}
 		}
 
 		if (interaction instanceof MessageComponentInteraction) {

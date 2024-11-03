@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChannelType, Client, User } from 'discord.js';
-import { KazagumoTrack } from 'kazagumo';
+import { KazagumoPlayer, KazagumoTrack } from 'kazagumo';
 
 import { MusicLavalinkService } from './lavalink.service';
 
@@ -61,25 +61,44 @@ export class MusicPlayerService {
 			};
 		}
 
-		const player = await this._lavalink.createPlayer({
-			guildId: guildId,
-			textId: textChannelId,
-			voiceId: voiceChannel.id,
-			volume: 50,
-			deaf: true,
-		});
+		let player: KazagumoPlayer | undefined;
+		let existing = true;
+		if (!radio) {
+			player = this.get(guildId);
+		}
+
+		if (!player) {
+			existing = false;
+			player = await this._lavalink.createPlayer({
+				guildId: guildId,
+				textId: textChannelId,
+				voiceId: voiceChannel.id,
+				volume: 50,
+				deaf: true,
+			});
+		}
+
 		player.data.set('previousVolume', 50);
 		player.data.set('radio', radio);
 		player.data.set('auto-restart', radio);
 		player.data.set('no-dc', process.env['NODE_ENV'] === 'development');
 
-		if (player.queue.size > 0) {
+		if (!existing && player.queue.size > 0) {
 			player.queue.clear();
 		}
 
-		for (const track of result.tracks) {
+		console.log(result.type);
+		if (result.type === 'TRACK' || result.type === 'SEARCH') {
+			const track = result.tracks[0];
 			const transformedTrack = this._transformTrack(track);
 			player.queue.add(transformedTrack);
+		}
+
+		if (result.type === 'PLAYLIST') {
+			for (const track of result.tracks) {
+				const transformedTrack = this._transformTrack(track);
+				player.queue.add(transformedTrack);
+			}
 		}
 
 		if (radio) {
@@ -93,7 +112,10 @@ export class MusicPlayerService {
 		}
 
 		return {
-			data: result,
+			data: {
+				...result,
+				existing,
+			},
 			result: 'PLAYING',
 		};
 	}
