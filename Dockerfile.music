@@ -1,4 +1,4 @@
-FROM node:18 as base
+FROM node:20-alpine as base
 
 WORKDIR /opt/app
 EXPOSE 3000
