@@ -15,17 +15,14 @@ export class CustomRoleIsBoosterGuard implements CanActivate {
 		const [interaction] = ctx.getContext<'interactionCreate'>();
 
 		if (!interaction.isChatInputCommand()) return false;
-		// const admins = process.env['OWNER_IDS'].split(',');
-		// if (admins.includes(interaction.user.id)) {
-		// 	return true;
-		// }
-		//
+		const admins = process.env['OWNER_IDS'].split(',');
+		if (admins.includes(interaction.user.id)) {
+			return true;
+		}
+
 		const member = await interaction.guild.members.fetch(
 			interaction.user.id
 		);
-
-		console.log(JSON.stringify(member, null, 2));
-		console.log(member.premiumSince);
 
 		if (member.premiumSince) {
 			return true;

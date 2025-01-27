@@ -3,7 +3,6 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonInteraction,
-	ButtonStyle,
 	CommandInteraction,
 	EmbedBuilder,
 } from 'discord.js';
@@ -25,6 +24,7 @@ import { MessageTriggerGeneralService } from '../services/general.service';
 import { MESSAGE_TRIGGER_EMBED_COLOR } from '../util/constants';
 
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { createListButtons } from '@muse/util/create-list-buttons';
 
 import { TriggerMatch } from '@prisma/client';
 
@@ -311,34 +311,12 @@ export class MessageTriggerGeneralCommands {
 			});
 		}
 
-		const buttons = [];
+		const buttons = createListButtons(
+			'MESSAGE_TRIGGER_LIST',
+			page,
+			maxPage
+		);
 		const components: DiscordComponentsArrayDTO = [];
-
-		if (page > 1) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`MESSAGE_TRIGGER_LIST/1`)
-					.setLabel('⏪')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`MESSAGE_TRIGGER_LIST/${page - 1}`)
-					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
-
-		if (page < maxPage) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`MESSAGE_TRIGGER_LIST/${page + 1}`)
-					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`MESSAGE_TRIGGER_LIST/${maxPage}`)
-					.setLabel('⏩')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
 
 		if (buttons.length > 0) {
 			components.push(

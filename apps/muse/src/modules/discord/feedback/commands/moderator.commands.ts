@@ -26,6 +26,7 @@ import { FeedbackService } from '../services';
 import { FEEDBACK_EMBED_COLOR } from '../util/constants';
 
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { createListButtons } from '@muse/util/create-list-buttons';
 
 import { FeedbackTopicsType } from '@prisma/client';
 
@@ -280,34 +281,12 @@ export class FeedbackModeratorCommands {
 			});
 		}
 
-		const buttons = [];
+		const buttons = createListButtons(
+			'FEEDBACK_TOPICS_LIST',
+			page,
+			maxPage
+		);
 		const components: DiscordComponentsArrayDTO = [];
-
-		if (page > 1) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`FEEDBACK_TOPICS_LIST/1`)
-					.setLabel('⏪')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`FEEDBACK_TOPICS_LIST/${page - 1}`)
-					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
-
-		if (page < maxPage) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`FEEDBACK_TOPICS_LIST/${page + 1}`)
-					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`FEEDBACK_TOPICS_LIST/${maxPage}`)
-					.setLabel('⏩')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
 
 		if (buttons.length > 0) {
 			components.push(

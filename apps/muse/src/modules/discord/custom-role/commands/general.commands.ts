@@ -32,6 +32,7 @@ import { CustomRoleSettingsService } from '../services/settings.service';
 import { CUSTOM_ROLE_EMBED_COLOR } from '../util/constants';
 
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { createListButtons } from '@muse/util/create-list-buttons';
 
 import {
 	EnabledExceptionFilter,
@@ -336,34 +337,8 @@ export class CustomRoleGeneralCommands {
 			});
 		}
 
-		const buttons = [];
+		const buttons = createListButtons('CUSTOM_ROLE_LIST', page, maxPage);
 		const components: DiscordComponentsArrayDTO = [];
-
-		if (page > 1) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`CUSTOM_ROLE_LIST/1`)
-					.setLabel('⏪')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`CUSTOM_ROLE_LIST/${page - 1}`)
-					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
-
-		if (page < maxPage) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`CUSTOM_ROLE_LIST/${page + 1}`)
-					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`CUSTOM_ROLE_LIST/${maxPage}`)
-					.setLabel('⏩')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
 
 		if (buttons.length > 0) {
 			components.push(

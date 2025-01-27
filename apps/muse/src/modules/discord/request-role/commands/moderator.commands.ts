@@ -38,6 +38,7 @@ import { RequestRoleGeneralService } from '../services';
 import { REQUEST_ROLE_EMBED_COLOR } from '../util/constants';
 
 import { DiscordComponentsArrayDTO } from '@muse/types/discord-components-array.type';
+import { createListButtons } from '@muse/util/create-list-buttons';
 
 import { Prisma } from '@prisma/client';
 
@@ -326,34 +327,8 @@ export class RequestRoleModeratorCommands {
 			});
 		}
 
-		const buttons = [];
+		const buttons = createListButtons('REQUEST_ROLE_LIST', page, maxPage);
 		const components: DiscordComponentsArrayDTO = [];
-
-		if (page > 1) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`REQUEST_ROLE_LIST/1`)
-					.setLabel('⏪')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`REQUEST_ROLE_LIST/${page - 1}`)
-					.setLabel('◀️')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
-
-		if (page < maxPage) {
-			buttons.push(
-				new ButtonBuilder()
-					.setCustomId(`REQUEST_ROLE_LIST/${page + 1}`)
-					.setLabel('▶️')
-					.setStyle(ButtonStyle.Primary),
-				new ButtonBuilder()
-					.setCustomId(`REQUEST_ROLE_LIST/${maxPage}`)
-					.setLabel('⏩')
-					.setStyle(ButtonStyle.Primary)
-			);
-		}
 
 		if (buttons.length > 0) {
 			components.push(
