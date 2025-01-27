@@ -279,6 +279,10 @@ export class ReactionTriggerGeneralCommands {
 		if (page > 1) {
 			buttons.push(
 				new ButtonBuilder()
+					.setCustomId(`REACTION_TRIGGER_LIST/1`)
+					.setLabel('⏪')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
 					.setCustomId(`REACTION_TRIGGER_LIST/${page - 1}`)
 					.setLabel('◀️')
 					.setStyle(ButtonStyle.Primary)
@@ -290,6 +294,10 @@ export class ReactionTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`REACTION_TRIGGER_LIST/${page + 1}`)
 					.setLabel('▶️')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId(`REACTION_TRIGGER_LIST/${maxPage}`)
+					.setLabel('⏩')
 					.setStyle(ButtonStyle.Primary)
 			);
 		}

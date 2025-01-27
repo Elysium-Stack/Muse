@@ -317,6 +317,10 @@ export class MessageTriggerGeneralCommands {
 		if (page > 1) {
 			buttons.push(
 				new ButtonBuilder()
+					.setCustomId(`MESSAGE_TRIGGER_LIST/1`)
+					.setLabel('⏪')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
 					.setCustomId(`MESSAGE_TRIGGER_LIST/${page - 1}`)
 					.setLabel('◀️')
 					.setStyle(ButtonStyle.Primary)
@@ -328,6 +332,10 @@ export class MessageTriggerGeneralCommands {
 				new ButtonBuilder()
 					.setCustomId(`MESSAGE_TRIGGER_LIST/${page + 1}`)
 					.setLabel('▶️')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId(`MESSAGE_TRIGGER_LIST/${maxPage}`)
+					.setLabel('⏩')
 					.setStyle(ButtonStyle.Primary)
 			);
 		}

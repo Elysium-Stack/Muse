@@ -286,6 +286,10 @@ export class FeedbackModeratorCommands {
 		if (page > 1) {
 			buttons.push(
 				new ButtonBuilder()
+					.setCustomId(`FEEDBACK_TOPICS_LIST/1`)
+					.setLabel('⏪')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
 					.setCustomId(`FEEDBACK_TOPICS_LIST/${page - 1}`)
 					.setLabel('◀️')
 					.setStyle(ButtonStyle.Primary)
@@ -297,6 +301,10 @@ export class FeedbackModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`FEEDBACK_TOPICS_LIST/${page + 1}`)
 					.setLabel('▶️')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId(`FEEDBACK_TOPICS_LIST/${maxPage}`)
+					.setLabel('⏩')
 					.setStyle(ButtonStyle.Primary)
 			);
 		}

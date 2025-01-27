@@ -332,6 +332,10 @@ export class RequestRoleModeratorCommands {
 		if (page > 1) {
 			buttons.push(
 				new ButtonBuilder()
+					.setCustomId(`REQUEST_ROLE_LIST/1`)
+					.setLabel('⏪')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
 					.setCustomId(`REQUEST_ROLE_LIST/${page - 1}`)
 					.setLabel('◀️')
 					.setStyle(ButtonStyle.Primary)
@@ -343,6 +347,10 @@ export class RequestRoleModeratorCommands {
 				new ButtonBuilder()
 					.setCustomId(`REQUEST_ROLE_LIST/${page + 1}`)
 					.setLabel('▶️')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId(`REQUEST_ROLE_LIST/${maxPage}`)
+					.setLabel('⏩')
 					.setStyle(ButtonStyle.Primary)
 			);
 		}
