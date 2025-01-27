@@ -1,5 +1,6 @@
 export * from './admin';
 export * from './bookworm';
+export * from './custom-role';
 export * from './feedback';
 export * from './fun';
 export * from './message-trigger';

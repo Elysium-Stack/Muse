@@ -99,6 +99,7 @@
 		"react-particles": "^2.9.3",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.8.0",
+		"sharp": "^0.33.5",
 		"tslib": "^2.3.0",
 		"winston": "^3.8.2",
 		"winston-loki": "6.0.6",
