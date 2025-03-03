@@ -81,10 +81,11 @@ export class MinecraftRegisterCommands {
 		}
 
 		const userData = await this._general.fetchUserData(username, bedrock);
+		console.log(userData);
 
 		if (!userData?.uuid) {
 			return interaction.reply({
-				content: `${MESSAGE_PREFIX} I am sorry, but I could not find a user with that username on the minecraft database.`,
+				content: `${MESSAGE_PREFIX} I am sorry, but I could not find a user with that username on the ${bedrock ? 'xbox' : 'minecraft'} database.`,
 				ephemeral: true,
 			});
 		}

@@ -29,11 +29,6 @@ export class MinecraftGeneralService {
 			: this._getJavaData(username);
 
 		data = await data;
-		this._logger.log(
-			`Received data for ${
-				bedrock ? ' [bedrock]' : ''
-			}${username}: ${JSON.stringify(data)}`
-		);
 		return data;
 	}
 
@@ -124,11 +119,11 @@ export class MinecraftGeneralService {
 		return fetch(
 			this._xuidUrl.replace('{username}', username.replaceAll(' ', ''))
 		)
-			.then(res => res.text())
+			.then(res => res.json())
 			.then(res => ({
-				id: res,
+				id: res.code === 404 ? null : res.xuid,
 				name: username,
-				uuid: stringToUuid(`00000000${res}`),
+				uuid: res.xuid ? stringToUuid(`00000000${res.xuid}`) : null,
 			}))
 			.catch(() => null);
 	}
@@ -171,6 +166,8 @@ export class MinecraftGeneralService {
 		const { rconHost, rconPort, rconPass } =
 			await this._settings.get(guildId);
 
+		console.log(rconHost, rconPort, rconPass);
+
 		const client = new Rcon({
 			host: rconHost,
 			port: Number.parseInt(rconPort, 10),
@@ -180,7 +177,7 @@ export class MinecraftGeneralService {
 
 		try {
 			this._logger.log(`Sending rcon command "${command}"`);
-			const response = await client.session(c => c.send(command));
+			const response = await client.session(async c => c.send(command));
 			return response;
 		} catch (error) {
 			this._logger.error(error);
