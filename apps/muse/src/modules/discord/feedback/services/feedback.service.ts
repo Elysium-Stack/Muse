@@ -123,6 +123,7 @@ export class FeedbackService {
 	) {
 		const embed = new EmbedBuilder()
 			.setTitle(`${MESSAGE_PREFIX} Feedback response`)
+			.setDescription(content)
 			.addFields(
 				{
 					name: 'Topic',
@@ -133,10 +134,6 @@ export class FeedbackService {
 					name: 'Feedback by',
 					value: `<@${user.id}>`,
 					inline: true,
-				},
-				{
-					name: 'Feedback',
-					value: content,
 				}
 			)
 			.setColor(FEEDBACK_EMBED_COLOR);
