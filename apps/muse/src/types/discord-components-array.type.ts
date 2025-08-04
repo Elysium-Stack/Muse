@@ -1,16 +1,17 @@
 import {
-	APIActionRowComponent,
-	APIMessageActionRowComponent,
+	APIMessageTopLevelComponent,
 	ActionRowData,
 	JSONEncodable,
 	MessageActionRowComponentBuilder,
 	MessageActionRowComponentData,
+	TopLevelComponentData,
 } from 'discord.js';
 
 export type DiscordComponentsArrayDTO = (
-	| JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>
+	| JSONEncodable<APIMessageTopLevelComponent>
+	| TopLevelComponentData
 	| ActionRowData<
 			MessageActionRowComponentData | MessageActionRowComponentBuilder
 	  >
-	| APIActionRowComponent<APIMessageActionRowComponent>
+	| APIMessageTopLevelComponent
 )[];

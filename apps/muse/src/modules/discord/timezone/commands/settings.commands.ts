@@ -9,7 +9,6 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -41,6 +40,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
+
 class TimezoneSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -64,6 +65,7 @@ class TimezoneIgnoreOptions {
 @TimezoneCommandDecorator({
 	name: 'settings',
 	description: 'Timezone settings commands',
+	options: [],
 })
 export class TimezoneSettingsCommands {
 	private readonly _logger = new Logger(TimezoneSettingsCommands.name);

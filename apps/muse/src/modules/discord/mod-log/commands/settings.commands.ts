@@ -8,7 +8,6 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -39,6 +38,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+
 class ModLogSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -54,6 +55,7 @@ class ModLogSettingsChangeOptions {
 @ModLogCommandDecorator({
 	name: 'settings',
 	description: 'Mod log settings commands',
+	options: [],
 })
 export class ModLogSettingsCommands {
 	private readonly _logger = new Logger(ModLogSettingsCommands.name);

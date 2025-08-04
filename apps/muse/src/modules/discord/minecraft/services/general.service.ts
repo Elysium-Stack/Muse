@@ -166,8 +166,6 @@ export class MinecraftGeneralService {
 		const { rconHost, rconPort, rconPass } =
 			await this._settings.get(guildId);
 
-		console.log(rconHost, rconPort, rconPass);
-
 		const client = new Rcon({
 			host: rconHost,
 			port: Number.parseInt(rconPort, 10),

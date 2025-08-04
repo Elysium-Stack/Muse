@@ -60,6 +60,7 @@ class BookwormSettingsChangeOptions {
 @BookwormCommandDecorator({
 	name: 'settings',
 	description: 'Bookworm settings commands',
+	options: [],
 })
 export class BookwormSettingsCommands {
 	private readonly _logger = new Logger(BookwormSettingsCommands.name);

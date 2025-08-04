@@ -9,7 +9,6 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -41,6 +40,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
+
 class MessageTriggerSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -64,6 +65,7 @@ class MessageTriggerIgnoreOptions {
 @MessageTriggerCommandDecorator({
 	name: 'settings',
 	description: 'Message trigger settings commands',
+	options: [],
 })
 export class MessageTriggerSettingsCommands {
 	private readonly _logger = new Logger(MessageTriggerSettingsCommands.name);

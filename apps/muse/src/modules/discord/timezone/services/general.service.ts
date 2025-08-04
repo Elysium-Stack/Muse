@@ -89,6 +89,10 @@ export class TimezoneGeneralService {
 		// **Your time:**: <t:${utcDate.getTime()}:t>`,
 		// )
 
+		if (!message.channel.isSendable()) {
+			return;
+		}
+
 		return message.channel.send({
 			embeds: [embed],
 		});

@@ -35,7 +35,6 @@ export class AuthController {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		@Query('code') code: string
 	): TokensResponseDTO {
-		console.log(code);
 		return req.user as TokensResponseDTO;
 	}
 

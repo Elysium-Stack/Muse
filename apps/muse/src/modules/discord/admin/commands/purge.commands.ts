@@ -60,6 +60,7 @@ class AdminPurgeListOptions {
 @AdminCommandDecorator({
 	name: 'purge',
 	description: 'Admin utility commands',
+	options: [],
 })
 export class AdminPurgeCommands {
 	private readonly _logger = new Logger(AdminPurgeCommands.name);

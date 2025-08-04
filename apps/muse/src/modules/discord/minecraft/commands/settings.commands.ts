@@ -64,6 +64,7 @@ class MinecraftSettingsChangeOptions {
 @MinecraftCommandDecorator({
 	name: 'settings',
 	description: 'Minecraft settings commands',
+	options: [],
 })
 export class MinecraftSettingsCommands {
 	private readonly _logger = new Logger(MinecraftSettingsCommands.name);

@@ -6,7 +6,6 @@ import {
 	EmbedBuilder,
 	MessageComponentInteraction,
 	Role,
-	SelectMenuBuilder,
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
@@ -75,7 +74,9 @@ export class RequestRoleGeneralCommands {
 			);
 
 		const selectRow =
-			new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
+			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+				select
+			);
 
 		const data = {
 			content: `${MESSAGE_PREFIX} What role would you like to request?`,

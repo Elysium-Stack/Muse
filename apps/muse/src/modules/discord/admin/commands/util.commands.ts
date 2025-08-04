@@ -1,15 +1,17 @@
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
-import { AdminGuard } from 'libs/util/src/lib/guards/admin.guard';
 import { Context, SlashCommandContext, Subcommand } from 'necord';
 
 import { AdminCommandDecorator } from '..';
 
 import { ForbiddenExceptionFilter } from '@util';
+
+import { AdminGuard } from 'libs/util/src/lib/guards/admin.guard';
 @UseGuards(AdminGuard)
 @UseFilters(ForbiddenExceptionFilter)
 @AdminCommandDecorator({
 	name: 'util',
 	description: 'Admin utility commands',
+	options: [],
 })
 export class AdminUtilsCommands {
 	private readonly _logger = new Logger(AdminUtilsCommands.name);

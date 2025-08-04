@@ -9,7 +9,6 @@ import {
 	MessageComponentInteraction,
 	TextChannel,
 } from 'discord.js';
-import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -41,6 +40,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard, GuildModeratorGuard } from 'libs/util/src/lib/guards';
+
 class ReactionTriggerSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -64,6 +65,7 @@ class ReactionTriggerIgnoreOptions {
 @ReactionTriggerCommandDecorator({
 	name: 'settings',
 	description: 'Reaction trigger settings commands',
+	options: [],
 })
 export class ReactionTriggerSettingsCommands {
 	private readonly _logger = new Logger(ReactionTriggerSettingsCommands.name);

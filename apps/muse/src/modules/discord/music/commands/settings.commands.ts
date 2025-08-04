@@ -9,7 +9,6 @@ import {
 	MessageComponentInteraction,
 	RoleSelectMenuBuilder,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -44,6 +43,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+
 class MusicSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -59,6 +60,7 @@ class MusicSettingsChangeOptions {
 @MusicCommandDecorator({
 	name: 'settings',
 	description: 'Music settings commands',
+	options: [],
 })
 export class MusicSettingsCommands {
 	private readonly _logger = new Logger(MusicSettingsCommands.name);

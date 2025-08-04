@@ -43,18 +43,25 @@ import {
 
 class CustomRoleSetOptions {
 	@StringOption({
-		name: 'name',
+		name: 'role-name',
 		description: 'The name of your role',
 		required: false,
 	})
 	name?: string;
 
 	@StringOption({
-		name: 'color',
-		description: "Hexcode of the color you'd like",
+		name: 'start-color',
+		description: "Hexcode of the start color you'd like",
 		required: false,
 	})
-	color?: string;
+	startColor?: string;
+
+	@StringOption({
+		name: 'end-color',
+		description: "Hexcode of the end color you'd like",
+		required: false,
+	})
+	endColor?: string;
 
 	@AttachmentOption({
 		name: 'icon',
@@ -94,13 +101,14 @@ export class CustomRoleGeneralCommands {
 	})
 	public async set(
 		@Context() [interaction]: SlashCommandContext,
-		@Options() { name, color, attachment }: CustomRoleSetOptions
+		@Options()
+		{ name, startColor, endColor, attachment }: CustomRoleSetOptions
 	) {
 		this._logger.verbose(`${interaction.user.tag} updated their role`);
 
-		if (!name && !color && !attachment) {
+		if (!name && !startColor && !endColor && !attachment) {
 			return interaction.reply({
-				content: `${MESSAGE_PREFIX} You need to provide at least one of the following options: Name, Color, Icon.`,
+				content: `${MESSAGE_PREFIX} You need to provide at least one of the following options: Name, Start color, End color, Icon.`,
 				ephemeral: true,
 			});
 		}
@@ -112,12 +120,12 @@ export class CustomRoleGeneralCommands {
 			});
 		}
 
-		if (color && color.length > 0) {
-			if (color[0] === '#') {
-				color = color.slice(1);
+		if (startColor && startColor.length > 0) {
+			if (startColor[0] === '#') {
+				startColor = startColor.slice(1);
 			}
 
-			if (!/^[\da-f]{6}$/i.test(color)) {
+			if (!/^[\da-f]{6}$/i.test(startColor)) {
 				return interaction.reply({
 					content: `${MESSAGE_PREFIX} color must be a valid hex code.`,
 					ephemeral: true,
@@ -178,21 +186,20 @@ export class CustomRoleGeneralCommands {
 		}
 
 		if (!map) {
-			if (!name || !color || !attachment) {
+			if (!name || !startColor || !attachment) {
 				return interaction.editReply({
-					content: `${MESSAGE_PREFIX} For your first time you need to provide all of the following options: Name, Color, Icon.`,
+					content: `${MESSAGE_PREFIX} For your first time you need to provide all of the following options: Name, Start color, Icon.`,
 				});
 			}
 
 			role = await guild.roles
 				.create({
 					name,
-					color: Number.parseInt(color, 16),
+					color: Number.parseInt(startColor, 16),
 					icon: image,
 					position: roleAfter.position - 1,
 				})
 				.catch(error => {
-					console.log(error);
 					this._logger.error(error);
 					return null;
 				});
@@ -220,11 +227,12 @@ export class CustomRoleGeneralCommands {
 		await role
 			.edit({
 				name: name ?? role.name,
-				color: color ? Number.parseInt(color, 16) : role.color,
+				color: startColor
+					? Number.parseInt(startColor, 16)
+					: role.color,
 				...(image ? { icon: image } : {}),
 			})
 			.catch(error => {
-				console.log(error);
 				this._logger.error(error);
 				return null;
 			});

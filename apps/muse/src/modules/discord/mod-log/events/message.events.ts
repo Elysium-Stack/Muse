@@ -82,7 +82,6 @@ export class ModLogMessageEvents {
 				embeds: [embed],
 			});
 		} catch (error) {
-			console.log(error);
 			this._logger.error(error);
 		}
 	}
@@ -242,7 +241,6 @@ export class ModLogMessageEvents {
 				await editChannel.send({ embeds: [embed] });
 			}
 		} catch (error) {
-			console.log(error);
 			this._logger.error(error);
 		}
 	}

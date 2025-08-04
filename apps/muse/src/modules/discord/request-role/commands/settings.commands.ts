@@ -8,7 +8,6 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 } from 'discord.js';
-import { GuildAdminGuard } from 'libs/util/src/lib/guards';
 import {
 	Button,
 	ButtonContext,
@@ -39,6 +38,8 @@ import {
 	camelCaseToSnakeCase,
 } from '@util';
 
+import { GuildAdminGuard } from 'libs/util/src/lib/guards';
+
 class RequestRoleSettingsChangeOptions {
 	@StringOption({
 		name: 'option',
@@ -54,6 +55,7 @@ class RequestRoleSettingsChangeOptions {
 @RequestRoleCommandDecorator({
 	name: 'settings',
 	description: 'Request role settings commands',
+	options: [],
 })
 export class RequestRoleSettingsCommands {
 	private readonly _logger = new Logger(RequestRoleSettingsCommands.name);

@@ -87,7 +87,6 @@ export class MusicPlayerService {
 			player.queue.clear();
 		}
 
-		console.log(result.type);
 		if (result.type === 'TRACK' || result.type === 'SEARCH') {
 			const track = result.tracks[0];
 			const transformedTrack = this._transformTrack(track);

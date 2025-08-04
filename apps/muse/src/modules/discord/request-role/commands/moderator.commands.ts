@@ -80,6 +80,7 @@ class RequestRoleRemoveOptions {
 @RequestRoleCommandDecorator({
 	name: 'manage',
 	description: 'Request role manage entries commands',
+	options: [],
 })
 export class RequestRoleModeratorCommands {
 	private readonly _logger = new Logger(RequestRoleModeratorCommands.name);

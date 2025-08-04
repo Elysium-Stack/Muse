@@ -91,6 +91,7 @@ class FeedbackTopicRemoveOptions {
 @FeedbackCommandDecorator({
 	name: 'topic',
 	description: 'Feedback topic commands',
+	options: [],
 })
 export class FeedbackModeratorCommands {
 	private readonly _logger = new Logger(FeedbackModeratorCommands.name);

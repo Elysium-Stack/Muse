@@ -81,7 +81,6 @@ export class MinecraftRegisterCommands {
 		}
 
 		const userData = await this._general.fetchUserData(username, bedrock);
-		console.log(userData);
 
 		if (!userData?.uuid) {
 			return interaction.reply({
