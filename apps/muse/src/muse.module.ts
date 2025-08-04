@@ -35,6 +35,7 @@ import {
 	RequestRoleModule,
 	SettingsModule,
 	TimezoneModule,
+	WriterPromptModule,
 } from './modules';
 import { SharedModule } from './shared.module';
 
@@ -94,6 +95,7 @@ import { intents } from '@util';
 		RadioModule,
 		MinecraftModule,
 		RequestRoleModule,
+		WriterPromptModule,
 	],
 	providers: [
 		{

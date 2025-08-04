@@ -12,3 +12,4 @@ export * from './reaction-trigger';
 export * from './request-role';
 export * from './timezone';
 export * from './qotd';
+export * from './writer-prompt';

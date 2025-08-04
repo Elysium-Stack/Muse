@@ -105,8 +105,14 @@ model Settings {
   requestRoleLogChannelId                   String?
 
   // Booster role
-  customRoleEnabled                        Boolean?    @default(true)
-  customRoleAfterRoleId					   String?
+  customRoleEnabled                         Boolean?    @default(true)
+  customRoleAfterRoleId                     String?
+
+  // Write prompts
+  writerPromptEnabled                        Boolean?    @default(true)
+  writerPromptChannelId                      String?
+  writerPromptWriterRoleId                   String?
+  writerPromptPingRoleId                     String?
 
   // purge
   purgeIgnoredParentChannelIds              String[]    @default([])
@@ -159,6 +165,7 @@ model RadioLog {
   createdAt                                 DateTime    @default(now())
   updatedAt                                 DateTime    @updatedAt
 }
+
 model ReactionTriggers {
   id                                        Int         @id @default(autoincrement())
   guildId                                   String
@@ -243,7 +250,19 @@ model CustomRoleMap {
   guildId                                   String
 
   roleId                                    String
-  userId									String
+  userId                                    String
+
+  // timestamps
+  createdAt                                 DateTime    @default(now())
+  updatedAt                                 DateTime    @updatedAt
+}
+
+model WritePrompt {
+  id                                        Int         @id @default(autoincrement())
+  guildId                                   String
+
+  prompt                                    String
+  scheduleDate                              DateTime
 
   // timestamps
   createdAt                                 DateTime    @default(now())
