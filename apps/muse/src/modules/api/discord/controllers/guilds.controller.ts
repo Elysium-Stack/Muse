@@ -8,7 +8,7 @@ import { BotOAuth2GuildDTO } from '../types/guild.type';
 
 import type { AuthenticatedRequestDTO } from '@muse/types/authenticated-request.type';
 
-import { PrismaService, UsersEntity } from '@prisma';
+import { PrismaService } from '@prisma';
 
 @Controller('discord/guilds')
 @ApiTags('Guilds')
@@ -44,13 +44,5 @@ export class GuildsController {
 						guild
 					)
 			);
-	}
-	/**
-	 * This is a test
-	 */
-	@Get('test')
-	@UseGuards(AccessTokenGuard)
-	test(): Promise<UsersEntity[]> {
-		return this._prisma.users.findMany();
 	}
 }
