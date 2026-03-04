@@ -60,7 +60,6 @@ class MusicSettingsChangeOptions {
 @MusicCommandDecorator({
 	name: 'settings',
 	description: 'Music settings commands',
-	options: [],
 })
 export class MusicSettingsCommands {
 	private readonly _logger = new Logger(MusicSettingsCommands.name);

@@ -65,7 +65,6 @@ class TimezoneIgnoreOptions {
 @TimezoneCommandDecorator({
 	name: 'settings',
 	description: 'Timezone settings commands',
-	options: [],
 })
 export class TimezoneSettingsCommands {
 	private readonly _logger = new Logger(TimezoneSettingsCommands.name);

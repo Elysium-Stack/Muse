@@ -65,7 +65,6 @@ class ReactionTriggerIgnoreOptions {
 @ReactionTriggerCommandDecorator({
 	name: 'settings',
 	description: 'Reaction trigger settings commands',
-	options: [],
 })
 export class ReactionTriggerSettingsCommands {
 	private readonly _logger = new Logger(ReactionTriggerSettingsCommands.name);

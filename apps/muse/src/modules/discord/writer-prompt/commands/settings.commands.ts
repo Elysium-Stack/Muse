@@ -58,7 +58,6 @@ class WriterPromptSettingsChangeOptions {
 @WriterPromptCommandDecorator({
 	name: 'settings',
 	description: 'Writer prompt settings commands',
-	options: [],
 })
 export class WriterPromptSettingsCommands {
 	private readonly _logger = new Logger(WriterPromptSettingsCommands.name);

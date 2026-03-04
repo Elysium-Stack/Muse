@@ -76,7 +76,7 @@ import { intents } from '@util';
 		// Api
 		HealthModule,
 		AuthModule,
-		DiscordModule,
+		// DiscordModule,
 
 		// Discord modules
 		AdminModule,

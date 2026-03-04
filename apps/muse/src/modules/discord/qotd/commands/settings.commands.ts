@@ -60,7 +60,6 @@ class QotDSettingsChangeOptions {
 @QotDCommandDecorator({
 	name: 'settings',
 	description: 'QotD settings commands',
-	options: [],
 })
 export class QotDSettingsCommands {
 	private readonly _logger = new Logger(QotDSettingsCommands.name);

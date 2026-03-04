@@ -55,7 +55,6 @@ class RequestRoleSettingsChangeOptions {
 @RequestRoleCommandDecorator({
 	name: 'settings',
 	description: 'Request role settings commands',
-	options: [],
 })
 export class RequestRoleSettingsCommands {
 	private readonly _logger = new Logger(RequestRoleSettingsCommands.name);

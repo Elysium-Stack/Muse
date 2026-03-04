@@ -55,7 +55,6 @@ class ModLogSettingsChangeOptions {
 @ModLogCommandDecorator({
 	name: 'settings',
 	description: 'Mod log settings commands',
-	options: [],
 })
 export class ModLogSettingsCommands {
 	private readonly _logger = new Logger(ModLogSettingsCommands.name);

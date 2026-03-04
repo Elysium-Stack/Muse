@@ -7,7 +7,7 @@ index 3e9afde..ddaf6a1 100644
                  relativePath = relativePath.slice(0, indexPos);
              }
 +            const djsText = 'discord.js';
-+            const typingsText = '/typings';
++            const typingsText = '/types';
 +            const djsPos = relativePath.indexOf(djsText);
 +            const typingsPos = relativePath.indexOf(typingsText);
 +            if (typingsPos >= 0 && djsPos >= 0) {

@@ -54,7 +54,6 @@ class CustomRoleSettingsChangeOptions {
 @CustomRoleCommandDecorator({
 	name: 'settings',
 	description: 'Custom role settings commands',
-	options: [],
 })
 export class CustomRoleSettingsCommands {
 	private readonly _logger = new Logger(CustomRoleSettingsCommands.name);

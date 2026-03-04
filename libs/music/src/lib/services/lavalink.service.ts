@@ -2,13 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron } from '@nestjs/schedule';
 import { ChannelType, Client, Events, VoiceState } from 'discord.js';
-import {
-	Kazagumo,
-	KazagumoPlayer,
-	KazagumoTrack,
-	PlayerState,
-	State,
-} from 'kazagumo';
+import { Kazagumo, KazagumoPlayer, KazagumoTrack, PlayerState } from 'kazagumo';
 import Spotify from 'kazagumo-spotify';
 import { On } from 'necord';
 import {
@@ -16,7 +10,10 @@ import {
 	TrackExceptionEvent,
 	TrackStuckEvent,
 	WebSocketClosedEvent,
+	Constants,
 } from 'shoukaku';
+
+const { State } = Constants;
 
 import {
 	createPlayingComponents,
