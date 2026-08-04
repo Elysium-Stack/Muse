@@ -18,17 +18,14 @@ import { userMetrics } from './metrics/user.metrics';
 import { LoggerMiddleware } from './middleware/log.middleware';
 import {
     AdminModule,
-    AuthModule,
     BookwormModule,
     CustomRoleModule,
     FeedbackModule,
     FunModule,
     HealthModule,
     MessageTriggerModule,
-    MinecraftModule,
     ModLogModule,
     QotDModule,
-    RadioModule,
     ReactionTriggerModule,
     RequestRoleModule,
     SettingsModule,
@@ -73,8 +70,6 @@ import { intents } from '@util';
 
 		// Api
 		HealthModule,
-		AuthModule,
-		// DiscordModule,
 
 		// Discord modules
 		AdminModule,
@@ -85,13 +80,9 @@ import { intents } from '@util';
 		BookwormModule,
 		CustomRoleModule,
 		QotDModule,
-		// MusicModule,
-		// MusicModule,
 		ReactionTriggerModule,
 		MessageTriggerModule,
 		FeedbackModule,
-		// RadioModule,
-		// MinecraftModule,
 		RequestRoleModule,
 		WriterPromptModule,
 	],
