@@ -9,7 +9,6 @@ import {
 } from '@nestjs/terminus';
 
 import { DiscordHealthService } from '../services/discord-health.service';
-import { LavalinkHealthService } from '../services/lavalink-health.service';
 import { PrismaHealthService } from '../services/prisma-health.service';
 
 @Controller('health')
@@ -21,8 +20,6 @@ export class HealthController {
 		private db: PrismaHealthService,
 		@Inject(DiscordHealthService)
 		private discord: DiscordHealthService,
-		@Inject(LavalinkHealthService)
-		private lavalink: LavalinkHealthService,
 		private disk: DiskHealthIndicator,
 		private memory: MemoryHealthIndicator
 	) {}
@@ -47,7 +44,6 @@ export class HealthController {
 				}),
 			() => this.db.pingCheck('muse'),
 			() => this.discord.pingCheck(),
-			() => this.lavalink.pingCheck(),
 			() => this.memory.checkHeap('memory_heap', 300 * 1024 * 1024),
 			() => this.memory.checkRSS('memory_rss', 300 * 1024 * 1024),
 
