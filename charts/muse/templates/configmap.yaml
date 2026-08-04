@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "muse.fullname" . }}-config
+  labels:
+    {{- include "muse.labels" . | nindent 4 }}
+data:
+  {{- range $k, $v := (.Values.config | default dict) }}
+  {{ $k }}: {{ $v | quote }}
+  {{- end }}

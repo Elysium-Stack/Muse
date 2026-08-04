@@ -1,0 +1,100 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/elysium-stack/muse
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# command is intentionally absent — the image CMD runs:
+#   yarn muse:start:prod
+# which triggers the yarn prestart:prod hook that runs:
+#   prisma migrate deploy
+# before booting the NestJS app.
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: muse.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Non-secret environment variables — rendered into a ConfigMap.
+config:
+  NODE_ENV: "production"
+  REGISTER_COMMANDS: "true"
+  OWNER_IDS: ""
+  DEVELOPMENT_LOG_CHANNEL_ID: ""
+  DISCORD_OAUTH_CLIENT_ID: ""
+  DISCORD_OAUTH_SCOPES: ""
+  DISCORD_OAUTH_CALLBACK_URL: ""
+  LOKI_URL: ""
+  MUSIC_BOT_HOSTS: ""
+
+# Secret environment variables — rendered into a Secret (unless existingSecret is set).
+# DATABASE_URL is only written to the Secret for external-DB deployments
+# (postgresql.enabled: false). When the Bitnami subchart is enabled the DB URL
+# is composed at runtime via the DB_PASSWORD + $(VAR) expansion pattern and
+# never appears in rendered manifests.
+secrets:
+  # Set to the name of a pre-existing k8s Secret to skip chart-managed Secret creation.
+  existingSecret: ""
+  DISCORD_TOKEN: ""
+  DISCORD_OAUTH_CLIENT_SECRET: ""
+  SENTRY_DNS: ""
+  # Only used when postgresql.enabled is false.
+  DATABASE_URL: ""
+
+extraEnv: []
+
+# When enabled, a wait-db init container runs before the app starts to ensure
+# Postgres is accepting connections. The app's built-in yarn prestart:prod hook
+# then runs `prisma migrate deploy` inside the main container before boot.
+migrations:
+  enabled: true
+
+# Image used for the wait-db init container.
+initImage: "busybox:1.36"
+
+postgresql:
+  enabled: true
+  auth:
+    username: muse
+    password: ""
+    # Set to the name of a pre-existing k8s Secret that holds the Postgres password
+    # (Bitnami-compatible: mirrors postgresql.auth.existingSecret).
+    # When set, DATABASE_URL is composed at runtime via env var expansion and the
+    # plaintext password above is not used.
+    existingSecret: ""
+    secretKeys:
+      userPasswordKey: password  # key within existingSecret (Bitnami default)
+    database: muse
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi

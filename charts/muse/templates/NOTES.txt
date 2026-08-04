@@ -1,0 +1,28 @@
+muse has been deployed!
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+Check pod status:
+  kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Follow logs:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} -f
+
+{{- if .Values.ingress.enabled }}
+Access the API via:
+  {{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
+  {{- end }}
+{{- else }}
+The HTTP API is not exposed externally (ingress.enabled=false).
+To expose the /api or OAuth callback endpoint, set:
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host=muse.example.com
+{{- end }}
+
+{{- if not .Values.secrets.DISCORD_TOKEN }}
+
+IMPORTANT: set secrets.DISCORD_TOKEN before the bot can connect to Discord:
+  --set secrets.DISCORD_TOKEN=<your-bot-token>
+{{- end }}
