@@ -4,20 +4,17 @@ import { TerminusModule } from '@nestjs/terminus';
 
 import { SharedModule } from '@muse/shared.module';
 
-import { MusicModule as MusicLibModule } from '@music';
 
 import { HealthController } from './controllers/health.controller';
-import { LavalinkHealthService } from './services';
 import { DiscordHealthService } from './services/discord-health.service';
 import { PrismaHealthService } from './services/prisma-health.service';
 
 @Module({
-	imports: [SharedModule, HttpModule, TerminusModule, MusicLibModule],
+	imports: [SharedModule, HttpModule, TerminusModule],
 	controllers: [HealthController],
 	providers: [
 		PrismaHealthService,
 		DiscordHealthService,
-		LavalinkHealthService,
 	],
 })
 export class HealthModule {}
